@@ -3,5 +3,5 @@
 }
 
 <h2>Message</h2>
-
-@ViewData["Message"]
+@* https://stackoverflow.com/questions/5120645/razor-syntax-equivalent  *@
+@Html.Raw(ViewData["Message"])
