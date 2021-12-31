@@ -1,0 +1,148 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<!-- 
+©2014 - Shawn and Kristen Grace Eary
+Licened via FCML
+http://www.conservativeart.net/Home/FCML 
+
+References
+[1] - Dahlström, Erik; Dengler, Patrick; Grasso, Anthony; Lilley, Chris;
+   McCormack, Cameron, Schepers, Doug; Watt, Jonathan; Ferrailolo, Jon; 
+   藤沢 淳; Jackson, Dean
+   SVG 1.1 (Second Edition) - Basic Shapes. W3C. 
+   [Online] AUG 16, 2011. [Cited: DEC 22, 2013.] 
+   a) http://www.w3.org/TR/SVG/shapes.html#PolygonElement.
+   b) http://www.w3.org/TR/SVG/coords.html#EstablishingANewUserSpace.
+   c) http://www.w3.org/TR/SVG/shapes.html#CircleElement
+   d) http://www.w3.org/TR/SVG/pservers.html#RadialGradientElement
+-->
+
+<!-- You can see a basic frame for an SVG File at [1a]  -->
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+ preserveAspectRatio="xMinYMin meet" 
+ width="350" height="600">
+  <desc>Christmas Tree</desc>
+
+   <!-- You can see an example of scaling at [1b] -->
+   <g transform="scale(0.15)">
+      <defs>
+         <!-- You can see examples of how to apply gradients at 1c -->
+         <radialGradient id="blueCircleGradient" 
+         gradientUnits="objectBoundingBox" fx="-1" fy="-1">
+            <stop offset="0%" stop-color="hsl(226, 100%, 75%)" />            
+            <stop offset="100%" stop-color="hsl(226, 100%, 25%)" />
+         </radialGradient>
+
+         <radialGradient id="redCircleGradient" 
+         gradientUnits="objectBoundingBox" fx="-1" fy="-1">
+            <stop offset="0%" stop-color="hsl(0, 100%, 100%)" />            
+            <stop offset="100%" stop-color="hsl(0, 100%, 50%)" />
+         </radialGradient>
+
+         <radialGradient id="yellowCircleGradient" 
+         gradientUnits="objectBoundingBox" fx="-1" fy="-1">
+            <stop offset="0%" stop-color="hsl(55, 85%, 90%)" />            
+            <stop offset="100%" stop-color="hsl(55, 100%, 40%)" />
+         </radialGradient>
+
+         <radialGradient id="greenTreeGradient" 
+         gradientUnits="objectBoundingBox" fx="-1" fy="-1">
+            <stop offset="0%" stop-color="hsl(122, 68%, 47%)" />            
+            <stop offset="100%" stop-color="hsl(122, 68%, 12%)" />
+         </radialGradient>
+
+         <radialGradient id="garlandGradient" 
+         gradientUnits="objectBoundingBox" fx="-1" fy="-1">
+            <stop offset="0%" stop-color="hsl(196, 32%, 96%)" />            
+            <stop offset="100%" stop-color="hsl(196, 32%, 66%)" />
+         </radialGradient>
+
+         <radialGradient id="brownGradient" 
+         gradientUnits="objectBoundingBox" fx="-1" fy="-1">
+            <stop offset="0%" stop-color="hsl(0, 73%, 50%)" />            
+            <stop offset="100%" stop-color="hsl(0, 73%, 30%)" />
+         </radialGradient>
+
+         <radialGradient id="darkBrownGradient" 
+         gradientUnits="objectBoundingBox" fx="-1" fy="-1">
+            <stop offset="0%" stop-color="hsl(0, 73%, 60%)" />            
+            <stop offset="100%" stop-color="hsl(0, 73%, 20%)" />
+         </radialGradient>
+
+         <radialGradient id="starGradient" 
+         gradientUnits="objectBoundingBox" fx="-1" fy="-1">
+            <stop offset="0%" stop-color="hsl(55, 87%, 100%)" />            
+            <stop offset="100%" stop-color="hsl(55, 87%, 50%)" />
+         </radialGradient>
+      </defs>
+
+      <!-- You can see an example of polygon use at [1a] -->
+      <polygon fill="url(#starGradient)" stroke="black" stroke-width="10"
+      points="955,60 903,207 757,215 860,288 785,450 
+      936,370 950,360 977,382 1061,437 1035,317 1111,225 
+      1004,225" />
+
+      <polygon fill="url(#darkBrownGradient)" stroke="black" stroke-width="10"
+      points="950,360 936,370 931,476 830,554 
+      880,554 1058,554
+      1105,554 973,476 977,382" />
+
+      <polygon fill="url(#greenTreeGradient)" stroke="black" stroke-width="10"
+      points="880,554 
+      730, 1023 714, 1076 
+      469, 2005 455, 2103
+      16, 3468 1, 3521
+      736, 3521 1184, 3521
+      2050, 3521
+      1800, 2634 1760, 2553
+      1357, 1464 1345, 1361
+      1058, 554" />
+
+      <polygon fill="url(#brownGradient)" stroke="black" stroke-width="10"
+      points="736,3521 736,3977 1184,3977 1184,3521" />
+
+      <polygon fill="url(#garlandGradient)" stroke="black" stroke-width="10"
+      points="
+      16,3468 1,3521     
+      1800,2634 1760,2553      
+      551,2055
+      1357,1464 1345,1361
+      730,1023 714,1076
+      1250,1430      
+      469,2005 455,2103
+      1670,2630
+      " />
+
+      <!-- You can see examples of how to draw ellipses at 1c and 
+           apply gradients at 1d -->
+      <ellipse cx="747" cy="1582" rx="50" ry="50"
+      fill="url(#blueCircleGradient)" stroke="black" 
+      stroke-width="10"  />
+
+      <ellipse cx="1220" cy="1990" rx="50" ry="100"
+      fill="url(#blueCircleGradient)" stroke="black" 
+      stroke-width="10"  />
+
+      <ellipse cx="545" cy="2950" rx="50" ry="50"
+      fill="url(#redCircleGradient)" stroke="black" 
+      stroke-width="10"  />
+
+      <ellipse cx="1248" cy="2600" rx="60" ry="60"
+      fill="url(#yellowCircleGradient)" stroke="black" 
+      stroke-width="10"  />
+
+      <ellipse cx="1013" cy="995" rx="40" ry="40"
+      fill="url(#yellowCircleGradient)" stroke="black" 
+      stroke-width="10"  />
+
+      <ellipse cx="1623" cy="3247" rx="50" ry="60"
+      fill="url(#redCircleGradient)" stroke="black" 
+      stroke-width="10"  />
+
+      <ellipse cx="642" cy="2600" rx="100" ry="80"
+      fill="url(#yellowCircleGradient)" stroke="black" 
+      stroke-width="10"  />
+   </g>
+</svg>

@@ -1,0 +1,495 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Immutability and F# (FSharp)</title>
+    <!-- Saw these meta tags on CodeShow 
+         http://codeshow.codeplex.com/ -->
+    <meta name="keywords" content="F# FSharp *.NET" />
+    <meta name="description" 
+    content="Description of the features I like the most about F#" />
+    <meta name="author" content="Shawn Eary" />
+    <meta name="dateCreated" content="01/17/2013" />
+    <meta name="copyright" content="©2013 - Shawn Eary" />
+</head>
+<body>    
+<article>
+    <p>Often in Information Technology (IT) we are so driven by 
+    deadlines that we don’t have time to learn new technologies or 
+    consider something that seems a bit unusual.  Instead, we 
+    constrain ourselves to the same old techniques that we have used 
+    for years.  In some cases, I suppose this might be good.  It is 
+    really hard for example to improve on the great language of 
+    Unmanaged C++.   This is why even after years of being an ASP.NET 
+    Developer, I’m still not real warm to VB.NET and C#.  While the 
+    languages do serve their purpose of allowing people to rapidly 
+    write software, I miss some of the good old features of C++.  
+    Fortunately, Microsoft does offer a *.NET language that excites me.
+    That language is F#.  In the months that follow, I *hope* to have
+    time to explain the reasons why I am so exited about F# and why 
+    I wish it were Microsoft's flagship *.NET language instead of C#.
+    </p>
+    
+    <p>
+    In Unmanaged C++, I believe the programmer has what is called 
+    *full* const correctness <a href="#src1">(1)</a> at her/his disposal.  In 
+    Unmanaged C++, you could use the “const” keyword to not only say 
+    that a pointer was unchangeable but also the thing that the 
+    pointer points to was unchangeable.  This meant that you could 
+    easily return collections of items back to a user without 
+    worrying if the user changed them.  At the time of this post, 
+    I don’t think this was possible in VB.NET and C# because of the 
+    simplified view those languages had of reference and value types.  
+    In C# or VB.NET if you return a stack of internal items from an 
+    API, I believe you had to be careful to deep clone those items to 
+    prevent users of your API from accidentally modifying the internal 
+    state of your API.  Here is a code example that demonstrates this 
+    annoyance of C# (Note: VB.NET isn't much different):
+    </p>
+
+    <pre>
+    <code class="language-csharp">
+using System;
+using System.Linq; 
+using System.Collections.Generic; 
+
+namespace ConsoleApplication2
+{
+   class Program
+   {
+      public class Person
+      {
+         public Person(string inName, int inAge)
+         {
+            Name = inName;
+            Age = inAge; 
+         }
+         public string Name { get; set; }
+         public int Age { get; set; }
+      }  
+     
+      public class UsersGroup
+      {
+         public UsersGroup(string inName)
+         {
+            Name = inName; 
+            members = new List<Person>(); 
+         }
+
+         public void AddMember(Person theMember)
+         {
+            members.Add(theMember);
+         }
+
+         /// <summary>
+         /// You want this function to return Read-Only data. 
+         /// In Unmanaged C++ you can do that with const, but 
+         /// in C# and VB.NET you have to go through more 
+         /// effort...
+         /// </summary>
+         public List<Person> ReadMembers()
+         {
+            // Returning an reference to the private list in C# or 
+            // VB.NET is not a good idea.  You can see why later...
+            return members; 
+         }
+
+         public void PrintMembers()
+         {
+            foreach (Person p in members)
+            {
+               Console.WriteLine(p.Name + ": " + p.Age);
+            }
+            Console.WriteLine(); 
+         }
+
+         public string Name { get; set; }        
+         private List<Person> members; 
+      }
+
+      static void Main(string[] args)
+      {
+         UsersGroup CAUG =
+            new UsersGroup("Cameron Amiga User's Group");
+         CAUG.AddMember(new Person("Pseudo-Random", 16));
+         CAUG.AddMember(new Person("Sean", 45));
+         CAUG.AddMember(new Person("Wiz Kid", 9));
+
+         // The consumer of your User's Group API wants to list the 
+         // people in the Cameron Amiga User's Group
+         CAUG.PrintMembers();
+
+         // For whatever reason, the user of your API decides to take 
+         // the list you gave her/him and change the age of the first 
+         // person to 32 and add a new member. 
+         CAUG.ReadMembers().First().Age = 32;
+         CAUG.ReadMembers().Add(new Person("Mac User", 17));
+
+         // Whoa!!! How did the user pull that off?  The user changed
+         // the age of the first person in your internal list and 
+         // added a new member without following your rules.  This is
+         // not good. 
+         // 
+         // You meant for ReadMembers to return a read-only version of 
+         // the members, but you forgot to clone the data and properly 
+         // use the Read-Only keyword on the Age property of the Person 
+         // Class.  Now, you have a mess because the consumer of your 
+         // API has managed to change the internal state of your API
+         // object.  This is not good.
+         CAUG.PrintMembers();
+      }
+   }
+}
+    </code>
+    </pre>
+
+    <p>
+    If you run the above code, you should see output like this:
+    </p>
+
+    <pre>
+Pseudo-Random: 16
+Sean: 45
+Wiz Kid: 9
+
+Pseudo-Random: 32
+Sean: 45
+Wiz Kid: 9
+Mac User: 17
+</pre>
+
+<p>
+That's probably not what we want.  In Unmanaged C++, I think you can
+generally stop this (in most cases) with the “const” keyword.  While 
+VB.NET and C# do offer the templated ReadOnlyCollection <a href="#src1">(2)</a> and the 
+ReadOnly keyword to make classes immutable, these features seems to be
+a bother to me.  If I remember correctly, I think I even ran into 
+one instance where I wasn't even able to use the ReadOnlyCollection 
+to protect my internal data structures.  This is where 
+F# comes in.  While I’m not sure F# offers *full* const-correctness 
+like C++, its immutability by default feature goes a long way toward 
+eliminating annoying side effects like the one previously described. 
+Look at how I have *attempted* to rewrite the above C# code in an F# 
+style:
+</p>
+
+<pre>
+<code class="language-fsharp">
+open System
+
+(* This is an F# "class".  It's sleek and streamlined :-).  Compare
+   it with its C# Counterpart *) 
+type Person(inName : string, inAge) = 
+   member this.Name = inName
+   member this.Age = inAge
+
+type UsersGroup(inName, inMembers : Person list) = 
+   let Name = inName
+   let Members = inMembers
+   new(inName) = UsersGroup(inName, [])
+   member this.addGroupMember gm = new UsersGroup(Name, (gm::Members))
+   member this.ReadGroupMembers = Members
+   member this.PrintGroupMembers = 
+      Members |> List.iter 
+         (fun p -> Console.WriteLine(p.Name + ": " + p.Age.ToString()))
+      Console.WriteLine("")
+
+let CAUG = 
+   (new UsersGroup("Cameron Amiga User's Group")).addGroupMember(
+      new Person("Pseudo-Random", 16)         
+   ).addGroupMember(
+      new Person("Sean", 45)
+   ).addGroupMember(
+      new Person("Wiz Kid", 9)
+   ).addGroupMember(
+      new Person("Video Toaster Addict", 83)
+   )
+
+Console.WriteLine("The original CAUG before a Mac User Gets In")
+CAUG.PrintGroupMembers
+
+(* <- is how you assign to F# properties and right off the bat, 
+   the compiler gives you and error saying 
+   "Property 'Age' cannot be set" because the Age property is 
+   immutable.  So I have to comment the below line out *)
+(* CAUG.ReadGroupMembers.Head.Age <- 32; *) 
+
+
+(* Setting the age didn't work.  Now let's see if a Mac User can get 
+   in. *)
+
+(* Right of the bat, F# gives you an error that you are trying to 
+   throw a value away by trying to simply call addGroupMember on 
+   CAUG.  This is because addGroupMember doesn't actually change CAUG
+   it creates a new UsersGroup and returns that value as a result.
+   This help eliminate unwanted side effects.  So the below statement
+   will not work *)
+(* CAUG.addGroupMember(new Person("Mac User", 17)) *) 
+
+(* To comply with F#, we have to assign the value of 
+   CAUG.addGroupMember to a new variable like this *)
+let newCAUG = CAUG.addGroupMember(new Person("Mac User", 17))
+
+(* Now the question is if CAUG actually changed.  Let's see *)
+Console.WriteLine("Mac User does not get into CAUG (Yeah!!!)")
+CAUG.PrintGroupMembers
+
+(* We can see that CAUG didn't change because it is immutable, but 
+   as we shall see newCAUG did.  That is not a concern, however, 
+   because we did not have to deal with a side effect or corruption
+   of the internal state of the original CAUG.  Because we designed 
+   our UserGroup class with hopefully decent F# design principles, 
+   we don't have to worry about side effects like we do in C# or 
+   VB.NET *)
+Console.WriteLine(
+   "Mac User got into New-CAUG but we expected that..."
+)
+Console.WriteLine(
+   "We still know that the original CAUG was unmodified"
+)
+
+newCAUG.PrintGroupMembers
+</code>
+</pre>
+    
+<p>
+If run the above F# code, you should now see output like this:
+</p>
+
+<pre>
+The original CAUG before a Mac User Gets In
+Video Toaster Addict: 83
+Wiz Kid: 9
+Sean: 45
+Pseudo-Random: 16
+
+Mac User does not get into CAUG (Yeah!!!)
+Video Toaster Addict: 83
+Wiz Kid: 9
+Sean: 45
+Pseudo-Random: 16
+
+Mac User got into New-CAUG but we expected that...
+We still know that the original CAUG was unmodified
+Mac User: 17
+Video Toaster Addict: 83
+Wiz Kid: 9
+Sean: 45
+Pseudo-Random: 16
+</pre>
+<p>
+The point of this is that the F# Style code did not allow the 
+internal state of the UsersGroup and Person classes to be changed, but 
+the C# code did.  Now, in C#'s defense, you can actually write C#
+code that is immutable using a sort of F# style but it is unnatural. 
+In C# you generally have to think a little more to get things to be 
+immutable while in F# you generally have to think a little more to 
+get things to be mutable.  So the two languages approach
+mutability from different perspectives.  C# and VB.NET have the 
+ReadOnly keyword that you have to litter each member of your classes 
+with to make the whole class immutable while in F# you have an opposite 
+"mutable" keyword.  
+</p>
+<p>
+You might be tempted to try using the <mark>ReadOnly</mark> Keyword in C# and 
+VB.NET to resolve the problem but that only solves "some" of the 
+issue.
+</p>
+
+<pre>
+<code class="language-csharp">
+using System;
+using System.Linq;
+using System.Collections.Generic;
+
+namespace ConsoleApplication2
+{
+   class Program
+   {
+      // Making this class immutable isn't to hard.  I simply put 
+      // the readonly keyword in front of all of its members
+      public class Person
+      {
+         public Person(string inName, int inAge)
+         {
+            Name = inName;
+            Age = inAge;
+         }
+         public <mark>readonly</mark> string Name;
+         public <mark>readonly</mark> int Age;
+      }
+
+      public class UsersGroup
+      {
+         public UsersGroup(string inName)
+         {
+            Name = inName;
+            members = new List<Person>();
+         }
+
+         public void AddMember(Person theMember)
+         {
+            members.Add(theMember);
+         }
+
+         /// <summary>
+         /// You want this function to return Read-Only data. 
+         /// In Unmanaged C++ you can do that with const, but 
+         /// in C# and VB.NET you either have to go through more 
+         /// effort...
+         /// </summary>
+         public List<Person> ReadMembers()
+         {
+            // Returning an reference to the private list in C# or 
+            // VB.NET is not a good idea.  You can see why later...
+            return members;
+         }
+
+         public void PrintMembers()
+         {
+            foreach (Person p in members)
+            {
+               Console.WriteLine(p.Name + ": " + p.Age);
+            }
+            Console.WriteLine();
+         }
+
+         public string Name { get; set; }
+
+         // You would think that since ReadOnly worked so well for 
+         // Person class.  You could apply it hear but that is where
+         // VB.NET and C# fall apart.  When you apply ReadOnly to 
+         // a reference type, it only means that the variable holding
+         // the reference can't be changed.  It doesn't prevent 
+         // the contents inside the reference type from being changed
+         // This is a really annoying C# and VB.NET "feature"...
+         // Properly written const-correct Unmanaged C++ code doesn't 
+         // have this probably and the F# code I showed earlier didn't 
+         // have the problem either
+         private <mark>readonly</mark> List<Person> members;
+      }
+
+      static void Main(string[] args)
+      {
+         UsersGroup CAUG =
+            new UsersGroup("Cameron Amiga User's Group");
+         CAUG.AddMember(new Person("Pseudo-Random", 16));
+         CAUG.AddMember(new Person("Sean", 45));
+         CAUG.AddMember(new Person("Wiz Kid", 9));
+
+         // The consumer of your User's Group API wants to list the 
+         // people in the Cameron Amiga User's Group
+         CAUG.PrintMembers();
+
+         // For whatever reason, the user decides to take the list 
+         // you gave her/him and try to change the age of the first 
+         // person to 32 and add a new member. 
+         // Fortunately C#, prevents this from happening since Age
+         // is ReadOnly.  Now that Age is <mark>ReadOnly</mark>, the 
+         // below line issues a compile time error 
+         // CAUG.ReadMembers().First().Age = 32;
+
+         // Try Adding Mac User into CAUG Again
+         CAUG.ReadMembers().Add(new Person("Mac User", 17));
+
+         // What!!! How did the user pull that off.  The consuming 
+         // programmer was still able to added a new member without 
+         // following your rules even though the internal private
+         // members value of UsersGroup was marked ReadOnly.  I 
+         // don't get it.  I thought ReadOnly meant ReadOnly!!!
+         CAUG.PrintMembers();
+      }
+   }
+}
+</code>
+</pre>
+
+<p>
+If you run the above program, you will find that Mac User still got into
+CAUG even though the internal members List of UserGroup was marked 
+readonly.  Kind of weird huh?  Well it has to do with the way *.NET
+handles reference types so in this particular case, 
+<mark>ReadOnly</mark> doesn't do any good. Lists in F# are immutable
+in F# so you don't have this problem, but in order to get that 
+kind of benefit in C# you have to a little more code jingling.  To 
+fix the problem completely for the C# code, you need to modify 
+the ReadMembers function of the UsersGroup class to return a copy of
+the members list instead of the actual members list.  In F#, you could
+simply return the members list because it was immutable but that 
+doesn't work in C# and VB.NET; nevertheless, here is a final part of
+code that will make the last C# example behave a little better.  
+When you apply this last bit of code and use the ReadOnly keywords 
+on the members of the Person class, everything should be okay and the 
+Mac User shouldn't get into CAUG.  
+</p>
+
+<pre>
+<code class="language-csharp">
+         /// <summary>
+         /// You want this function to return Read-Only data. 
+         /// In Unmanaged C++ you can do that with const, but 
+         /// in C# and VB.NET you either have to go through more 
+         /// effort...
+         /// 
+         /// To get the this function to return data that will not 
+         /// allow the internal state of this API to be modified, you 
+         /// have to first make sure every Person is immutable 
+         /// and we also have to return a *copy* of the members list.
+         /// 
+         /// You can also do the same without making the Person 
+         /// elements immutable but then you have to do a FULL deep 
+         /// copy of the members list and every person
+         /// 
+         /// This doesn't seem like a big deal here, but if you have 
+         /// many reading functions like this one you might have to 
+         /// write cloning code like this each time 
+         /// </summary>
+         public List<Person> ReadMembers()
+         {
+            // Returning an reference to the private list in C# or 
+            // VB.NET is not a good idea.  You can see why later...
+            List<Person> returnMembers = new List<Person>();
+            foreach (Person p in members)
+            {
+               returnMembers.Add(p);
+            }
+            return returnMembers;
+         }
+</code>
+</pre>
+
+<p>
+The above example may seem simple enough that you are wondering why 
+you would want to bother with F#.  Well, the fact is that the above 
+example was indeed simple.  If you had a much more complex program 
+with many classes nested via composition, it might not be quite so 
+easy to slap the readonly keyword everywhere and remember to copy your
+data before sending it to your API consumers.  In fact, putting
+readonly in some places of a C# or VB.NET program might cause you to 
+have to rethink your logic.  If you are going to have to rethink 
+large amounts of logic for a complex program, why not rethink that 
+logic in a functional language like F# that tries to protect you by 
+default?
+</p>
+
+<h2>Bibliography</h2>
+<a name="src1"></a>
+1. Various. <br />
+Const-Correctness. <br />
+Wikipedia. [Online] JAN 15, 2013. <br />
+[Cited: JAN 17, 2013.] <br />
+<a href="http://en.wikipedia.org/wiki/Const-correctness" target="_blank">http://en.wikipedia.org/wiki/Const-correctness</a><br />
+<br />
+<a name="src2"></a>
+2. Microsoft. <br />
+ReadOnlyCollection Generic Class. <br />
+MSDN. [Online] <br />
+[Cited: 1 17, 2013.] <br />
+<a href="http://msdn.microsoft.com/en-us/library/ms132474(v=vs.110).aspx" target="_blank">http://msdn.microsoft.com/en-us/library/ms132474(v=vs.110).aspx</a><br />
+
+<p>
+©2013 - Shawn Eary<br />
+This post and all included code is released under the Free Christian Document License (FCDL)<br />
+</p>
+</article>
+</body>
+</html>

@@ -1,0 +1,413 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   <title>No Table Layout</title>
+   <!-- Saw these meta tags on CodeShow 
+      http://codeshow.codeplex.com/ -->
+   <meta name="keywords" 
+   content="Table Layout HTML HTML5 CSS Grid Layout" />
+   <meta name="description" 
+   content="CSS Layout vs Table Layout" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="08/23/2013" />
+   <meta name="copyright" content="©2013 - Shawn Eary" />
+   <script type="text/javascript"
+    src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+   <!--  Don't ask...
+   <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />   -->
+</head>
+<body>    
+   <article>
+      <p>
+         When I first started working as as an ASP.NET WebForms developer back in
+         the mid 2000's, I was pretty green around the ears.  One of the
+         priorities my team indicated to me was that the WebForms I
+         created should have a good layout.  My memory may be a bit foggy,
+         but I believe that many members of my team suggested I use table
+         layout for this purpose.
+      </p>
+
+      <p>
+         For example, my team might have suggested that I try something like this
+         to layout my webforms:
+      </p>
+
+      <pre>
+      <code class="html">
+         &lt;table&gt;
+            &lt;tr&gt;&lt;td&gt;Last Name:&lt;/td&gt;&lt;td&gt;&lt;input type="text" /&gt;&lt;/td&gt;
+            &lt;tr&gt;&lt;td&gt;First Name:&lt;/td&gt;&lt;td&gt;&lt;input type="text" /&gt;&lt;/td&gt;
+            &lt;tr&gt;&lt;td&gt;Middle Name:&lt;/td&gt;&lt;td&gt;&lt;input type="text" /&gt;&lt;/td&gt;
+            &lt;!-- This would normally be populated from database but it is 
+                 hardcoded here for simplicity of demonstration.  --&gt;
+            &lt;tr&gt;
+               &lt;td&gt;Favorite Two Dimensional Geometric Shape:&lt;/td&gt;
+               &lt;td&gt;
+                  &lt;select&gt;
+                  &lt;option&gt;Square&lt;/option&gt;
+                  &lt;option&gt;Rectangle&lt;/option&gt;
+                  &lt;option&gt;Rhombus&lt;/option&gt;
+                  &lt;option&gt;Circle&lt;/option&gt;
+                  &lt;option&gt;Parallelogram&lt;/option&gt;
+                  &lt;/select&gt;
+               &lt;/td&gt;
+            &lt;tr /&gt;
+            &lt;tr&gt;
+            &lt;td colspan="2"&gt;&lt;input type="submit" value="Save" /&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+         &lt;/table&gt;
+      </code>
+      </pre>
+
+      <p>
+         Which would likely graphically render something like this
+      </p>
+      <figure>
+         <img src="http://www.arsquies.com/Content/Blog/noTable-Fig1.png"
+              alt="Picture of Form Rendered Via Table Based Layout" />
+         <figcaption>
+            Figure 1<br />
+         </figcaption>
+      </figure>
+
+      <p>
+         It's clean and it works right?  The columns and controls line
+         up well and with some CSS you can even get the text to right
+         align up to the controls.  There are a few problems though.
+         If you search the internet for table based vs CSS based layout,
+         you will run into a few flame posts where seasoned
+         Web Developers insist that you *never* use table based layout.
+         That's because tables were never designed to organize controls
+         on a form and there are a number of problems associated with
+         that approach.  Of those problems, there are three issues that 
+         concern me the most.
+      </p>
+
+      <p>
+         In my oppinion, the three components that table based layout messes
+         up the most are: accessiblity<a href="#src1">(1)</a>;
+         job security<a href="#src1">(1)</a>; and, jQuery annimations
+         <a href="#src2">(2)</a>.
+      </p>
+
+      <p>
+         In my oppinion, accessibility <a href="#src3">(3)</a> is the ease
+         at which your site can be used through various alternative devices
+         and by user's with special needs.  You would
+         typically want a website to be usable by as many people as
+         possible because it can mean increased productivity and revene.
+         Becuase of this, you should keep all types of users in mind including those
+         that might be using screen readers instead of typical monitors.
+         From what I understand from the accesibilty section of
+         <a href="#src1">(1)</a> and other things I have read over time,
+         table based layout tends to wreck havoc with screen readers
+         making a site much more difficult for a blind person to
+         navigate, but that isn't the only problem with table based
+         layout.  If you want, you can read <a href="#src1">(1)</a>
+         for additional reasons.
+      </p>
+
+      <p>
+         Another problem with table based layout that personally
+         affected me was the job security issue.  I had an
+         interview for a nice job at a well known university
+         farily recently and they asked me how I felt about
+         HTML5.  I mentioned a few points I liked about HTML5
+         and started to promote the new CSS3 Grid Layout
+         <a href="#src4">(4)</a> feature that's starting to
+         come to new browsers.  I suppose my first mistake was
+         that Grid Layout isn't technically part of HTML5, but
+         rather it is actually *expected* to become part of
+         CSS3; unfortunately, I didn't just stop by smaking
+         myself there.  I made the mistake of running into
+         a glass window by *implying* that the only reasonable
+         way I knew of laying out form items was table based
+         layout.  The interviewer took note of my statement
+         with a rather straight face and I *assume* he took
+         points off my application due to my ignorance.
+         I didn't get that job...
+      </p>
+
+      <p>
+         The other problem with table based layout is that
+         it could potentially interfere with jQuery animations.
+         While I understand that CSS3 animations are becoming
+         farily standard in newer browsers, they aren't
+         completely available yet so some developers may still
+         have to rely on jQuery animations.  For those
+         developers, forms layed out via tables may have
+         problems with such jQuery animations
+         <a href="#src2">(2)</a>.
+      </p>
+
+      <p>
+         Those are the three things that I feel personally
+         impact me with table based layout and why I chose
+         to stop using the "technique".  Now that I have
+         presented the downsides, I shall mention the two alternatives
+         that seem to be the easiest for me.  There are likely other
+         options, but these two seem to be the easiest for me.
+         The first is the use of the "table-" options of the "display:"
+         CSS option and the second is the new new CSS3 Grid Layout
+         that I already mentioned <a href="#src4">(4)</a>.
+      </p>
+
+      <p>
+         The "table-" options of the "display:" CSS option should be
+         supported by most modern browsers.  In fact, this feature should
+         be supported on IE8 <a href="#src5">(5)</a> which is appearently
+         included with Windows 7 and supported in Windows XP
+         <a href="#src6">(6)</a>.  So unless someone is using a *really*
+         old browser, the technique mentioned by Ms. Andrew should work
+         fine.
+      </p>
+
+      <p>
+         So how do you use the new "table-" options of the "display:" CSS
+         Property?  Well, you can either read Ms. Andrew's post
+         <a href="#src5">(5)</a> or you can look at this recoding of my
+         previous example:
+      </p>
+
+      <p><b><i>HTML File</i></b></p>
+      <pre>
+      <code class="html">
+      &lt;div class="gridForm"&gt;
+         &lt;div&gt;&lt;div&gt;Last Name:&lt;/div&gt;&lt;div&gt;&lt;input type="text" /&gt;&lt;/div&gt;&lt;/div&gt;
+         &lt;div&gt;&lt;div&gt;First Name:&lt;/div&gt;&lt;div&gt;&lt;input type="text" /&gt;&lt;/div&gt;&lt;/div&gt;
+         &lt;div&gt;&lt;div&gt;Middle Name:&lt;/div&gt;&lt;div&gt;&lt;input type="text" /&gt;&lt;/div&gt;&lt;/div&gt;
+         &lt;!-- This would normally be populated from database but it is
+                 hardcoded here for simplicity of demonstration.  --&gt;
+         &lt;div&gt;
+            &lt;div&gt;Favorite Two Dimensional Geometric Shape:&lt;/div&gt;
+            &lt;div&gt;
+               &lt;select&gt;
+                  &lt;option&gt;Square&lt;/option&gt;
+                  &lt;option&gt;Rectangle&lt;/option&gt;
+                  &lt;option&gt;Rhombus&lt;/option&gt;
+                  &lt;option&gt;Circle&lt;/option&gt;
+                  &lt;option&gt;Parallelogram&lt;/option&gt;
+               &lt;/select&gt;
+            &lt;/div&gt;
+         &lt;/div&gt;
+         &lt;div&gt;&lt;input type="submit" value="Save" /&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      </code>
+      </pre>
+
+      <p><b><i>CSS File</i></b></p>
+      <pre>
+      <code class="css">
+      .gridForm div {
+         display: table-row
+      }
+      .gridForm div > div {
+         display: table-cell
+      }   
+      </code>
+      </pre>
+
+      <p>
+         Which will probably render like this in most "modern" browsers:
+      </p>
+      <figure>
+         <img src="http://www.arsquies.com/Content/Blog/noTable-Fig2.png"
+              alt="Picture of Form Rendered Table Display Options for CSS" />
+         <figcaption>
+            Figure 2<br />
+         </figcaption>
+      </figure>
+
+      <p>
+         If you wanted, you *could* put the CSS in the same file as the HTML, but
+         for reasons I won't get into here, that isn't recommended.  Instead, you
+         typically have one or more CSS files for your site and you would put
+         the definitions for your GridForm class in one of those files.  The .gridForm identifier in both of the blocks
+         stands for the "gridForm" class that was referenced in the HTML File.
+         There are two CSS
+         blocks.  One had the ".gridForm div" selector and the other had the
+         ".gridForm div > div" selector.  The first selector ".gridForm div"
+         chooses all div elements of the gridForm class.  The second selector
+         ".gridForm div > div" chooses all div elements that are a direct
+         child of div elements inside an element of the .gridForm class.
+         The first block uses the ".gridform div" selector to make all div
+         elements inside and element of the .gridForm class display using
+         the table-row formatting.  The second block then uses the
+         ".gridForm div > div" selector to make sure that all direct chidren
+         of gridForm divs are displayed as table cells.  I'm not an expert
+         on CSS, but I think the rules of CSS are used in such a manner that
+         the more general rule is applied first and the more sepcific rule
+         is applied last to achive the result we want.
+      </p>
+      <p>
+         To make a long story short, using the table-row and table-cell
+         properties in CSS isn't much more difficult than using the
+         actual table elements for form layout and it's better for
+         accessibility, but my personal favorite method for form layout
+         is the grid-based layout in which Microsoft seems to have taken
+         the lead <a href="#src4">(4)</a>.  That is the layout that is
+         prefered for this site as it is partially supported in IE10 and
+         higher and *should* be supported in Chrome and Firefox soon.
+      </p>
+
+      <p>
+         In my oppinion, the HTML for GridBased CSS layout might look a
+         little cleaner like this:
+      </p>
+      <pre>
+      <code class="html">
+         &lt;div class="gridForm"&gt;
+            &lt;label&gt;Last Name:&lt;/label&gt;&lt;input type="text" /&gt;
+            &lt;label&gt;First Name:&lt;/label&gt;&lt;input type="text" /&gt;
+            &lt;label&gt;Middle Name:&lt;/label&gt;&lt;input type="text" /&gt;
+                     
+            &lt;label&gt;Favorite Two Dimensional Geometric Shape:&lt;/label&gt;
+            &lt;!-- This would normally be populated from database but it is
+                 hardcoded here for simplicity of demonstration.  --&gt;
+            &lt;select&gt;
+               &lt;option&gt;Square&lt;/option&gt;
+               &lt;option&gt;Rectangle&lt;/option&gt;
+               &lt;option&gt;Rhombus&lt;/option&gt;
+               &lt;option&gt;Circle&lt;/option&gt;
+               &lt;option&gt;Parallelogram&lt;/option&gt;
+            &lt;/select&gt;         
+            &lt;input type="submit" value="Save" /&gt;
+         &lt;/div&gt;
+      </code>
+      </pre>
+      <p>
+      ...but then the CSS might be a bit on the messy side looking something
+      like this...
+      </p>
+      <pre>
+      <code class="css">
+         div.gridForm {
+            display: -ms-grid; 
+            font-size: x-large
+         }
+         div.gridForm label:nth-of-type(1) {
+            display: -ms-grid;    
+            -ms-grid-column: 1; -ms-grid-row: 1;    
+         }
+         div.gridForm input:nth-of-type(1) {
+            -ms-grid-column: 2; -ms-grid-row: 1;    
+         }
+         div.gridForm label:nth-of-type(2) {   
+            display: -ms-grid;    
+            -ms-grid-column: 1; -ms-grid-row: 2;    
+         }
+         div.gridForm input:nth-of-type(2) {    
+            -ms-grid-column: 2; -ms-grid-row: 2;    
+         }
+         div.gridForm label:nth-of-type(3) {
+            display: -ms-grid; 
+            -ms-grid-column: 1; -ms-grid-row: 3;    
+         }
+         div.gridForm input:nth-of-type(3) {
+            -ms-grid-column: 2; -ms-grid-row: 3;    
+         }
+         div.gridForm label:nth-of-type(4) {
+            display: -ms-grid; 
+            -ms-grid-column: 1; -ms-grid-row: 4;    
+         }
+         div.gridForm select {
+            -ms-grid-column: 2; -ms-grid-row: 4;    
+         }
+         div.gridForm input[type="submit"] {   
+            -ms-grid-column: 1; -ms-grid-row: 5;    
+         }
+      </code>
+      </pre>
+
+      <p>The end result would probably render something like this...</p>
+      <figure>
+         <img src="http://www.arsquies.com/Content/Blog/noTable-Fig3.png"
+              alt="Picture of Form Rendered Via Grid Based Layout" />
+         <figcaption>
+            Figure 3<br />
+         </figcaption>
+      </figure>
+
+      <p>
+      I know that seems like a bit of work but it does *appear* to make 
+      for cleaner HTML at the expense of some messy CSS3.  In addition, 
+      since the CSS can be cached, ofloading work into the CSS3 file 
+      *may* lead to better network 
+      performance.  The HTML on the other hand can't be cached 
+      as easily as the CSS because portions of the HTML *might*
+      in some cases be automatically generated as with MVC, 
+      ASP.NET WebForms, PHP etc...  The other advantage of the 
+      Grid Based layout over just using the simple table-row 
+      and table-cell CSS commands is that the Grid Based 
+      approach *seems* (in my oppinion) to offer more predicatble 
+      results with a greater chance of flexibility.  The 
+      options for the new Grid Based approach seem promising
+      at <a href="#src4">(4)</a>.
+      </p>
+
+      <p>
+      In summary, I would say that while it may seem tempting 
+      to use HTML table elements to layout forms, I would not 
+      do so since that can lead toward definate accessibility
+      problems and possibly cause other unwanted issues. There
+      are two main easy alternatives to table based layout.  
+      Those alternatives are the table-cell/table-row properties
+      of CSS and the emerging Grid Based layout standard.  Of the
+      two options, I prefer the Grid Based layout standard.
+      </p>
+      
+      <h2>Bibliography</h2>
+      <a name="src1"></a>
+      1. Jurmann, Matt<br />
+      13 Reasons Why CSS Is Superior to Tables in Website Design<br />
+      Chromatic. [Online: APR 3, 2008]<br />
+
+
+      [Cited: AUG 2, 2013.]<br />
+      <a target="_blank" href="http://www.chromaticsites.com/blog/13-reasons-why-css-is-superior-to-tables-in-website-design/">http://www.chromaticsites.com/blog/13-reasons-why-css-is-superior-to-tables-in-website-design/</a><br />
+      <br />
+      <a name="src2"></a>
+      2. Emily; Greg; et al.<br />
+      jQuery - How to Use slideDown (or show) function on a table row?<br />
+      StackOverflow. [Online: MAY 28, 2009]<br />
+      [Cited: AUG 02, 2013.]<br />
+      <a target="_blank" href="http://stackoverflow.com/questions/467336/jquery-how-to-use-slidedown-or-show-function-on-a-table-row">http://stackoverflow.com/questions/467336/jquery-how-to-use-slidedown-or-show-function-on-a-table-row</a><br />
+      <br />
+      <a name="src3"></a>
+      3. Henry, Shawn Lawton<br />
+      "Introduction to Web Accessibility"<br />
+      W3C [Online: SEP 2005.]<br />
+            [Cited: AUG 09, 2013.]<br />
+      <a target="_blank" href="http://www.w3.org/WAI/intro/accessibility.php">http://www.w3.org/WAI/intro/accessibility.php</a><br />
+      <br />
+      <a name="src4"></a>
+      4. Atkins, Tab Jr.; Etemad, Elika J.; Atanassov, Rossen;
+      Mogilevsky, Alex; Cupp, Phil.<br />
+      "CSS Grid Layout"<br />
+      W3C Working Draft, 2 April 2013<br />
+      [Cited: AUG 09, 2013.]<br />
+      <a target="_blank" href="http://www.w3.org/TR/css3-grid-layout/">http://www.w3.org/TR/css3-grid-layout/</a><br />
+      <br />
+      <a name="src5"></a>
+      5. Andrew, Rachel<br />
+      "Everything You Know About CSS Is Wrong"<br />
+      Digital Web Magazine, October 21, 2008<br />
+      [Cited: August 10, 2013.]<br />
+      <a target="_blank" href="http://www.digital-web.com/articles/everything_you_know_about_CSS_Is_wrong/">http://www.digital-web.com/articles/everything_you_know_about_CSS_Is_wrong/</a><br />
+      <br />
+      <a name="src6"></a>
+      6. Various<br />
+      "Internet Explorer - OS Compatibility"<br />
+      Wikipedia, August 10, 2013<br />
+      [Cited: August 10, 2013.]<br />
+      <a target="_blank" href="http://en.wikipedia.org/wiki/Internet_Explorer#OS_compatibility">http://en.wikipedia.org/wiki/Internet_Explorer#OS_compatibility</a><br />
+      <br />
+
+      <p>
+         ©2013 - Shawn Eary<br />
+         This post is released under the Free Christian Document License (FCDL)<br />
+      </p>
+   </article>
+</body>
+</html>

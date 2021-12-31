@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>PeopleSoft SQR - Process Request Shows Status of 'INITIATED' or 'PROCESSING' but No Longer Running</title>
+   <!-- Saw these meta tags on CodeShow
+      http://codeshow.codeplex.com/ -->
+   <meta name="keywords" content="SQR PeopleSoft Run Control Error" />
+   <meta name="description"
+         content="Odd Error When Running SQR from a Run Control in PIA" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="08/08/2018" />
+   <meta name="copyright" content="©2018 - Shawn Eary" />
+   <!--  Don't ask...
+   <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />   -->
+</head>
+<body>
+    <article>
+        <p>
+            I've been goofing around on my bicycle too much to take interest in
+            blogging, but I recently ran across an interesting PeopleSoft error with
+            a simple solution.
+        </p>
+        <p>
+            I got an SQR from Oracle that was apparently meant to be run only from
+            SQR Express (or similar tool) in interactive mode.  Unfortunately, my
+            institution wanted to run it in the Web Based PeopleSoft Pure Internet
+            Architecture (PIA).  I was unfamiliar with SQR but I made the minimal
+            changes necessary so I could launch the SQR from a Run Control within the
+            PIA.  Then I ran it and got a weird error...
+        </p>
+        <p>
+            I kept getting the error "Process Request shows status of 'INITIATED' or 'PROCESSING' but no longer running."
+            in my Message Log and the Process Monitor status always showed a status of Error.  The
+            funny thing is that the SQR from Oracle seemed to be working just fine.
+            I searched around the internet and thumbed though a book I had on hand [1] for a solution but didn't
+            find exactly what I was looking for.  Eventually, I started looking through
+            the working SQRs my institution had and noticed StdAPI-Term wasn't being
+            called at the end of the SQR.  I put that line in at the end of my SQR
+            and Viola!  The error went away.
+        </p>
+        <p>
+            Granted it wasn't exactly that simple.  There are a *few* things you also
+            have to do *in addition* to calling StdAPI-Term like maybe including
+            setenv.sqc and calling stdapi-init [1], but I had already done that
+            previously and the final thing that got rid of the error was the
+            StdAPI-Term call.  So if you are getting the error mentioned in the
+            title of this article, check and make sure your SQR matches the simple form
+            mentioned in [2] and make sure you have a "Do stdapi-term" statement at the
+            end of your SQR.
+        </p>
+
+        <h2>Bibliography</h2>
+        <a name="src1"></a>
+        1. Galina Landres and Vlad Landres<br />
+        SQR in PeopleSoft and Other Applications, Second Edition<br />
+        Manning, 2003.<br />
+        ISBN: 9781932394009<br />
+        <br />
+
+        <a name="src2"></a>
+        2. Saran, Raj<br />
+        SQR using New-report Command<br />
+        rajmercido.blogspot.com [Online: November 4, 2011]<br />
+        [Cited: August 8, 2018.]<br />
+        <a target="_blank" href="https://rajmercido.blogspot.com/2011/11/peoplesoft-sqr.html">https://rajmercido.blogspot.com/2011/11/peoplesoft-sqr.html</a><br />
+        <br />
+        <p>
+            ©2018 - Shawn Eary<br />
+            This post is copyright (where allowable) by Shawn Eary and is released under
+            the Free Christian Media Licence <a target="_blank" href="https://www.utilars.com/Home/FCML">(FCML)</a>.
+            Content from authors other than Shawn Eary maintain
+            the copyright and license rules that were imposed by the original authors.
+            <br />
+        </p>
+    </article>
+</body>
+</html>

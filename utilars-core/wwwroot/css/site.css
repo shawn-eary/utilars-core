@@ -1,0 +1,167 @@
+﻿/* Copyright © 2011-2014 - Shawn Eary (Licensed under FCDL) */
+
+.sideNote {
+    color: #b23c9f;
+    font-style: italic;
+    font-weight: bolder
+}
+
+.informationOutput {
+    color: #00FF00;
+    font-style: italic
+}
+
+.highlight, mark {
+    background-color: Yellow
+}
+
+.errMsg, .article-error {
+    color: Red;
+    font-size: larger;
+    font-weight: bold
+}
+
+.field-validation-error {
+    color: Red;
+    font-size: larger;
+    font-weight: bold
+}
+
+/* https://www.w3.org/TR/css-grid-1/. */
+#masterLayout {
+    /* Microsoft implemented this before the others did and its 
+      really helped, but because it was implemented early, I have 
+      to maintain multiple sets of permissions here */
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr auto;
+}
+
+/* Got Help From */
+/* http://www.webreference.com/programming/css_style2/index.html */
+/* How to get rid of annoying bullets on a menu */
+#masterLayout nav {
+    vertical-align: top;
+    grid-column: 1;
+    grid-row: 1;
+    background-color: #DDEE88;
+    padding: 10px 10px 10px 0px;
+    margin-right: 30px;
+    border-width: thin;
+    border-style: solid;
+    border-radius: 10px;
+    opacity: 0.96;
+}
+
+/* http://www.webreference.com/programming/css_style2/index.html */
+/* How to get rid of annoying bullets on a menu */
+#masterLayout nav li {
+    list-style-type: none
+}
+
+#masterLayout #PrimaryDiv {
+    grid-column: 2;
+    grid-row: 1;
+    margin-bottom: 25px;
+    border-width: thin;
+    border-style: solid;
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px 0px 0px 0px;
+    background-color: rgb(240, 240, 240);
+    opacity: 0.96;
+    /*
+display: inline-block;      
+   
+    
+position: relative; 
+top: 0px; 
+left: 0px;   */
+}
+
+#masterLayout footer {
+    grid-column: 1;
+    grid-row: 2 / span 2;
+    background-color: rgb(200, 180, 180);
+    margin-top: 25px;
+    border-width: thin;
+    border-style: solid;
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px 0px 0px 0px;
+    opacity: 0.96;
+}
+
+.notice {
+    background-color: Yellow;
+    margin-top: 25px;
+    border-width: thin;
+    border-style: solid;
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px 0px 0px 0px;
+}
+
+.warning, #construction {
+    background-color: #FFF884;
+    margin-top: 25px;
+    border-width: thin;
+    border-style: solid;
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px 0px 0px 0px;
+    opacity: 0.96;
+}
+
+#construction span {
+    font-size: xx-large;
+    font-weight: bolder
+}
+
+
+
+html {
+    /* http://weblogs.asp.net/scottgu/archive/2006/05/29/Eliminating-CSS-Image-Flicker-with-IE6.aspx */
+    /* background: #FCD6FF url(/img/grace.png) no-repeat center center fixed; */
+    background: #FCD6FF url(/img/grace.png) no-repeat;
+    background-size: cover;
+}
+
+.dataTable {
+    background-color: Gray;
+}
+
+.dataTable thead {
+    background-color: rgb(180, 240, 100);
+}
+
+.dataTable tbody {
+    background-color: Gray;
+}
+
+.dataTable tbody tr {
+    background-color: rgb(240, 230, 200);
+}
+
+.MCTS-Logo, .figImageHack {
+    border: 4px double #2c5044;
+}
+
+.wrnGetModernIE {
+    background-color: Yellow;
+    padding: 10px 10px 10px 10px;
+    margin-bottom: 10px
+}
+
+.musicItem, .generalItem {
+    border: 4px double #2c5044;
+    background-color: rgb(240, 230, 200);
+    margin: 30px 20px 30px 20px;
+    padding: 10px 10px 10px 10px;
+}
+
+.musicItem > table {
+    padding-top: 10px;
+    width: 100%;
+    text-align: left;
+}
+
+.musicItem > table th {
+    text-align: left;
+}

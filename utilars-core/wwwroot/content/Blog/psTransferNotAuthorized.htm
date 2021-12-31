@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   <title>PeopleCode Not Authorized After Transfer</title>
+   <!-- Saw these meta tags on CodeShow
+      http://codeshow.codeplex.com/ -->
+   <meta name="keywords" content="PeopleSoft PeopleCode Transfer Error" />
+   <meta name="description"
+         content="Description of possible cause
+         of 'You are not authorized...' message
+         when using the PeopleCode Transfer Function" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="01/21/2015" />
+   <meta name="copyright" content="©2015 - Shawn Eary" />
+   <!--  Don't ask...
+   <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />   -->
+</head>
+<body>
+   <article>
+      <p>
+         I was recently working on a PeopleSoft project where I had to call
+         the Transfer Function <a href="#src1">[1]</a> from PeopleCode.  Since 
+         I had little experience with the Transfer Function, I mistakingly 
+         entered the information in a style similar to this:
+      </p>
+      <pre>
+      
+      <code class="language-peoplecode">
+Transfer(True, MenuName."MyMenuName", BarName."MyBarName", ItemName.<mark>"MyComponentName"</mark>, Page."MyPageName", "U"); 
+    </code>
+    </pre>
+
+      <p>
+         If you are a veteran PeopleCode Programmer, you can probably immediately see the error in my logic.
+         I specified the name of my component instead of the name of the item within the Menu Bar; unfortunately,
+         PeopleCode did <b>*not*</b> give me a compile time warning or error when I did this.  
+      </p>
+      <p>
+         Instead, when I ran my program and initiated the Transfer call, I got this ugly and
+         not very helpful error message:
+      </p>
+
+      <p class="article-error">
+      “You are not authorized to access this component. (40,20)<br />
+      <br />
+      You have not been granted security authorization for the component you are attempting to access. You may have access to the designated component and page, but not in the specified action mode (such as Correction or Update/Display).  Contact your system administrator.”
+      </p>
+
+      <p>
+         The error left me scratching my head for a bit of time.  I was especially 
+         confused because I had <a>*another*</a> Transfer call of mine that <b>*was*</b>
+         working.  I began to wonder.  Did security get setup correctly for the 
+         <b>*component*</b> I was trying to transfer to?  Did I use the correct 
+         Action Mode (A, U, L, C, E) <a href="#src1">[1]</a> in the transfer call? 
+      </p>
+      <p>
+      Clueless, I began to ask my teammates for help while I continued to stew in my 
+      confusion.  Per the error message, I tried changing the Action Mode 
+      to "L" - update/display all <a href="#src1">[1]</a> even though the original 
+      "U - update" made more sense.  Unfortunately, the change did not help me.  
+      I still got the cryptic error.  
+      </p>
+      <p>
+      At some point, it became apparent to my team what I was doing wrong and they 
+      pointed out to me that I was entering the wrong parameters for my transfer call. 
+      The <b>*most*</b> significant error I had made was the one mentioned earlier where
+      I had used the <b>*component*</b> name instead of the <b>*Bar Item*</b> name. 
+      After I corrected the parameters as my team had specified, the error gladly 
+      went away. 😎 
+      </p>
+      <p>
+      An underlying lesson in this might be that if you happen to be using 
+      the PeopleCode Transfer function and get a "You are not authorized..." style
+      error like the one above, you might want to check your BarName and ItemName
+      parameters.  An experienced PeopleCode Programmer might get that information 
+      correct the first time, but a new PeopleCode Programmer might goof up and 
+      be left with the rather unhelpful message mentioned above.
+      </p>
+      <h2>Bibliography</h2>
+      <p>
+         <a name="src1"></a>
+         [1] - Unknown.<br />
+         Transfer<br />
+         PeopleSoft Wiki. [Online] Unknown.<br />
+         [Cited: January 1, 2015.]<br />
+         <a target="_blank" href="http://peoplesoft.wikidot.com/transfer">http://peoplesoft.wikidot.com/transfer</a>
+      </p>      
+      <p>
+         ©2015 - Shawn Eary<br />
+         This post is copyright (where allowable) by Shawn Eary and is released under
+         the Free Christian Media Licence <a target="_blank" href="http://www.arsquies.com/Home/FCML">(FCML)</a>.
+         Content from authors other than Shawn Eary maintain
+         the copyright and license rules that were imposed by the original authors.
+         <br />
+      </p>
+   </article>
+</body>
+</html>

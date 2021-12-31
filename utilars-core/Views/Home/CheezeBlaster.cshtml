@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "Cheeze Blaster (Neglected)";
+}
+
+<!-- https://stackoverflow.com/questions/3077558/use-of-tilde-in-asp-net-path -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="~/js/third-party/svg.min.js" type="text/javascript"></script>
+<script src="~/js/synth.js" type="text/javascript"></script>
+
+<!--
+Copyright © 2021 Shawn Eary
+
+Licensed via FCML
+https://www.utilars.com/Home/FCML
+-->
+<!-- https://stackoverflow.com/questions/3077558/use-of-tilde-in-asp-net-path -->
+
+<script>
+    $(document).ready(function () {
+        // https://stackoverflow.com/questions/879152/how-do-i-make-javascript-beep
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        draw = SVG().addTo('#dialog').size(gWidth, gHeight);
+
+        // https://riptutorial.com/jquery-ui/example/17189/dialog-with-no-close-button#:~:text=Alternatively%2C%20you%20can%20hide%20the%20close%20button%20in,PDF%20-%20Download%20jQuery%20UI%20Library%20for%20free
+        // https://stackoverflow.com/questions/13283108/how-to-remove-jquery-ui-dialog-title-bar
+        // https://stackoverflow.com/questions/23847635/jqueryui-dialog-width
+        // https://jqueryui.com/dialog/#animated
+        $("#dialog").dialog({
+            autoOpen: false,
+            width: "800px",
+            open: function (event, ui) {
+                $(".ui-dialog-titlebar-close", $(this).parent()).hide();
+            }
+        }).dialog("widget").find(".ui-dialog-title").hide();
+
+        $("#opener").on("click", function () {
+            $("#dialog").dialog("open");
+
+            // https://stackoverflow.com/questions/1467102/jquery-ui-dialog-box-not-positioned-center-screen
+            $("#dialog").dialog('option', 'position', 'center');
+            begin();
+        });
+    });
+</script>
+
+<div id="cheezeMaster">
+</div>
+<div id="thisShouldReallyBeSomePopup">
+    <p>
+        Make sure you turn your volume down before you click
+        "Start this Goofy 'Program'".  You may find the generated tones
+        "annoying"...
+    </p>
+    <p>
+        You need a recent version of Chromium Edge, Chrome or Firefox for this
+        to work.  Other browsers are untested.  Internet Explorer will definitely
+        not work.
+    </p>
+    <p>
+        If the code freaks out and you can't stand the
+        sound, close the tab/browser or hit the refresh button
+        which used to be also connected to F5.
+    </p>
+    <p>
+        I am not responsible for any damange this
+        hacked together code may invoke on your
+        electronic devices or mental well being...
+    </p>
+    <p>
+        This is supposed to be a game someday, but I'm easily
+        distracted.  This code is best run on your local PC
+        right now, but it will very likely be put into my
+        personal website some day.
+    </p>
+    <p>
+        If you visited CheezeBlaster recently, you may need to
+        clear your browser cache...  Sorry, I'm making a mess
+        out of this code right now and your browser may have
+        some old code laying around.
+    </p>
+    <p>
+        WARNING: Do not light a match while running this program...<br />
+        <br />
+        Still working on this...
+    </p>
+    <button id="opener">Start this Goofy "Program"</button>
+</div>
+
+<div id="dialog" title="Basic dialog" style="width:800px;height:600px;background-color:#ffffff">
+    Press F5 or close your browser
+    window to stop the program<br />
+    Sorry I don't have a better UI/UX at this time.  I'm slapping this stuff
+    together in a hurry in my free time.
+</div>
+

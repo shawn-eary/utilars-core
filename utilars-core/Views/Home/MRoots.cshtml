@@ -1,0 +1,468 @@
+﻿@{
+    ViewData["Title"] = "MRoots";
+}
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+
+    <h2>MRoots</h2>
+    Here is a demonstration of MRoots:
+    <br />
+    <i>
+        I know, it needs some work... You must have Silverlight 4 installed
+        to see the MRoots Applet below. Silverlight is (in my opinion) a
+        more secure/versatile alternative to Adobe Flash.<br />
+        <span class="sideNote">
+I need to upgrade this to SVG.js when I get the chance...</span><br />
+</i>
+    <br />
+    <object width="500" height="500"
+            data="data:application/x-silverlight-2,"
+            type="application/x-silverlight-2">
+        <param name="source" value="../../Content/ClientBin/MRootsDemo.xap" />
+
+        <a href="http://go.microsoft.com/fwlink/?LinkID=149156&v=4.0.60310.0"
+           style="text-decoration: none;">
+            <img src="http://go.microsoft.com/fwlink/?LinkId=161376"
+                 alt="Get Microsoft Silverlight"
+                 style="border-style: none" />
+        </a>
+    </object>
+
+    <p>Here's a "pretty" listing of the code.  I'll probably add a raw file link later:</p>
+    <p class="MsoNormal">
+        <span style="font-size:10.0pt;font-family:Consolas;mso-fareast-font-family:&quot;Times New Roman&quot;;
+color:green">(*</span><span style="font-size:10.0pt;font-family:Consolas;
+mso-fareast-font-family:&quot;Times New Roman&quot;">
+            <br />
+            <span style="color:green">&quot;And&nbsp;whatever&nbsp;you&nbsp;do,&nbsp;whether&nbsp;in&nbsp;word&nbsp;or&nbsp;deed,</span><br />
+            <span style="color:green">
+                do&nbsp;it&nbsp;all&nbsp;in&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;Lord&nbsp;Jesus,&nbsp;giving&nbsp;thanks&nbsp;to
+            </span><br />
+            <span style="color:green">God&nbsp;the&nbsp;Father&nbsp;through&nbsp;him.&quot;</span><br />
+            <span style="color:green">Collossians&nbsp;3:17&nbsp;NIV</span><br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            <span style="color:green">
+                !!!&nbsp;Warning&nbsp;!!!&nbsp;This&nbsp;document&nbsp;is&nbsp;currently&nbsp;in&nbsp;a&nbsp;draft&nbsp;status.
+            </span><br />
+            <span style="color:green">it&nbsp;might&nbsp;change&nbsp;a&nbsp;bit.&nbsp;If&nbsp;you&nbsp;actually&nbsp;do&nbsp;cite&nbsp;it,</span><br />
+            <span style="color:green">be&nbsp;sure&nbsp;and&nbsp;let&nbsp;everyone&nbsp;know&nbsp;that&nbsp;you&nbsp;are&nbsp;citing</span><br />
+            <span style="color:green">a&nbsp;draft&nbsp;document.</span><br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            <span style="color:green">Title&nbsp;:&nbsp;M&nbsp;Roots&nbsp;Demo</span><br />
+            <span style="color:green">Filename&nbsp;:&nbsp;MSRootsDemo.fs&nbsp;&nbsp;&nbsp;&nbsp;</span><br />
+            <span style="color:green">Author&nbsp;:&nbsp;Shawn&nbsp;Eary</span><br />
+            <span style="color:green">Date&nbsp;:&nbsp;01-FEB-2011</span><br />
+            <span style="color:green">Revision&nbsp;:&nbsp;dft-0.01&nbsp;&nbsp;(This&nbsp;is&nbsp;seriously&nbsp;alpha...</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I&#39;m&nbsp;a&nbsp;little&nbsp;cramped&nbsp;for&nbsp;time&nbsp;right&nbsp;now...)
+            </span><br />
+            <span style="color:green">Copyright&nbsp;:&nbsp;2011</span><br />
+            <span style="color:green">License&nbsp;:&nbsp;Free&nbsp;Christian&nbsp;Document&nbsp;License&nbsp;(FCDL)</span><br />
+            <span style="color:green">http://www.conservativeArt.net/fcdl.aspx</span><br />
+            <span style="color:green">Warranty&nbsp;:&nbsp;None&nbsp;(See&nbsp;FCDL&nbsp;Terms)</span><br />
+            <span style="color:green">Purpose&nbsp;:&nbsp;To&nbsp;amuze&nbsp;the&nbsp;reader&nbsp;(Also&nbsp;see&nbsp;spec)</span><br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            <span style="color:green">Notes:&nbsp;</span><br />
+            <span style="color:green">
+                The&nbsp;program&nbsp;is&nbsp;covered&nbsp;under&nbsp;the&nbsp;FCDL&nbsp;(see&nbsp;above)&nbsp;as&nbsp;such&nbsp;it
+            </span><br />
+            <span style="color:green">
+                is&nbsp;treated&nbsp;more&nbsp;as&nbsp;a&nbsp;paper&nbsp;than&nbsp;a&nbsp;program.&nbsp;Do&nbsp;not&nbsp;confuse
+            </span><br />
+            <span style="color:green">
+                the&nbsp;FCDL&nbsp;License&nbsp;with&nbsp;other&nbsp;&quot;Open&nbsp;Source&quot;&nbsp;Licenses&nbsp;as&nbsp;this
+            </span><br />
+            <span style="color:green">license&nbsp;is&nbsp;very&nbsp;different.&nbsp;The&nbsp;FCDL&nbsp;is&nbsp;a&nbsp;&quot;good&nbsp;faith&quot;</span><br />
+            <span style="color:green">licence&nbsp;that&nbsp;basically&nbsp;gives&nbsp;you&nbsp;the</span><br />
+            <span style="color:green">right&nbsp;to:</span><br />
+            <span style="color:green">
+                a)&nbsp;Make&nbsp;as&nbsp;many&nbsp;copies&nbsp;of&nbsp;covered&nbsp;documents&nbsp;that&nbsp;you&nbsp;want&nbsp;as
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;long&nbsp;as&nbsp;the&nbsp;entire&nbsp;covered&nbsp;documents&nbsp;including&nbsp;spelling
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;errors,&nbsp;biblical&nbsp;references,&nbsp;citations&nbsp;and&nbsp;author&nbsp;credits
+            </span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;are&nbsp;kept&nbsp;intact.</span><br />
+            <span style="color:green">b)&nbsp;Use&nbsp;portions&nbsp;of&nbsp;this&nbsp;document&nbsp;to&nbsp;create&nbsp;your&nbsp;own</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;religiously&nbsp;neutral&nbsp;or&nbsp;Christian&nbsp;products&nbsp;provided&nbsp;you
+            </span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;properly&nbsp;cite&nbsp;this&nbsp;document.</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;(Overall&nbsp;URL&nbsp;of&nbsp;document&nbsp;and&nbsp;Author&nbsp;at&nbsp;tail&nbsp;or&nbsp;beginning
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;work&nbsp;with&nbsp;(filename:functionname)&nbsp;citations&nbsp;inline)
+            </span><br />
+            <span style="color:green">c)&nbsp;Charge&nbsp;for&nbsp;the&nbsp;distribution&nbsp;of&nbsp;covered&nbsp;documents&nbsp;or</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;for&nbsp;products&nbsp;that&nbsp;were&nbsp;created&nbsp;by&nbsp;using&nbsp;portions&nbsp;of&nbsp;covered
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;documents&nbsp;with&nbsp;no&nbsp;obligation&nbsp;to&nbsp;reimburse&nbsp;the&nbsp;authors&nbsp;of
+            </span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;the&nbsp;covered&nbsp;documents.</span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;Resources</span><br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            <span style="color:green">Other&nbsp;Notes:&nbsp;</span><br />
+            <span style="color:green">
+                In&nbsp;order&nbsp;to&nbsp;compile&nbsp;this,&nbsp;you&nbsp;will&nbsp;need&nbsp;Mr.&nbsp;Danson&#39;s&nbsp;Silverlight&nbsp;
+            </span><br />
+            <span style="color:green">Application&nbsp;Template&nbsp;[1]&nbsp;(See&nbsp;Below)&nbsp;</span><br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            <span style="color:green">
+                You&nbsp;cram&nbsp;all&nbsp;of&nbsp;this&nbsp;file&nbsp;into&nbsp;the&nbsp;MainPage.fs&nbsp;file&nbsp;that&nbsp;his&nbsp;template
+            </span><br />
+            <span style="color:green">
+                creates.&nbsp;&nbsp;You&nbsp;should&nbsp;then&nbsp;be&nbsp;able&nbsp;to&nbsp;compile&nbsp;this&nbsp;applet
+            </span><br />
+            <span style="color:green">
+                (which&nbsp;is&nbsp;still&nbsp;in&nbsp;a&nbsp;serious&nbsp;development&nbsp;stage&nbsp;and&nbsp;may&nbsp;have&nbsp;
+            </span><br />
+            <span style="color:green">&nbsp;significant&nbsp;bugs)&nbsp;</span><br />
+            <span style="color:green">*)</span><br />
+            <span style="color:green">//&nbsp;Sources</span><br />
+            <span style="color:green">//&nbsp;Warning:&nbsp;I&nbsp;haven&#39;t&nbsp;double&nbsp;checked&nbsp;these&nbsp;references.</span><br />
+            <span style="color:green">
+                //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;not&nbsp;a&nbsp;serious&nbsp;acedemic&nbsp;adventure&nbsp;yet...
+            </span><br />
+            <span style="color:green">//&nbsp;</span><br />
+            <span style="color:green">//&nbsp;[1]&nbsp;-&nbsp;Danson,&nbsp;Neil&nbsp;</span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F#&nbsp;Silverlight&nbsp;Application&nbsp;</span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;December&nbsp;22,&nbsp;2010&nbsp;</span><br />
+            <span style="color:green">
+                //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://visualstudiogallery.msdn.microsoft.com/8b9fe647-cfad-4afa-a6d3-07f2fea712a2/
+            </span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last&nbsp;visited&nbsp;on:&nbsp;January&nbsp;29,&nbsp;2011</span><br />
+            <span style="color:green">//</span><br />
+            <span style="color:green">//&nbsp;[2]&nbsp;-&nbsp;McNamara,&nbsp;Brian</span><br />
+            <span style="color:green">
+                //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Game&nbsp;programming&nbsp;in&nbsp;F#&nbsp;(with&nbsp;Silverlight&nbsp;and&nbsp;WPF)
+            </span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;April&nbsp;24,&nbsp;2010</span><br />
+            <span style="color:green">
+                //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://lorgonblog.wordpress.com/2010/04/24/game-programming-in-f-with-silverlight-and-wpf/
+            </span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last&nbsp;Visited&nbsp;on:&nbsp;January&nbsp;29,&nbsp;2011</span><br />
+            <span style="color:green">//</span><br />
+            <span style="color:green">//&nbsp;[3]&nbsp;-&nbsp;McNamara,&nbsp;Brian</span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Source&nbsp;code&nbsp;for&nbsp;F#&nbsp;Depth&nbsp;Colorizer&nbsp;extension</span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;November&nbsp;21,&nbsp;2010</span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://lorgonblog.wordpress.com/2010/11/</span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last&nbsp;Visited&nbsp;on:&nbsp;January&nbsp;29,&nbsp;2011</span><br />
+            <span style="color:green">//</span><br />
+            <span style="color:green">//&nbsp;[4]&nbsp;-&nbsp;Smith,&nbsp;J.O.&nbsp;</span><br />
+            <span style="color:green">
+                //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mathematics&nbsp;of&nbsp;the&nbsp;Discrete&nbsp;Fourier&nbsp;Transform&nbsp;(DFT)
+            </span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;Audio&nbsp;Applications,&nbsp;Second&nbsp;Edition,</span><br />
+            <span style="color:green">
+                //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https://ccrma.stanford.edu/~jos/mdft/Back_Mth_Roots.html&nbsp;
+            </span><br />
+            <span style="color:green">
+                //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https://ccrma.stanford.edu/~jos/mdft/Euler_s_Identity_I.html
+            </span><br />
+            <span style="color:green">
+                //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https://ccrma.stanford.edu/~jos/mdft/Roots_Unity.html
+            </span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2007,&nbsp;online&nbsp;book,&nbsp;accessed&nbsp;January&nbsp;30,&nbsp;2011.</span><br />
+            <span style="color:green">//</span><br />
+            <span style="color:green">//&nbsp;[5]&nbsp;-&nbsp;Butler,&nbsp;Tetyana</span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Roots&nbsp;of&nbsp;complex&nbsp;numbers&nbsp;</span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2006</span><br />
+            <span style="color:green">
+                //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://www.suitcaseofdreams.net/Roots_complex.htm
+            </span><br />
+            <span style="color:green">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last&nbsp;Visited&nbsp;on:&nbsp;February&nbsp;01,&nbsp;2011</span><br />
+            <span style="color:blue">namespace</span>&nbsp;FSharpSilverlightApp<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            <span style="color:blue">open</span>&nbsp;System<br />
+            <span style="color:blue">open</span>&nbsp;System.Windows<br />
+            <span style="color:blue">open</span>&nbsp;System.Windows.Controls<br />
+            <span style="color:blue">open</span>&nbsp;System.Windows.Media<br />
+            <span style="color:blue">open</span>&nbsp;System.Windows.Shapes<br />
+            <span style="color:blue">open</span>&nbsp;System.Windows.Media.Imaging<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            <span style="color:blue">type</span>&nbsp;MainPage()&nbsp;<span style="color:blue">as</span>&nbsp;this&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;<span style="color:blue">inherit</span>&nbsp;UserControl()<br />
+            &nbsp;&nbsp;&nbsp;<span style="color:blue">do</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(***********************************************************)</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;BEGIN:&nbsp;Configuration&nbsp;Constants&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(***********************************************************)</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;canvasHeight&nbsp;=&nbsp;400.0<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;canvasWidth&nbsp;=&nbsp;400.0<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;circleFractionToCanvasSize&nbsp;=&nbsp;0.70&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;70&nbsp;Percent&nbsp;*)</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;minRootLevel&nbsp;=&nbsp;1<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;maxRootLevel&nbsp;=&nbsp;7<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;defaultRootLevel&nbsp;=&nbsp;3<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Limited&nbsp;to&nbsp;prevent&nbsp;excessive&nbsp;clutter&nbsp;*)</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;<span style="color:blue">rec</span>&nbsp;allowedRoots&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[minRootLevel&nbsp;..&nbsp;maxRootLevel]&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(***********************************************************)</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;END:&nbsp;Configuration&nbsp;Constants&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(***********************************************************)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;canvasCenterX&nbsp;=&nbsp;canvasHeight&nbsp;/&nbsp;2.0<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;canvasCenterY&nbsp;=&nbsp;canvasWidth&nbsp;/&nbsp;2.0<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;minDimValue&nbsp;=&nbsp;min&nbsp;canvasHeight&nbsp;canvasWidth<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;circleRadius&nbsp;=&nbsp;(minDimValue&nbsp;*&nbsp;circleFractionToCanvasSize)&nbsp;/&nbsp;2.0<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;phaseCirclesRadius&nbsp;=&nbsp;circleRadius&nbsp;*&nbsp;0.05<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Helper&nbsp;function&nbsp;to&nbsp;load&nbsp;a&nbsp;combo&nbsp;box&nbsp;with&nbsp;values&nbsp;*)</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;<span style="color:blue">rec</span>&nbsp;loadCB&nbsp;(cb&nbsp;:&nbsp;ComboBox)&nbsp;list&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">match</span>&nbsp;list&nbsp;<span style="color:blue">with</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;head&nbsp;::&nbsp;tail&nbsp;<span style="color:blue">-&gt;</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cb.Items.Add(head)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loadCB&nbsp;cb&nbsp;tail&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;[]&nbsp;<span style="color:blue">-&gt;</span>&nbsp;()<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Helper&nbsp;function&nbsp;to&nbsp;return&nbsp;the&nbsp;Magnatude&nbsp;of&nbsp;a&nbsp;complex&nbsp;number&nbsp;*)</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;magnitude&nbsp;r&nbsp;i&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Math.Sqrt(r*r&nbsp;+&nbsp;i*i)<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Helper&nbsp;function&nbsp;to&nbsp;return&nbsp;the&nbsp;Phase&nbsp;of&nbsp;a&nbsp;complex&nbsp;number&nbsp;*)</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;phase&nbsp;r&nbsp;i&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Math.Atan(i/r)<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;I&nbsp;&quot;believe&quot;&nbsp;this&nbsp;computes&nbsp;the&nbsp;Mth&nbsp;roots&nbsp;of&nbsp;identity&nbsp;of&nbsp;</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;complex&nbsp;number&nbsp;defined&nbsp;by&nbsp;r&nbsp;(real)&nbsp;and&nbsp;i&nbsp;(imaginary).
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;of&nbsp;course&nbsp;assuming&nbsp;that&nbsp;I&nbsp;understood&nbsp;Dr.&nbsp;Smith.&nbsp;[4]
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;I&nbsp;understood&nbsp;Dr.&nbsp;Smith&nbsp;correctly,&nbsp;then&nbsp;the&nbsp;M&nbsp;roots&nbsp;are
+            </span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;simply&nbsp;given&nbsp;by&nbsp;his&nbsp;formula:</span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r^(1/M)&nbsp;*&nbsp;e&nbsp;^&nbsp;(j*(initialPhase+2*pi*k)/M)&nbsp;</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;since&nbsp;r^(1/M)&nbsp;appears&nbsp;to&nbsp;just&nbsp;be&nbsp;a&nbsp;scaling&nbsp;factor&nbsp;then&nbsp;the&nbsp;
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mth&nbsp;roots&nbsp;of&nbsp;unity&nbsp;should&nbsp;just&nbsp;be&nbsp;the&nbsp;same&nbsp;function&nbsp;above&nbsp;
+            </span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;without&nbsp;the&nbsp;scaling&nbsp;factor&nbsp;which&nbsp;would&nbsp;be&nbsp;</span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e&nbsp;^&nbsp;(j*(initialPhase+2*pi*k)/M)&nbsp;</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this&nbsp;is&nbsp;confusing&nbsp;to&nbsp;me&nbsp;since&nbsp;Dr.&nbsp;Smith&nbsp;formula&nbsp;for&nbsp;the&nbsp;Mth
+            </span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;roots&nbsp;of&nbsp;unity&nbsp;appears&nbsp;to&nbsp;be&nbsp;</span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e&nbsp;^&nbsp;(j*2*pi*k/M)</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;totally&nbsp;ignores&nbsp;the&nbsp;initial&nbsp;phase&nbsp;of&nbsp;the&nbsp;complex&nbsp;
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number.&nbsp;&nbsp;Maybe&nbsp;I&#39;m&nbsp;just&nbsp;going&nbsp;a&nbsp;little&nbsp;dense&nbsp;here.&nbsp;&nbsp;Maybe
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;we&nbsp;want&nbsp;for&nbsp;Dr.&nbsp;Smith&#39;s&nbsp;application&nbsp;the&nbsp;initial&nbsp;phase&nbsp;isn&#39;t
+            </span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;important.&nbsp;&nbsp;Anyway,&nbsp;I&nbsp;will&nbsp;by&nbsp;using&nbsp;</span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e&nbsp;^&nbsp;(j*(initialPhase+2*pi*k)/M)</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;applying&nbsp;it&nbsp;to&nbsp;Euler&#39;s&nbsp;identity&nbsp;as&nbsp;proposed&nbsp;by&nbsp;
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dr.&nbsp;Smith&nbsp;[4]&nbsp;which&nbsp;should&nbsp;give&nbsp;me&nbsp;(assuming&nbsp;I&#39;m&nbsp;not&nbsp;really
+            </span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lost):</span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cos&nbsp;((initialPhase&nbsp;+&nbsp;2*pi*k)&nbsp;/&nbsp;M)&nbsp;+&nbsp;</span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j&nbsp;sin&nbsp;((initialPhase&nbsp;+&nbsp;2*pi*k)&nbsp;/&nbsp;M)</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;get&nbsp;the&nbsp;unit&nbsp;circle&nbsp;roots&nbsp;of&nbsp;the&nbsp;original&nbsp;complex&nbsp;
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;defined&nbsp;by&nbsp;r&nbsp;(real)&nbsp;and&nbsp;i&nbsp;(imaginary)&nbsp;&nbsp;*)
+            </span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;rootPhases&nbsp;r&nbsp;i&nbsp;M&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;<span style="color:blue">rec</span>&nbsp;p_rootsOfUnity&nbsp;r&nbsp;i&nbsp;M&nbsp;(k&nbsp;:&nbsp;int)&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">if</span>&nbsp;(k&nbsp;&gt;&nbsp;(M-1))&nbsp;<span style="color:blue">then</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[]<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">else</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;complexPhase&nbsp;=&nbsp;phase&nbsp;r&nbsp;i&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;(doubleK&nbsp;:&nbsp;double)&nbsp;=&nbsp;Convert.ToDouble(k)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;(doubleM&nbsp;:&nbsp;double)&nbsp;=&nbsp;Convert.ToDouble(M)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;theta&nbsp;=&nbsp;(complexPhase&nbsp;+&nbsp;2.0&nbsp;*&nbsp;Math.PI&nbsp;*&nbsp;doubleK)&nbsp;/&nbsp;doubleM<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Math.Cos(theta),&nbsp;Math.Sin(theta))&nbsp;::&nbsp;(p_rootsOfUnity&nbsp;r&nbsp;i&nbsp;M&nbsp;(k+1))<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p_rootsOfUnity&nbsp;r&nbsp;i&nbsp;M&nbsp;0<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Helper&nbsp;function&nbsp;to&nbsp;output&nbsp;a&nbsp;Phase&nbsp;List&nbsp;in&nbsp;a&nbsp;format&nbsp;that&nbsp;</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;a&nbsp;little&nbsp;easier&nbsp;to&nbsp;read&nbsp;in&nbsp;the&nbsp;VS2010&nbsp;debugger&nbsp;*)
+            </span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;<span style="color:blue">rec</span>&nbsp;getPhaseDebugString&nbsp;pl&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">match</span>&nbsp;pl&nbsp;<span style="color:blue">with</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;head&nbsp;::&nbsp;tail&nbsp;<span style="color:blue">-&gt;</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:maroon">&quot;(&quot;</span>&nbsp;+&nbsp;fst(head).ToString()&nbsp;+&nbsp;<span style="color:maroon">&quot;,&quot;</span>&nbsp;+&nbsp;snd(head).ToString()&nbsp;+&nbsp;<span style="color:maroon">&quot;)&quot;</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;(getPhaseDebugString&nbsp;tail)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;[]&nbsp;<span style="color:blue">-&gt;</span>&nbsp;<span style="color:maroon">&quot;&quot;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Given&nbsp;the&nbsp;assumption&nbsp;that&nbsp;the&nbsp;origin&nbsp;is&nbsp;in&nbsp;the&nbsp;center&nbsp;of&nbsp;the</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas,&nbsp;this&nbsp;trivial&nbsp;function&nbsp;converts&nbsp;the&nbsp;origin&nbsp;relative
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cord&nbsp;into&nbsp;the&nbsp;absolute&nbsp;cord&nbsp;that&nbsp;is&nbsp;needed&nbsp;by&nbsp;a&nbsp;Silverlight
+            </span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Canvas&nbsp;*)</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;relToAbs&nbsp;(rx,ry)&nbsp;=&nbsp;(canvasCenterX&nbsp;+&nbsp;rx,&nbsp;canvasCenterY&nbsp;-&nbsp;ry)<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Trivial&nbsp;function&nbsp;to&nbsp;compute&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;well&nbsp;behaved</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape.&nbsp;&nbsp;This&nbsp;will&nbsp;only&nbsp;work&nbsp;on&nbsp;Ellipses,&nbsp;Rectangles&nbsp;
+            </span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;Lines&nbsp;*)</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;simpleShapeCenter&nbsp;(s&nbsp;:&nbsp;Shape)&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(s.Width&nbsp;/&nbsp;2.0,&nbsp;s.Height&nbsp;/&nbsp;2.0)<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Takes&nbsp;a&nbsp;simple&nbsp;shape&nbsp;and&nbsp;its&nbsp;current&nbsp;position&nbsp;and&nbsp;returns&nbsp;</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;absolute&nbsp;coordinated&nbsp;needed&nbsp;to&nbsp;position&nbsp;it&nbsp;on&nbsp;a&nbsp;canvas.
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;makes&nbsp;it&nbsp;easy&nbsp;to&nbsp;plot&nbsp;the&nbsp;center&nbsp;of&nbsp;elipses&nbsp;from&nbsp;the&nbsp;
+            </span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;center&nbsp;of&nbsp;the&nbsp;cavas&nbsp;which&nbsp;is&nbsp;considered&nbsp;the&nbsp;origin&nbsp;
+            </span><br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            <span style="color:green">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note:&nbsp;This&nbsp;will&nbsp;only&nbsp;work&nbsp;on&nbsp;Ellipses&nbsp;and&nbsp;Rectangles&nbsp;*)
+            </span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;simpleShapeRelToAbs&nbsp;(s&nbsp;:&nbsp;Shape)&nbsp;(rx,ry)&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;cTup&nbsp;=&nbsp;simpleShapeCenter&nbsp;s<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;absTup&nbsp;=&nbsp;relToAbs&nbsp;(rx,ry)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fst(absTup)&nbsp;-&nbsp;fst(cTup),&nbsp;snd(absTup)&nbsp;-&nbsp;snd(cTup))<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Helper&nbsp;function&nbsp;to&nbsp;packs&nbsp;the&nbsp;specified&nbsp;control&nbsp;into&nbsp;the&nbsp;</span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specified&nbsp;grid&nbsp;*)</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;pack&nbsp;ctrl&nbsp;row&nbsp;column&nbsp;colSpan&nbsp;(grid&nbsp;:&nbsp;Grid)&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Grid.SetRow(ctrl,&nbsp;row)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Grid.SetColumn(ctrl,&nbsp;column)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Grid.SetColumnSpan(ctrl,&nbsp;colSpan)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grid.Children.Add(ctrl)<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Helper&nbsp;function&nbsp;to&nbsp;create/locate&nbsp;simple&nbsp;TextBlock&nbsp;controls&nbsp;*)</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;newTB&nbsp;text&nbsp;row&nbsp;column&nbsp;colSpan&nbsp;(grid&nbsp;:&nbsp;Grid)&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;someTB&nbsp;=&nbsp;TextBlock(Text=text)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pack&nbsp;someTB&nbsp;row&nbsp;column&nbsp;colSpan&nbsp;grid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;grid&nbsp;=&nbsp;Grid()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grid.RowDefinitions.Add(<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RowDefinition(Height=GridLength(0.0,&nbsp;GridUnitType.Auto))<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grid.RowDefinitions.Add(<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RowDefinition(Height=GridLength(0.0,&nbsp;GridUnitType.Auto))<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grid.RowDefinitions.Add(<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RowDefinition(Height=GridLength(0.0,&nbsp;GridUnitType.Auto))<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grid.RowDefinitions.Add(<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RowDefinition(Height=GridLength(0.0,&nbsp;GridUnitType.Auto))<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grid.ColumnDefinitions.Add(ColumnDefinition())<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grid.ColumnDefinitions.Add(ColumnDefinition())<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grid.ColumnDefinitions.Add(ColumnDefinition())<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;canvas&nbsp;=&nbsp;Canvas()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas.Height&nbsp;&lt;-&nbsp;canvasHeight<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas.Width&nbsp;&lt;-&nbsp;canvasWidth<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas.Background&nbsp;&lt;-&nbsp;SolidColorBrush(Color(A=255uy,R=0uy,B=0uy,G=255uy))<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.Content&nbsp;&lt;-&nbsp;grid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;a&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ellipse(<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Width=(circleRadius*2.0),<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Height=(circleRadius*2.0),&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fill=SolidColorBrush(Color(A=255uy,R=255uy,B=0uy,G=0uy)),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StrokeThickness=3.0,&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stroke=SolidColorBrush(Color(A=255uy,R=0uy,B=0uy,G=0uy))<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;newCord&nbsp;=&nbsp;simpleShapeRelToAbs&nbsp;a&nbsp;(0.0,&nbsp;0.0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Canvas.SetLeft(a,&nbsp;fst(newCord))&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Canvas.SetTop(a,&nbsp;snd(newCord))&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas.Children.Add(a)&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pack&nbsp;canvas&nbsp;0&nbsp;0&nbsp;3&nbsp;grid<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Create&nbsp;the&nbsp;labels&nbsp;for&nbsp;the&nbsp;input&nbsp;controls&nbsp;*)</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newTB&nbsp;<span style="color:maroon">&quot;Real:&quot;</span>&nbsp;1&nbsp;0&nbsp;1&nbsp;grid<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newTB&nbsp;<span style="color:maroon">&quot;Imaginary:&quot;</span>&nbsp;1&nbsp;1&nbsp;1&nbsp;grid<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newTB&nbsp;<span style="color:maroon">&quot;Num&nbsp;Roots:&quot;</span>&nbsp;1&nbsp;2&nbsp;1&nbsp;grid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;realInput&nbsp;=&nbsp;TextBox()<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pack&nbsp;realInput&nbsp;2&nbsp;0&nbsp;1&nbsp;grid<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;imaginaryInput&nbsp;=&nbsp;TextBox()<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pack&nbsp;imaginaryInput&nbsp;2&nbsp;1&nbsp;1&nbsp;grid<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;cbNumRoots&nbsp;=&nbsp;ComboBox()<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loadCB&nbsp;cbNumRoots&nbsp;allowedRoots&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cbNumRoots.SelectedValue&nbsp;&lt;-&nbsp;defaultRootLevel&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pack&nbsp;cbNumRoots&nbsp;2&nbsp;2&nbsp;1&nbsp;grid<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Helper&nbsp;function&nbsp;to&nbsp;plot&nbsp;the&nbsp;circle&nbsp;dots&nbsp;associated&nbsp;with&nbsp;the&nbsp;</span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;phases&nbsp;in&nbsp;pl&nbsp;*)</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;plotPhases&nbsp;pl&nbsp;(iCanvas&nbsp;:&nbsp;Canvas)&nbsp;baseCircle&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;<span style="color:blue">rec</span>&nbsp;plotPhasesR&nbsp;pl&nbsp;(iCanvas&nbsp;:&nbsp;Canvas)&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">match</span>&nbsp;pl&nbsp;<span style="color:blue">with</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;head&nbsp;::&nbsp;tail&nbsp;<span style="color:blue">-&gt;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;e&nbsp;=&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ellipse(<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Width=(phaseCirclesRadius)*2.0,<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Height=(phaseCirclesRadius)*2.0,&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fill=SolidColorBrush(Color(A=255uy,R=0uy,B=255uy,G=0uy)),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StrokeThickness=3.0,&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stroke=SolidColorBrush(Color(A=255uy,R=0uy,B=0uy,G=0uy))<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;fstHead&nbsp;=&nbsp;fst(head)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;sndHead&nbsp;=&nbsp;snd(head)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;relX&nbsp;=&nbsp;fstHead*circleRadius<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;relY&nbsp;=&nbsp;sndHead*circleRadius<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;newCord&nbsp;=&nbsp;simpleShapeRelToAbs&nbsp;e&nbsp;(relX,&nbsp;relY)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Canvas.SetLeft(e,&nbsp;fst(newCord))&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Canvas.SetTop(e,&nbsp;snd(newCord))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iCanvas.Children.Add(e)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plotPhasesR&nbsp;tail&nbsp;iCanvas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;[]&nbsp;<span style="color:blue">-&gt;</span>&nbsp;()<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Toast&nbsp;everything&nbsp;in&nbsp;the&nbsp;Canvas&nbsp;-&nbsp;Lazy&nbsp;fix&nbsp;*)</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iCanvas.Children.Clear()&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Add&nbsp;the&nbsp;base&nbsp;circle&nbsp;back&nbsp;after&nbsp;the&nbsp;above&nbsp;toast&nbsp;</span><br />
+            <span style="color:green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;operation&nbsp;*)</span>&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iCanvas.Children.Add(baseCircle)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plotPhasesR&nbsp;pl&nbsp;iCanvas<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Mr.&nbsp;McNamara&nbsp;shows&nbsp;how&nbsp;to&nbsp;map&nbsp;a&nbsp;handler&nbsp;in&nbsp;[3]&nbsp;*)</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;submitHandler()&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;realString&nbsp;=&nbsp;realInput.Text&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;realIsValid&nbsp;=&nbsp;fst(Double.TryParse(realString))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">if</span>&nbsp;not&nbsp;realIsValid&nbsp;<span style="color:blue">then</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MessageBox.Show(<span style="color:maroon">&quot;Real&nbsp;Component&nbsp;is&nbsp;not&nbsp;a&nbsp;valid&nbsp;Double&quot;</span>)&nbsp;|&gt;&nbsp;ignore&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;imaginaryString&nbsp;=&nbsp;imaginaryInput.Text<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;imaginaryIsValid&nbsp;=&nbsp;fst(Double.TryParse(imaginaryString))<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">if</span>&nbsp;not&nbsp;imaginaryIsValid&nbsp;<span style="color:blue">then</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MessageBox.Show(<span style="color:maroon">&quot;Imaginary&nbsp;Component&nbsp;is&nbsp;not&nbsp;a&nbsp;valid&nbsp;Double&quot;</span>)&nbsp;|&gt;&nbsp;ignore<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">if</span>&nbsp;realIsValid&nbsp;&amp;&amp;&nbsp;imaginaryIsValid&nbsp;<span style="color:blue">then</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;(rootDegree&nbsp;:&nbsp;int)&nbsp;=&nbsp;cbNumRoots.SelectedValue&nbsp;:?&gt;&nbsp;int<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;realValue&nbsp;=&nbsp;Double.Parse(realString)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;imaginaryValue&nbsp;=&nbsp;Double.Parse(imaginaryString)&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;complexRadius&nbsp;=&nbsp;magnitude&nbsp;realValue&nbsp;imaginaryValue&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;thePhases&nbsp;=&nbsp;rootPhases&nbsp;realValue&nbsp;imaginaryValue&nbsp;rootDegree&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plotPhases&nbsp;thePhases&nbsp;canvas&nbsp;a<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;()<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue">let</span>&nbsp;bnSubmit&nbsp;=&nbsp;Button(Content=<span style="color:maroon">&quot;Submit&quot;</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pack&nbsp;bnSubmit&nbsp;3&nbsp;0&nbsp;3&nbsp;grid<br />
+            <span style="mso-spacerun:yes">&nbsp;</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">(*&nbsp;Mr.&nbsp;McNamara&nbsp;shows&nbsp;how&nbsp;to&nbsp;map&nbsp;a&nbsp;handler&nbsp;in&nbsp;[3]&nbsp;*)</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bnSubmit.Click.Add(<span style="color:blue">fun</span>&nbsp;_&nbsp;<span style="color:blue">-&gt;</span>&nbsp;submitHandler())<br />
+        </span>
+    </p>
+    <p class="MsoNormal">
+        <o:p>&nbsp;</o:p>
+    </p>
+    <p>&nbsp;</p>
+

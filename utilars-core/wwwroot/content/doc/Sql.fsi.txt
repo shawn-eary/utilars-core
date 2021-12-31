@@ -1,0 +1,97 @@
+﻿(*
+"And whatever you do, whether in word or deed,
+do it all in the name of the Lord Jesus, giving thanks to
+God the Father through him."
+Collossians 3:17 NIV
+
+!!! Warning !!! This document is currently in a draft status.
+it might change a bit. If you actually do cite it,
+be sure and let everyone know that you are citing
+a draft document.
+
+Title : SqlHelper
+Filename : Sql.fsi   (Spec)  (Where you go to figure out what to call)
+Author : Shawn Eary
+Date : 13-NOV-2010
+Revision : dft-0.01  (This is seriously alpha...)
+Copyright : 2010
+License : Free Christian Document License (FCDL)
+http://www.conservativeArt.net/fcdl.aspx
+Warranty : None (See FCDL Terms)
+Purpose : To amuze the reader and serve as a "simpler" alternative
+          to running RAW System.Data.SqlClient Commands
+          (One advantage of this interface when it is out of alpha 
+           status is that it will make it easier to bundle several
+           commands into a single transaction and thereby make
+           rollback easier) 
+Notes: 
+The program is covered under the FCDL (see above) as such it
+is treated more as a paper than a program. Do not confuse
+the FCDL License with other "Open Source" Licenses as this
+license is very different. The FCDL is a "good faith"
+licence that basically gives you the
+right to:
+a) Make as many copies of covered documents that you want as
+   long as the entire covered documents including spelling
+   errors, biblical references, citations and author credits
+   are kept intact.
+b) Use portions of this document to create your own
+   religiously neutral or Christian products provided you
+   properly cite this document.
+   (Overall URL of document and Author at tail or beginning
+    of work with (filename:functionname) citations inline)
+c) Charge for the distribution of covered documents or
+   for products that were created by using portions of covered
+   documents with no obligation to reimburse the authors of
+   the covered documents.
+   Resources
+*)
+namespace Helper
+
+(* Here is a not so great example of how you might use this library
+
+         Helper.Sql.tran aTran =
+            new Helper.Sql.tran(MVCA.sc, HttpContext.Current.User);
+         System.Data.DataTable personTable =
+            aTran.runSP(
+               "addPerson", 
+               new Helper.Sql.sInSqlParam("@LastName", pm.LastName), 
+               new Helper.Sql.sInSqlParam("@FirstName", pm.FirstName)
+            );
+         aTran.closeTran();
+
+
+Hopefully, I will back to working on this library in the near
+future...
+
+*) 
+
+module Sql =    
+   (* Base class from which other "Simple" SqlParameters derive *)
+   type sSqlParam = 
+      new:name:string->sSqlParam
+   
+   (* A "simple" Sql Input Parameter *) 
+   type sInSqlParam =
+      inherit sSqlParam
+      new:name:string*value:obj->sInSqlParam
+
+   (* A "simple" Sql Output Parameter *) 
+   type sOutSqlParam =
+      inherit sSqlParam
+      new:name:string->sOutSqlParam
+               
+   (* One of these classes should be created to create a tranaction 
+      of bundled SqlClient commands.  Then the action methods 
+      [currenty only runSP] can be called to perform tasks against
+      the database and closeTran can be called for final cleanup *) 
+   type tran =
+      new:sc:System.Data.SqlClient.SqlConnection*user:obj->tran
+      member runSP:spName:string*args:sSqlParam[]->System.Data.DataTable
+
+      (* Description: 
+            Function to close this classes' currently open 
+            transaction scope
+         Parameters: unit
+         Return: unit *) 
+      member closeTran:unit->unit

@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Elasticsearch Query String Quote_Analyzer</title>
+   <!-- Saw these meta tags on CodeShow
+      http://codeshow.codeplex.com/ -->
+   <meta name="keywords" content="Elasticsearch Query Quote Analyzer Quote_Analyzer Phrase Search Stopwords" />
+   <meta name="description"
+         content="Importance of quote_analyzer when using a Query String Query with Stopwords in Elasticsearch" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="04/21/2019" />
+   <meta name="copyright" content="(c) ©2019 - Shawn Eary" />
+   <!--  Don't ask...
+   <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />   -->
+</head>
+<body>
+    <article>
+        <p>
+            Recently, I was fortunate enough to professionally work on an ASP.NET MVC
+            project again.  I worked in tandem with a team leader to
+            switch the application so it used Elasticsearch (ES)
+            <b>instead</b> of Google Search Appliance (GSA). Surprisingly,
+            the switch went really well.  There were only a few
+            "enhancements" that needed to be done after the switch.
+        </p>
+        <p>
+            One such enhancement was something called stopwords.  When
+            users searched for words like "a", "an" and "the", they were
+            getting back way too many hits.  My team leader, created an
+            analyzer that used the stopwords feature to get rid of this
+            annoying behavior <a href="#src1">[1]</a>.  I then modified the ASP.NET MVC 
+            code for the project to apply
+            the said analyzer when necessary.  This got rid of that
+            problem, but later when we decided to allow more advanced
+            queries, a different issue popped up.
+        </p>
+        <p>
+            Initially, basic queries were useful for the ASP.NET MVC
+            app we had worked on.  At some point, however,
+            the users needed additional functionality.  An easy way to
+            allow this was to enable the Query String Query <a href="#src2">[2]</a>
+            feature of ES.  It allows interesting queries to be constructed
+            using boolean roles, Match Phrase (aka: Quoted)
+            queries <a href="#src3">[3]</a> and other goodies.
+        </p>
+        <p>
+            So we started leveraging the Query String component of ES.  It
+            worked great but we ran into a small problem.  If our users searched for
+            phrases that contained stopwords, they would get way too many
+            hits since the stopwords would get removed from the phrase.
+            As an example, if a user searched for "War of the Worlds" on
+            our system, the query would be altered to "War Worlds" since
+            the analyzer would remove the stopwords "of" and "the".  This
+            modified query would then match all sorts of combinations beyond
+            what was intended since stop words between "War" and "Words" in the
+            "War Worlds" phrase would be ignored.  Even though "War of the Worlds"
+            was originally specified, as long as our original analyzer was running
+            on the phrase, the "War of the Worlds" could also match "War in the World", 
+            "War over the World", etc... because "of", "the", "in" and "over" are all
+            stopwords that would be ignored.
+        </p>
+        <p>
+            Well, we didn't want to turn the analyzer completely off so I
+            searched for days and hours looking for a solution.  I was trying
+            to figure out how to use the stopwords feature to filter out 
+            silly queries when stopwords are <b>not</b> needed but yet allow
+            them for Match Phrase queries.  I was thinking the solution would
+            be very hard and complicated.  It turns out the solution was quite
+            simple.  If you look back at <a href="#src2">[2]</a>, you will notice
+            that ES allows you to specify <b>two</b> analyzers in the JSON body.
+            One of them is the regular analyzer (which is intuitively named "analzyer")
+            and the other one is an analyzer that only applies to quoted or Match
+            Phrase queries (this one is named "quote_analyzer").
+        </p>
+        <p>
+            To keep excluding stopwords for basic queries but <b>not</b> exclude
+            stopwords for quoted queries, you simply continue specifying your
+            regular analzyer via the "analyzer" keyword but set the
+            quote_analzyer to something sensible like the standard analyzer.
+            An example of how the JSON for this might look appears below:
+
+            <pre>
+            <code class="language-cpp">
+                GET /_search
+                {
+                    "query": {
+                        "query_string" : {
+                            "query" : "\"War of the Worlds\" OR "\"Star Trek\""
+                        }
+                    },
+                    "analyzer": "your_analyzer_to_remove_stopwords",
+                    <span class="highlight">"quote_analyzer": "standard"</span>
+                }
+            </code>
+            </pre>
+        </p>
+        <p>
+            Pretty simple.  I'm suprised it took me so long to figure out
+            that all I had to do was <span class="highlight">
+    change one line</span> to adjust quoted searches
+    so they didn't exclude stopwords.
+</p>
+        
+        <h2>Bibliography</h2>
+        <a name="src1"></a>
+        1. Elasticsearch Reference [7.0] - Analysis<br />
+        <a target="_blank" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis.html">
+            https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis.html
+        </a><br />
+        <br />
+
+        <a name="src2"></a>
+        2. Elasticsearch Reference [7.0] - Query String Query<br />
+        <a target="_blank" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-dsl-query-string-query">
+            https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-dsl-query-string-query
+        </a><br />
+        <br />
+
+        <a name="src3"></a>
+        3. Elasticsearch Reference [7.0] - Match Phrase Query<br />
+        <a target="_blank" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query-phrase.html">
+        https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query-phrase.html
+        </a><br />
+        <br />
+    </article>
+</body>
+</html>

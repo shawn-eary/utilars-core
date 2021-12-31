@@ -1,0 +1,510 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   <title>F# (FSharp) Interactive</title>
+   <!-- Saw these meta tags on CodeShow 
+        http://codeshow.codeplex.com/ -->
+   <meta name="keywords" content="F# (FSharp) Interactive" />
+   <meta name="description" 
+   content="F# (FSharp) Interactive" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="05/28/2013" />
+   <meta name="copyright" content="©2013 - Shawn Eary" />
+</head>
+<body>    
+<article>
+   <p>
+   I've started a series of posts explaining why I prefer F# to 
+   VB.NET and C#.  This is yet another post in that series.  In this 
+   post, I hope to talk about the benefits of F# Interactive Mode. 
+   </p>
+
+   <p>
+   To get F# Interactive, you can either install a recent version of
+   Visual Studio Pro (or higher) or you can follow the instructions 
+   provided by the 
+   <a target="_blank" href="http://fsharp.org/">F# Sharp Foundation</a>  
+   <a target="_blank" href="http://fsharp.org/use/windows/">here</a>.<br /> 
+   <span class="sideNote">
+   (NOTE: You *should* be able to also install F# on GNU/Linux 
+    following the appropriate instructions on the 
+    F# Software Foundation website.  At the time of this post, those
+    instructions were found 
+    <a target="_blank" href="http://fsharp.org/use/linux/">here</a>)
+    </span>
+   </p>
+   <p>
+   For the purposes of this blog post, I will be using the third
+   option that was mentioned on the web site: 
+   "Option 3: Install the F# compiler and tools alone"
+   </p>
+   <p>
+   This third option, which offers the possibility of using F# 
+   independent of Visual Studio, can possibly support an argument that
+   F# *may* be able to serve as an replacement for 
+   <a target="_blank" href="http://www.gnu.org/software/octave/">GNU Octave</a> when 
+   run in a suitable *.NET environment such as Windows 8 or 
+   <a target="_blank" href="http://www.mono-project.com/Main_Page">Mono</a>.<br />
+   <span class="sideNote">(NOTE: I will not discuss installation of 
+   F# in this post since the F# Software Foundation Website already
+   has excellent instructions)</span>
+   </p>
+
+   <p>
+   After you follow the instructions from the F# Software Foundation
+   website to setup F# on your machine, you will probably find F#
+   in a directory path similar to this:<br />
+   C:\Program Files (x86)\Microsoft SDKs\F#\3.0\Framework\v4.0 <br />
+   <span class="sideNote">
+   (NOTE: Your path and version information may vary slightly.)
+   </span>
+   </p>
+   <p>
+   If you open that directory in File Explorer, you will likely see
+   executables named Fsc and Fsi among other files.  The Fsc file 
+   is for the command line compiler and the Fsi file is for the 
+   interpreter.  This post is not concerned with the compiler which 
+   can also be run from within a Visual Studio IDE.  Instead, this 
+   post is interested in running F# in an interactive mode to 
+   emulate a Matlab/Octave like environment independent of Visual 
+   Studio. 
+   </p>
+   <p>
+   You can double click on the Fsi Executable in the F# installation
+   directory to be greeted with a prompt similar to this:
+   </p>
+   <figure>
+   <img 
+   src="https://www.utilars.com/Content/Blog/fsiCommandPrompt.png" 
+   alt="FSharp Interactive Command Prompt" />
+   <figcaption>
+   Figure 1<br />
+   <span class="sideNote">
+   (FSharp Interactive Command Prompt)
+   </span>
+   </figcaption>
+   </figure>
+
+   <p>
+   Now, suppose you were a *high tech* hillbilly of the 
+   <a target="_blank" href="http://en.wikipedia.org/wiki/Ozark_Softscape">EOA</a> 
+   variety with plenty of land/wood sensibly raising a family in 
+   the middle of the Ozarks.  You've played 
+   <a target="_blank" href="http://en.wikipedia.org/wiki/M.U.L.E.">M.U.L.E.<a /> with 
+   your kids for the 1,000,000,000,000<sup>th</sup> time and you 
+   want them to get a breath of the ever abundant Ozark fresh air.
+   You bust out your Win8 device to order the plans for a 
+   monster play set from some place in Europe only to find that all 
+   of the measurements are in metric.  You realize that your PhD 
+   neighbors could translate all of these measurements to English in 
+   their head, but they aren't available right now because they are 
+   gone to Fayetteville giving a guest lecture at 
+   <a target="_blank" href="http://www.uark.edu">University of Arkansas</a>
+   </p>
+
+   <p>
+   Looking for a quick easy way to do the translations, you install 
+   the FSharp interactive environment on your Win8 device and enter
+   a simple approximation command like this <a href="#src1">[1]</a>:
+   </p>
+   <pre>
+   <code class="language-fsharpInteractive">
+   > let metersToFeet = m = 3.28 * m;;
+   </code>
+   </pre>
+
+   <p>
+   Then to convert meters to feet that could be read on an American 
+   tape measure, you would simply run commands like this:
+   </p>
+   <pre>
+   <code class="language-fsharpInteractive">
+   > metersToFeet 1.0;;
+   > metersToFeet 1.5;;
+   </code>
+   </pre>
+
+   <p>
+   F# will then convert 1.0 meters and 1.5 meters into feet for you.
+   Also, for quick recollection of a previous command, you can simply
+   press the up arrow in the FSI Command Window.  You can then 
+   adjust the meters passed into the command to the value of the 
+   board or object you currently need to cut/measure.  Finally, to 
+   make sure you don't do something goofy like pass inches into 
+   the meetersToFeet function, you can also use F#'s feature called
+   <a href="https://www.utilars.com/Blog/shawn-eary/2013/3/30/unitsOfMeasure">Units of Measure</a> 
+   but that is the topic of another post.
+   </p>
+
+   <p>
+   Of course when you run the above commands, the outputs of 3.281 ft
+   and 4.9215 ft aren't particularly friendly for use with an American
+   tape measure, so you *might* define yet another function called
+   friendlyFeet as so:
+   </p>
+   <pre>
+   <code class="language-fsharpInteractive">
+   > let inchesPerFoot = 12.0;;
+
+   <span class="informationOutput">val inchesPerFoot : float = 12.0</span>
+
+   > let friendlyFeet f =    
+   -    let baseFeet = floor f;
+   -    let totalInches = f * inchesPerFoot;
+   -    let baseInches = baseFeet * inchesPerFoot;
+   -    let remainingInches = totalInches - baseInches;
+   -    baseFeet.ToString() + " ft " + 
+   -    remainingInches.ToString() + " inches";; 
+   </code>
+   </pre>
+
+   <p>
+   Then, when you want to convert meters to something that is 
+   easy to read, you can just do this in your interactive command
+   window:
+   </p>
+   <pre>
+   <code class="language-fsharpInteractive">
+   > friendlyFeet (metersToFeet 1.0);;
+   </code>
+   </pre>
+
+   <p>
+   And you will get output like this:
+   </p>
+   <pre>
+   <code class="language-fsharpInteractive">
+   > val it : string "3 ft 3.372 inches";;
+   </code>
+   </pre>
+    
+   <p>
+   You can also write the trivial function metersToFriendlyFeet on 
+   the fly:
+   </p>
+    
+   <pre>
+   <code class="language-fsharpInteractive">
+   > val metersToFriendlyFeet m = friendlyFeet (metersToFeet m);;
+   </code>
+   </pre>
+    
+   <p>
+   You might find it a bit cumbersome to press the up arrow and 
+   change the meters passed into metersToFriendlyFeet *every* time
+   you want to convert a value to inches.  If so, you can use F#'s 
+   handy map function like this:
+   </p>
+   <pre>
+   <code class="language-fsharpInteractive">
+   > val metersToConvert = [1.0; 1.5; 1.2; 1.61];;
+    
+   <span class="informationOutput">val metersToConvert : float list = [1.0; 1.5; 1.2; 1.61]</span>
+
+   > let convertedVals = 
+   >    metersToConvert |> List.map metersToFriendlyFeet;;
+   </code>
+   </pre>
+   <p>
+   The F# Interactive Command Window will then spit out a list of the
+   converted values back to you in a friendly ft and inches format. 
+   </p>
+   <p>
+   Or, if you rather, you can even use F# Interactive to create 
+   WebForms that will process and display your data.  Check out 
+   Don Syme's post at <a href="#src2">[2]<a />. 
+   </p>
+
+   <p>
+   You may be thinking that that is an awful lot of typing to have
+   to go through each time you want to convert Meters to Feet in the 
+   Interactive F# Window.  Well, you have two options to resolve that.
+   You can either use the F# Compilers and environments to compile 
+   your scripts into a module or you can save your scripts to an 
+   FSharp Script (.fsx) file and reload them at a later time.  The 
+   later option is the easiest, so I will cover it. 
+   </p>
+   <p>
+   To save your scripts for later use, you would bust open Notepad
+   and type in the following:
+   </p>
+   <pre>
+   <code class="language-fsharpScript">
+   module conversions
+      let metersToFeet m = 3.28 * m
+      let inchesPerFoot = 12.0
+      let friendlyFeet f =    
+         let baseFeet = floor f
+         let totalInches = f * inchesPerFoot
+         let baseInches = baseFeet * inchesPerFoot
+         let remainingInches = totalInches - baseInches
+         baseFeet.ToString() + " ft " + 
+         remainingInches.ToString() + " inches"; 
+   </code>
+   </pre>
+
+   <p>
+   You would then save the file to something like 
+   "d:\conversions.fsx"
+   </p>
+
+   <p>
+   The next time you start F# Interactive, you would simply run  
+   commands like this to load your script:
+   </p>
+   <pre>
+   <code class="language-fsharpInteractive">
+   > #load "d:\myConversions.fsx";;
+   <span class="informationOutput">
+   [Loading d:\myConversions.fsx]
+
+   namespace FSI_0002
+     val metersToFeet : m:float -> float
+     val inchesPerFoot : float
+     val friendlyFeet : f:float -> string
+   </span>
+
+   > open conversions;;
+   </code>
+   </pre>
+
+   <p>
+   Then, once your script was loaded, you would continue to call 
+   friendlyFeet and the other functions as usual. 
+   </p>
+
+   <p>
+   Now, suppose you were helping your daughter with beginning algebra
+   and you wanted to help her visualize the intersection of two lines.
+   You might start out by defining two functions like so:<br />
+   let f1 x = 2.0 * x + 10.0;;<br />
+   let f2 x = 4.0 * x;;
+   </p>
+   <p>
+   The two above F# Function definitions correspond to:<br />
+   y = 2x + 10<br />   
+   and<br />
+   y = 4x<br />
+   </p>
+   <p>
+   Don't be confused by the "let f1 x =" and "let f2 x =" portions of
+   the above equations.  "let" is just a reserved to let F# know 
+   that a definition is coming and "f1" and "f2" are just names for
+   those definitions.  Also, definition names have to be unique in 
+   F# (as well as *most* programming languages), so we can't just 
+   use the name "y" like we would in algebra. 
+   </p>
+   <p>
+   The next thing you would want to do is to plot these two functions.
+   Fortunately, F# makes this reasonably easy as you can see in  
+   Mr. Hugard's post at <a href="#src3">[3]<a />.
+   </p>
+   <p>
+   With some minor changes to Mr. Hugard's code at <a href="#src3">[3]<a /> and 
+   help from <a target="_blank" href="http://tomasp.net/about/">Tomas Petricek</a> <a href="#src4">[4]<a /> we can come up
+   with a "Form" type in an fsx file that will allow us to plot 
+   multiple functions:
+   </p>
+
+   <pre>
+   <code class="language-fsharpScript">
+(* This code is based off of a Stack Overflow post by 
+   James Hugard @ 
+   http://stackoverflow.com/questions/3276357/how-do-i-plot-a-data-series-in-f
+
+   Other References: 
+   Tomas Petricek @
+   http://stackoverflow.com/questions/16783196/f-interactive-pass-paramarray-of-functions
+   *) 
+module HuggardPlot
+
+#r "System.Windows.Forms.DataVisualization" 
+open System
+open System.Windows.Forms
+open System.Windows.Forms.DataVisualization.Charting 
+
+type LineChartForm(
+                    title, 
+                    minX, 
+                    maxX, 
+                    [<ParamArray>] funcs: (float -> float)[]) =
+   inherit Form( Text=title )
+
+   let chart = new Chart(Dock=DockStyle.Fill)
+   let area = new ChartArea(Name="Area1")
+   
+   do for func in funcs do 
+      (* Add the first plot Hugard style *) 
+      let series = new Series()
+      do series.ChartType <- SeriesChartType.Line
+      do for i in minX .. maxX do 
+         series.Points.AddXY(i, func(i)) |> ignore   
+      do series.ChartArea <- "Area1"
+      do chart.Series.Add( series )      
+
+   (* Add area1 to the plot *) 
+   do chart.ChartAreas.Add(area)
+   do base.Controls.Add( chart ) 
+
+(* Convenience method to make it easier to plot functions *) 
+let plotFunctions (minX, maxX, [<ParamArray>] funcs: (float -> float)[]) = 
+   let LCF = new LineChartForm("lines", minX, maxX, funcs); 
+   LCF.Show();
+   </code>
+   </pre>
+
+<p>
+After saving the above fsx file as d:\HuggardPlot.fsx, you can then 
+run commands like the following in the F# Interactive Window to plot 
+the two previously defined functions:
+</p>
+<pre>
+<code class="language-fsharpInteractive">
+> #load "d:\HuggardPlot.fsx";;
+<span class="informationOutput">[Some output from the F# Interactive Interpreter Goes Here ]</span>
+> open HuggardPlot;;
+> plotFunctions (-8.0, 8.0, [|f1 ; f2|]);;
+</code>
+</pre>
+<p>
+Then you will get an graph like the one shown in the following picture:
+</p>
+<figure>
+<img 
+ src="https://www.utilars.com/Content/Blog/fSharpGraph.png" 
+ alt="F# WinForms Data Visualization Lines Plot" />
+<figcaption>
+Figure 2<br />
+<span class="sideNote">
+(F# Interactive WinForms Data Visualization Plot)
+</span>
+</figcaption>
+</figure>
+<p>
+The picture demonstrates an intersection at (5, 20).  This is the same 
+location you would get if you solved the two previously equations 
+manually. 
+</p>
+<p>
+You should note that the plotFunctions helper function does not limit
+you to two functions.  Because it takes a variable number of args, 
+you can pass in several functions.  In fact, you don't even have to 
+declare the functions.  You can pass in anonymous functions.  For 
+example you can try something like this if you want:
+</p>
+<pre>
+<code class="language-fsharpInteractive">
+> plotFunctions (0.0, 6.0, 
+-    [|(fun x -> x + 3.0) ; (fun x-> 4.0) ; (fun x -> x * x) |]);; 
+</code>
+</pre>
+<p>
+The above command plots part of a parabola and two lines on the same
+graph.  Don't be concerned with the unusual x -> x type syntax.  That's just a 
+requirement of the anonymous functions.  You can simply read the 
+above command as plot:
+<ol>
+<li>y = x + 3</li>
+<li>y = 4</li>
+and
+<li>y = x<sup>2</sup></li>
+</ol>
+all on the same "form" using the X range between 0 and 6. 
+</p>
+
+<p>
+Now that we have went through this effort and seen a small taste of 
+what F# can do, I really need to point out that Tomas Petricek
+explained to me in <a href="#src4">[4]<a /> that there are already F# Sharp charting 
+bindings available here:
+<a target="_blank" href="https://github.com/fsharp/FSharp.Chart">https://github.com/fsharp/FSharp.Chart</a>
+</p>
+<p>
+If I read Mr. Petricek's post correctly, the library appears to offer 
+a clean, easy syntax.  I suspect that if you are willing to download
+the library, it should also offer much more flexibility that the 
+HuggardPlot method that I proposed.  Also, the FSharp.Chart project 
+on GitHub appears to have been started by the man himself 
+<a target="_blank" href="http://en.wikipedia.org/wiki/Don_Syme">Don Syme</a>.
+</p>
+<p>
+Of course, I'm not as sharp as Syme, Petricek and many other Microsoft
+buffs, so I will leave you will one final example of how F# really shines
+in Data Visualization.  If you are into the 
+<a target="_blank" href="http://en.wikipedia.org/wiki/Force_(Star_Wars)">Force</a>, then you should 
+really watch this cool example by 
+<a target="_blank" href="http://blogs.msdn.com/b/lukeh/">Luke</a> on how FSharp Interactive can
+easily create DirectX animations:<br />
+<a target="_blank" href="http://channel9.msdn.com/Blogs/Dan/C9-Bytes-Data-Visualization-and-FSharp-with-Luke-Hoban">http://channel9.msdn.com/Blogs/Dan/C9-Bytes-Data-Visualization-and-FSharp-with-Luke-Hoban</a><br />
+<span class="sideNote">
+(I'm unable to verify but some of this work may be based on stuff
+that was done previously by Don Syme)</span>
+</p>
+<p>
+I hope that you can see from a combination of my blog post and Luke's 
+demo, that FSharp Interactive has potential for *all* kinds of people.
+From 
+<a target="_blank" href="http://fsharp.org/teaching/index.html#lectures_and_course_material">10/11 year olds</a> 
+to engineers/physicists.  In fact, I have already briefly exposed my 
+7 year old to *basic* F#, but I am a bit disappointed that she hasn't
+figured out the classic recursive 
+factorial <a href="#src5">[5]<a /> problem yet.
+</p>
+
+
+
+<h2>Bibliography</h2>
+<a name="src1"></a>
+1.  Conversion Factors Appendix.<br />
+James Shippman, Jerry Wilson and Charles Higgins. <br />
+An Introduction to Physical Science.<br /> 
+Boston : Brooks/Cole, <br />
+Cengage Learning, 2013.<br />
+ISBN-13: 978-1-133-10909-9<br />
+<br />
+
+<a name="src2"></a>
+2. Syme, Don.<br />
+F# Interactive Tips and Tricks: Visualizing Data in a Grid <br />
+MSDN Blogs: Don Syme's WebLog on F# and Related Topics.<br /> 
+[Online] Jan 8, 2010.<br />
+[Cited: APR 27, 2013.]<br />
+<a target="_blank" 
+href="http://blogs.msdn.com/b/dsyme/archive/2010/01/08/f-interactive-tips-and-tricks-visualizing-data-in-a-grid.aspx">
+http://blogs.msdn.com/b/dsyme/archive/2010/01/08/f-interactive-tips-and-tricks-visualizing-data-in-a-grid.aspx</a><br /><br />
+
+<a name="src3"></a>
+3. Hugard, James et all.<br />
+How do I plot a data series in F#?<br />
+StackOverflow. [Online] 18 JUN, 2010.<br />
+[Cited: MAY 27, 2013.]<br />
+<a target="_blank" href="http://stackoverflow.com/questions/3276357/how-do-i-plot-a-data-series-in-f">http://stackoverflow.com/questions/3276357/how-do-i-plot-a-data-series-in-f</a>.
+<br /><br />
+
+<a name="src4"></a>
+4. Petricek, Tomas et all.<br />
+F# Interactive Pass ParamArray of Functions<br />
+StackOverflow. [Online] 27 MAY, 2013.<br />
+[Cited: MAY 28, 2013.]<br />
+<a target="_blank" href="http://stackoverflow.com/questions/16783196/f-interactive-pass-paramarray-of-functions">http://stackoverflow.com/questions/16783196/f-interactive-pass-paramarray-of-functions</a> <br /><br />
+
+<a name="src5"></a>
+5. Various.<br />
+Recursion (computer science)<br />
+Wikipedia. [Online] MAY 27, 2013.<br />
+[Cited: MAY 28, 2013.]<br />
+<a target="_blank" href="http://en.wikipedia.org/wiki/Recursion_(computer_science)#Factorial">
+http://en.wikipedia.org/wiki/Recursion_(computer_science)#Factorial
+</a><br /><br />
+
+<p>
+©2013 - Shawn Eary<br />
+This post contains material from <a target="_blank" href="http://stackoverflow.com/">StackOverflow</a> that is licensed 
+under the <a target="_blank" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons</a> license.  That material continues to be licensed 
+via Creative Commons license.  All other content that is specific to the poster
+(Shawn Eary) is licensed under the 
+<a target="_blank" href="http://www.arsquies.com/Home/FCDL">Free Christian Document License (FCDL)</a><br />
+</p>
+</article>
+</body>
+</html>

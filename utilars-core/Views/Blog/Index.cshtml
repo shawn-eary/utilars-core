@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Shawn Eary's Blogs";
+}
+
+    @foreach (efModels.sp_getBlogListResult item in Model)
+    {
+    <p>
+        Year: @item.year /
+        Month: @item.month /
+        Day: @item.day<br />
+        @Html.ActionLink(
+            item.title,
+            "Item",
+            new  {
+                userName = @item.friendlyId,
+                year = @item.year,
+                month = @item.month,
+                day = @item.day,
+                id = @item.subId
+            })
+    </p>
+    }

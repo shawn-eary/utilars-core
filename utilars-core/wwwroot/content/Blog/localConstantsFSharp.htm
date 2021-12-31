@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>F# (FSharp) Local Constants</title>
+    <!-- Saw these meta tags on CodeShow 
+         http://codeshow.codeplex.com/ -->
+    <meta name="keywords" content="F# FSharp *.NET" />
+    <meta name="description" 
+    content="Local Constants in F#" />
+    <meta name="author" content="Shawn Eary" />
+    <meta name="dateCreated" content="02/17/2013" />
+    <meta name="copyright" content="©2013 - Shawn Eary" />
+</head>
+<body>    
+<article>
+    <p>
+    I just realized that my post last month on the immutability benefit 
+    of F# failed to address one of the most basic benefits.  In C# and 
+    VB.NET, I *believe* it is *impossible* to have “local” constants 
+    to non-literal values while in C++ and F# it *is* possible to have 
+    these “local” constants.  
+    </p>
+    
+    <p>
+    You *might* be thinking: what about C#/VB.NET const <a href="#src1">(1)</a> and ReadOnly <a href="#src2">(2)</a>?  
+    Unfortunately, those don’t work in every scenario.  The problem 
+    with C#/VB.NET const is that it seems to only work with literal 
+    values.  At the time of this post, the documentation even seemed 
+    to say "...the only possible values for constants of reference types 
+    are string and null." <a href="#src1">(1)</a>
+    </p>     
+    <p>
+    If you try compiling this program in C# you will get an 
+    error:
+    </p>
+    <pre>
+    <code class="language-csharp">
+namespace testApplication
+{
+   class Program
+   {
+      static int square(int x) {
+         return x * x; 
+      }
+      static void Main(string[] args)
+      {
+         const int squareOfThree = square(3);
+      }
+   }
+}
+    </code>
+    </pre>
+    <p class="article-error">
+    error CS0133: The expression being assigned to 'squareOfThree' must 
+    be constant
+    </p>
+
+    <p>
+    Your next thought might be to try and replace the const keyword
+    above with the readonly <a href="#src2">(2)</a> keyword that I mentioned in the post last 
+    month but then you will get yet another error:
+    </p>
+
+    <p class="article-error">
+    The modifier 'readonly' is not valid for this item
+    </p>
+
+    <p>
+    In fact, at the time of this post, I don't know of anyway to get
+    around this problem in C#/VB.NET.  Unmanaged C++ and F# resolve 
+    the problem quite eloquently though.  In Unmanaged Visual C++, you
+    just use the const keyword like <mark>this</mark> and 
+    squareOfThree will not be changeable for the rest of its local 
+    life:
+    </p>
+
+    <pre>
+    <code class="language-cplusplus">
+#include "stdafx.h"
+
+int square(int x) {
+   return x * x; 
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+   int <mark>const</mark> squareOfThree = square(3);     
+}
+    </code>
+    </pre>
+
+    <p>
+    On the other hand, in F# you would simply do something like this<br />
+    <span class="sideNote">
+    (Notice how the below fully complete program is *much* easier to read 
+    then either the C# or Unmanaged C++ versions and has the same 
+    <b>or better</b> features):
+    </span>
+    </p>
+   
+    <pre>
+        <code class="language-fsharp">
+let square x = x * x 
+let squareOfThree = square 3
+    </code>
+    </pre>
+
+    <p>
+    Then, if you try to do any of the <mark>following</mark>, you will get errors:
+    </p>
+
+        <pre>
+        <code class="language-fsharp">
+let square x = x * x 
+(* SquareOfThree immediately becomes a local constant just like it did
+   in Unmanaged C++ with the "const" keyword. *) 
+let squareOfThree = square 3
+
+<mark>
+(* Now, if you try to change squareOfThree, you will get errors *)
+(* Trying to change squareOfThree by redefining it, yields an error *)
+let squareOfThree = 8
+
+(* Trying to change squareOfThree using F#'s assignment operator 
+   yields yet another error <a href="#src3">(3)</a> *)
+   
+squareOfThree <- 8
+</mark>
+    </code>
+    </pre>
+
+ <p class="article-error">
+c:\users\shawn_000\documents\visual studio 2010\Projects\ConsoleApplication8\ConsoleApplication8\Program.fs(18,1): error FS0027: This value is not mutable<br />
+c:\users\shawn_000\documents\visual studio 2010\Projects\ConsoleApplication8\ConsoleApplication8\Program.fs(13,5): error FS0037: Duplicate definition of value 'squareOfThree'<br />
+</p>
+
+<p>
+This demonstration of "local" constants shows yet another feature of 
+how the functional F# behaves like the good old imperative C++.  While
+it is really unfair to compare F# and C++, I think it is interesting 
+to note that F# seems to be one of the few languages that can do some of the
+things that Unmanaged C++ can that VB.NET and C# can't.  The 
+default immutability of F# is one example of how F# comes closer to 
+meeting the const-correctness <a href="#src4">(4)</a> of Unmanaged C++. 
+</p>
+
+<h2>Bibliography</h2>
+<a name="src1"></a>
+1. Microsoft.<br />
+const (C# Reference).<br />
+MSDN. [Online]<br />
+[Cited: FEB 02, 2013.]<br />
+<a target="_blank" href="http://msdn.microsoft.com/en-us/library/e6w8fe1b(v=vs.100).aspx">http://msdn.microsoft.com/en-us/library/e6w8fe1b(v=vs.100).aspx<br />
+<br />
+<a name="src2"></a>
+2. Microsoft.<br />
+readonly (C# Reference).<br />
+MSDN. [Online]<br />
+[Cited: FEB 02, 2013.]<br />
+<a target="_blank" href="http://msdn.microsoft.com/en-us/library/acdd6hb7(v=vs.100).aspx">http://msdn.microsoft.com/en-us/library/acdd6hb7(v=vs.100).aspx<br />
+<br />
+
+<a name="src3"></a>
+3. Microsoft.<br />
+Values (F#).<br />
+MSDN. [Online]<br />
+[Cited: FEB 02, 2013.]<br />
+<a target="_blank" href="http://msdn.microsoft.com/en-us/library/dd233185.aspx">http://msdn.microsoft.com/en-us/library/dd233185.aspx<br />
+<br />
+
+<a name="src4"></a>
+4. Various. <br />
+Const-Correctness. <br />
+Wikipedia. [Online] JAN 15, 2013. <br />
+[Cited: FEB 02, 2013.] <br />
+<a href="http://en.wikipedia.org/wiki/Const-correctness" target="_blank">http://en.wikipedia.org/wiki/Const-correctness</a><br />
+<br />
+<p>
+©2013 - Shawn Eary<br />
+This post and all included code is released under the Free Christian Document License (FCDL)<br />
+</p>
+</article>
+</body>
+</html>

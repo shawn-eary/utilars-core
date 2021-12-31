@@ -1,0 +1,813 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   <title>Drawing a Cartoonish Christmas Tree with SVG</title>
+   <!-- Saw these meta tags on CodeShow 
+      http://codeshow.codeplex.com/ -->
+   <meta name="keywords" content="Cartoon SVG Tree Christmas" />
+   <meta name="description" 
+   content=
+   "Talks breifly about how to draw a crude cartoon looking 
+    Christmas Tree using SVG" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="01/01/2013" />
+   <meta name="copyright" content="©2014 - Shawn and Kristen Grace Eary" />   
+   <!--  Don't ask...
+   <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />   -->
+</head>
+<body>    
+   <article>
+      <p>
+      Every now and then, one of my kids will bring home a piece of art
+      that I think is pretty neat.  I have often thought about 
+      using MS PowerPoint to turn their ideas into vector based clipart
+      but never got around to it.  
+      </p>
+
+      <p>
+      Recently, my daughter Kristen brought home what I thought was a neat 
+      drawing of a Christmas tree.  Sure I'm biased, but I thought it was cool.
+      The Christmas tree looked something like this:
+      </p>
+
+
+      <figure>
+         <img width="300" height="390" src="https://www.utilars.com/Content/Blog/KristenTree.jpg"
+              alt="Tree Kristen Grace Eary drew" />
+         <figcaption>Kristen's Tree</figcaption>
+      </figure>      
+      
+      <p>
+      So how would I convert this tree into vector format?  
+      The most obvious way that came to mind was to load the raster image into 
+      MS Powerpoint and then trace vector shapes over it.  After 
+      the tracing was done, I would delete the raster image and save to 
+      a vector format.  EMF used to be a popular vector format 
+      <a href="#src1">(1)</a>, but now SVG <a href="#src2">(2a)</a> is more popular.
+      In fact, SVG files can be easily used in modern browsers; unfortunately, 
+      there oddly doesn't seem to be a method to save 
+      PowerPoint 2010 Files directly to SVG.  After Binging around, 
+      I found out that most people wanting to save to SVG would
+      first save the PPT File to PDF or EMF and then use a 
+      converter to change the PDF or EMF to SVG format as mentioned in 
+      <a href="#src3">(3)</a>.  
+      </p>
+      <p>      
+      So in this particular case, PowerPoint did not help me much.  
+      Also, while there were are a handful of free vector 
+      drawing tools out there, most of them seemed to be associated
+      with: Google; the GNU Public License (GPL); or, the 
+      Free Software Foundation (FSF) in some way.  Because I'm 
+      presently attempting to 
+      <a href="https://www.utilars.com/Home/LinuxBeef">boycott</a>
+      Google and the FSF, I choose to not use tools affiliated with those 
+      entities unless absolutely necessary.  Of course, if you think 
+      my "boycott" is a bit on the silly side, you can be encouraged
+      that learning how to manually create SVG Files may provide you 
+      with the following benefits: 
+      <ol>
+      <li>cleaner product output and higher file readabilty</li>
+      <li>knowlege of SVG Fundaments that can be used for dynamic content generation</li>
+      </ol>
+      So even though it was tempting to just download the latest
+      SVG drawing tool, I decided to create the product image by 
+      hand.
+      </p>
+
+      <p>
+      When I looked at my daugher's picture, I noticed that 
+      *most* of it could be represented by several closed 
+      polygons while the rest of it could be approximated by 
+      filled ovals.  Given that fact, it become easier to 
+      translate my daughter's tree into a vector based 
+      format.
+      </p>
+
+      <p>
+      I figured that closed polygons could be used to express the 
+      rectangle stump, tree body, garland, and star.  Then, I 
+      figured that the ornaments could be approximated with the 
+      mentioned ovals.  Fortunately, it was and is easy to represent 
+      filled ovals <a href="#src2">(2d)</a> and closed polygons 
+      <a href="#src2">(2b)</a> in SVG.  So I proceeded to determine
+      the minimal necessary SVG document structure.  
+      </p>
+      
+      <p>
+      I found a good starting point for the basic SVG Document 
+      Structure at <a href="#src2">(2f)</a>.  When I striped out
+      all of what I considered unnecessary except for the demo circle, 
+      then I came up with: 
+      </p>
+
+<pre>
+<code class="language-svg">
+   &lt;?xml version="1.0" standalone="no" ?&gt;
+   &lt;!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+    "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"&gt;
+
+   &lt;!-- Some Copyright Statement Might Go Here --&gt;
+   &lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1"&gt;
+      &lt;desc&gt;Some Circle&lt;/desc&gt;
+      &lt;circle cx="100" cy="100" r="100"
+      fill="red" stroke="blue" stroke-width="10" /&gt;
+   &lt;/svg&gt;        
+</code>
+</pre>
+
+<p>
+   So after I got the basic document structure, I got rid of 
+   the circle and began to start tracing out the polygons per
+   <a href="#src2">(2b)</a>.  Before I started that, however, 
+   I had to make a quick hack to Kristen's picture.  
+   I needed to raise Kristen's star up a bit and get it off 
+   the tree allowing for some sort of a stand.  
+   I did that with the following crude wireframe: 
+</p>
+
+<figure>
+   <img width="300" height="390" src="https://www.utilars.com/Content/Blog/KristenWireTree.jpg"
+   alt="Wire Frame Extension of Tree Kristen Grace Eary drew" />
+   <figcaption>Wire Extension of Kristen's Tree</figcaption>
+</figure>           
+
+<p>
+Yes. I know. I should be ashamed for butchering my child's
+artwork, but this wireframe *may* come in handy when I trace
+out the vector image.
+</p>
+
+      <p>
+      So using the SVG Polygon Element mentioned previously, I:
+      <ol>
+      <li>opened up the WireFrame in Paint.Net</li>
+      <li>zoomed in</li>
+      and
+      <li>hovered the mouse pointer over each of the sections
+      of Kristen's star recording the point coordinates</li>
+      </ol> 
+      The procedure looked something like this: 
+      </p>
+      <figure>
+         <img width="500" height="375" src="https://www.utilars.com/Content/Blog/fig1-kristenTree.png"
+              alt="Procedure to Determine Pologon Points for Star" />
+         <figcaption>Figure 1</figcaption>
+      </figure>         
+
+      <p>When I finished, I had code that looked something like this:</p>
+      
+<pre>
+<code class="language-svg">
+   &lt;?xml version="1.0" standalone="no" ?&gt;
+   &lt;!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"&gt;
+
+   &lt;!-- 
+   ©2014 - Shawn and Kristen Grace Eary
+   Licened via FCML
+   https://www.utilars.com/Home/FCML
+
+   References
+   [1] - Dahlström, Erik; Dengler, Patrick; Grasso, Anthony; Lilley, Chris;
+      McCormack, Cameron, Schepers, Doug; Watt, Jonathan; Ferrailolo, Jon; 
+      藤沢 淳; Jackson, Dean
+      SVG 1.1 (Second Edition) - Basic Shapes. W3C. 
+      [Online] AUG 16, 2011. [Cited: DEC 22, 2013.] 
+      http://www.w3.org/TR/SVG/shapes.html#PolygonElement.
+   --&gt;
+   &lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1"&gt;
+      &lt;desc&gt;Yellow Star&lt;/desc&gt;
+      &lt;polygon fill="yellow" stroke="black" stroke-width="10"
+               points="955,60 903,207 757,215 860,288 785,450
+      936,370 950,360 977,382 1061,437 1035,317 1111,225
+      1004,225" /&gt;
+   &lt;/svg&gt;
+</code>
+</pre>
+
+<p>
+The above code then rendered into a star that looked something like this png:
+</p>
+
+      <figure>
+         <img src="https://www.utilars.com/Content/Blog/fig2-kristenTree.png"
+              alt="PNG Similation of Rendered Result" />
+         <figcaption>Figure 2</figcaption>
+      </figure>   
+
+<p>
+So now that the star was drawn, I needed to draw the base that supported
+the star using a similar method.  The only difference was that this time 
+care was needed to ensure the snap points from Figure#1 were used.
+If I didn't use the previously mentioned snap points, then there could 
+have been holes in the rendered image when it was rescaled,
+translated, or rotated.  Below is a diagram that shows how I 
+walked through the points: 
+</p>
+
+<figure>
+   <img src="https://www.utilars.com/Content/Blog/fig3-kristenTree.png"
+        alt="Walk Through to Generate Points for Star Base" />
+   <figcaption>Figure 3</figcaption>
+</figure>   
+
+<p>
+After drawing the star base, the code looked something like this: 
+</p>
+
+<pre>
+<code class="language-svg">
+   &lt;?xml version="1.0" standalone="no" ?&gt;
+   &lt;!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"&gt;
+
+   &lt;!-- 
+   ©2014 - Shawn and Kristen Grace Eary
+   Licened via FCML
+   https://www.utilars.com/Home/FCML 
+   References
+   [1] - Dahlström, Erik; Dengler, Patrick; Grasso, Anthony; Lilley, Chris;
+      McCormack, Cameron, Schepers, Doug; Watt, Jonathan; Ferrailolo, Jon; 
+      藤沢 淳; Jackson, Dean
+      SVG 1.1 (Second Edition) - Basic Shapes. W3C. 
+      [Online] AUG 16, 2011. [Cited: DEC 22, 2013.] 
+      http://www.w3.org/TR/SVG/shapes.html#PolygonElement.
+   --&gt;
+   &lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1"&gt;
+      &lt;desc&gt;Yellow Star and Base&lt;/desc&gt;
+      &lt;polygon fill="yellow" stroke="black" stroke-width="10"
+      points="955,60 903,207 757,215 860,288 785,450
+      936,370 950,360 977,382 1061,437 1035,317 1111,225
+      1004,225" /&gt;
+   
+   <mark>
+      &lt;polygon fill="brown" stroke="black" stroke-width="10"
+      points="950,360 936,370 931,476 830,554
+      880,554 1058,554
+      1105,554 973,476 977,382" /&gt;</mark>
+   &lt;/svg&gt;   
+</code>
+</pre>
+
+<p>
+I then proceeded to draw the rest of the tree using the 
+(880, 554) and (1058,554) snap points from the start base and 
+introducing new snap points as necessary.  A figure of this 
+process looked something like this: 
+</p>
+
+<figure>
+   <img src="https://www.utilars.com/Content/Blog/fig4-kristenTree.png"
+        alt="Walk Through to Generate Points for Tree Body" />
+   <figcaption>Figure 4</figcaption>
+</figure>   
+
+<p>
+I then ended up with code that looked like this: 
+</p>
+
+<pre>
+<code class="language-svg">
+   &lt;?xml version="1.0" standalone="no" ?>
+   &lt;!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+             "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"&gt;
+
+   &lt;!-- 
+   ©2014 - Shawn and Kristen Grace Eary
+   Licened via FCML
+   https://www.utilars.com/Home/FCML 
+   References
+   [1] - Dahlström, Erik; Dengler, Patrick; Grasso, Anthony; Lilley, Chris;
+      McCormack, Cameron, Schepers, Doug; Watt, Jonathan; Ferrailolo, Jon; 
+      藤沢 淳; Jackson, Dean
+      SVG 1.1 (Second Edition) - Basic Shapes. W3C. 
+      [Online] AUG 16, 2011. [Cited: DEC 22, 2013.] 
+      http://www.w3.org/TR/SVG/shapes.html#PolygonElement.
+   --&gt;
+   &lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+   <mark>width="4000" height="4000"</mark>&gt;
+      &lt;desc&gt;Yellow Star and Base&lt;/desc&gt;
+      &lt;polygon fill="yellow" stroke="black" stroke-width="10"
+               points="955,60 903,207 757,215 860,288 785,450
+      936,370 950,360 977,382 1061,437 1035,317 1111,225
+      1004,225" /&gt;
+
+      &lt;polygon fill="brown" stroke="black" stroke-width="10"
+               points="950,360 936,370 931,476 830,554
+      880,554 1058,554
+      1105,554 973,476 977,382" /&gt;
+
+      <mark>
+      &lt;polygon fill="green" stroke="black" stroke-width="10"
+               points="880,554
+      730, 1023 714, 1076
+      469, 2005 455, 2103
+      16, 3468 1, 3521
+      736, 3521 1184, 3521
+      2050, 3521
+      1800, 2634 1760, 2553
+      1357, 1464 1345, 1361
+      1058, 554" /&gt;  
+      </mark>
+   &lt;/svg&gt;
+</code>
+</pre>
+
+<p>
+Notice above the new definition of width and height attributes 
+for the SVG tree.  Without these, neither IE11 nor FireFox 26.0 
+seemed to render the whole tree.  After the new dimensions were
+applied, however, I still needed to zoom to a 
+size of less than 100% to see the full image.  I think I had 
+to zoom to about 20%.<br />  
+   <span class="sideNote">
+      I found out later that this large
+      amount of unzoom was necessary because I needed to use a smaller viewport
+      and scalling.
+   </span>  
+</p>
+
+<p>
+I then drew the tree trunk using the (736, 3521) (1184, 3521)
+snap points from the previous example and two new ordinary 
+points (736, 3977) (1184, 3977).  At this point, the tree 
+got too big so I had to also apply a scale <a href="#src2">(2c)</a> 
+transformation
+to shrink the tree into a size that can be displayed in the 
+the browser.  Once the scale was applied, I was able to 
+go back to "100% zoom" which is the default for most browsers.
+This left the code like the following: 
+</p>
+
+<pre>
+<code class="language-svg">
+   &lt;?xml version="1.0" standalone="no" ?&gt;
+   &lt;!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"&gt;
+   &lt;!-- 
+   ©2014 - Shawn and Kristen Grace Eary
+   Licened via FCML
+   https://www.utilars.com/Home/FCML 
+   References
+   [1] - Dahlström, Erik; Dengler, Patrick; Grasso, Anthony; Lilley, Chris;
+      McCormack, Cameron, Schepers, Doug; Watt, Jonathan; Ferrailolo, Jon; 
+      藤沢 淳; Jackson, Dean
+      SVG 1.1 (Second Edition) - Basic Shapes. W3C. 
+      [Online] AUG 16, 2011. [Cited: DEC 22, 2013.] 
+      http://www.w3.org/TR/SVG/shapes.html#PolygonElement.
+   <mark>
+   [2] - Dahlström, Erik; Dengler, Patrick; Grasso, Anthony; Lilley, Chris;
+      McCormack, Cameron, Schepers, Doug; Watt, Jonathan; Ferrailolo, Jon; 
+      藤沢 淳; Jackson, Dean
+      SVG 1.1 (Second Edition) - Basic Shapes. W3C. 
+      [Online] AUG 16, 2011. [Cited: DEC 22, 2013.] 
+      http://www.w3.org/TR/SVG/coords.html#EstablishingANewUserSpace.
+   </mark>
+   --&gt;
+   <mark>
+   &lt;!-- You can see a basic frame for an SVG File at [1]  --&gt;
+   </mark>
+   &lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+   preserveAspectRatio="xMinYMin meet"
+   width="4000" height="4000"&gt;
+   &lt;desc&gt;Undecorated Tree&lt;/desc&gt;
+   <mark>
+   &lt;!-- You can see an example of scaling at [2] --&gt;   
+   &lt;g transform="scale(0.2)"&gt;   
+      &lt;!-- You can see an example of polygon use at [1] --&gt;
+      </mark>
+      &lt;polygon fill="yellow" stroke="black" stroke-width="10"
+      points="955,60 903,207 757,215 860,288 785,450
+      936,370 950,360 977,382 1061,437 1035,317 1111,225
+      1004,225" /&gt;
+
+      &lt;polygon fill="brown" stroke="black" stroke-width="10"
+      points="950,360 936,370 931,476 830,554
+      880,554 1058,554
+      1105,554 973,476 977,382" /&gt;
+
+      &lt;polygon fill="green" stroke="black" stroke-width="10"
+      points="880,554
+      730, 1023 714, 1076
+      469, 2005 455, 2103
+      16, 3468 1, 3521
+      736, 3521 1184, 3521
+      2050, 3521
+      1800, 2634 1760, 2553
+      1357, 1464 1345, 1361
+      1058, 554" /&gt;
+
+   <mark>
+      &lt;polygon fill="brown" stroke="black" stroke-width="10"
+      points="736,3521 736,3977 1184,3977 1184,3521" /&gt;
+      </mark>
+   <mark>
+   &lt;/g&gt;
+   </mark>
+   &lt;/svg&gt;
+</code>
+</pre>
+
+<p>
+Next I added the garland to the Christmas tree.  The snap 
+points for this were already defined in Figure 4, so I 
+used those and inserted the following new polygon: 
+</p>
+
+<pre>
+<code class="language-svg">
+   &lt;polygon fill="silver" stroke="black" stroke-width="10"
+   points="
+   16,3468 1,3521
+   1800,2634 1760,2553
+   551,2055
+   1357,1464 1345,1361
+   730,1023 714,1076
+   1250,1430
+   469,2005 455,2103
+   1670,2630
+   " /&gt;
+</code>
+</pre>
+
+<p>
+You can see a trace of the points used in Figure#5
+</p>
+
+<figure>
+   <img src="https://www.utilars.com/Content/Blog/fig5-kristenTree.png"
+        alt="Walk Through to Generate Points for Tree Body" />
+   <figcaption>Figure 5</figcaption>
+</figure>   
+
+<p>
+The next step I did was to add the circular like ornaments.  
+I used the SVG Ellipse Shape for that using the technique mentioned in 
+<a href="#src2">(2d)</a>.
+Like before, I used Paint.NET to hover over locations where I wanted
+to put Kristen's ornaments and to find a default width.  Here is 
+some code to add a few oval ornaments: 
+</p>
+
+<pre>
+<code class="language-svg">
+   &lt;ellipse cx="747" cy="1582" rx="50" ry="50"
+   fill="blue" stroke="black" stroke-width="10" /&gt;
+
+   &lt;ellipse cx="1220" cy="1990" rx="50" ry="100"
+   fill="blue" stroke="black" stroke-width="10" /&gt;
+</code>
+</pre>
+
+<p>
+By now, however, it became apparent that the 
+colors used were a bit bland, so I started 
+looking into the use of gradients.  I wanted 
+to define the gradients for the ornaments at 
+this point because there would be several of 
+them later.  I used the information at 
+<a href="#src2">(2e)</a> for assistance. 
+</p>
+<p>
+Here is some code I used to apply gradients to the ornaments
+using the HSL model that Mr. LePage blogs about at 
+<a href="#src4">(4)</a>.  It seems more convenient to me to apply 
+gradients using HSL than the old RGB method since the lighting percentage
+can be easily manipulated to obtain different shades of 
+the of the color. 
+</p>
+
+<pre>
+<code class="language-svg">
+   &lt;?xml version="1.0" standalone="no" ?&gt;
+   &lt;!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+             "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"&gt;
+
+   &lt;!-- 
+   ©2014 - Shawn and Kristen Grace Eary
+   Licened via FCML
+   https://www.utilars.com/Home/FCML 
+   References
+   [1] - Dahlström, Erik; Dengler, Patrick; Grasso, Anthony; Lilley, Chris;
+      McCormack, Cameron, Schepers, Doug; Watt, Jonathan; Ferrailolo, Jon; 
+      藤沢 淳; Jackson, Dean
+      SVG 1.1 (Second Edition) - Basic Shapes. W3C. 
+      [Online] AUG 16, 2011. [Cited: DEC 22, 2013.] 
+      a) http://www.w3.org/TR/SVG/shapes.html#PolygonElement.
+      b) http://www.w3.org/TR/SVG/coords.html#EstablishingANewUserSpace.
+      c) http://www.w3.org/TR/SVG/shapes.html#CircleElement
+      d) http://www.w3.org/TR/SVG/pservers.html#RadialGradientElement
+   --&gt;
+   &lt;!-- You can see a basic frame for an SVG File at [1a]  --&gt;
+   &lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+        preserveAspectRatio="xMinYMin meet"
+        width="4000" height="4000"&gt;
+      &lt;desc&gt;Partially Decorated Tree&lt;/desc&gt;
+      &lt;!-- You can see an example of scaling at [1b] --&gt;
+      &lt;g transform="scale(0.2)"&gt;
+   <mark>
+      &lt;defs&gt;
+         &lt;!-- You can see examples of how to apply gradients at 1c --&gt;
+         &lt;radialGradient id="blueCircleGradient"
+         gradientUnits="objectBoundingBox" fx="-1" fy="-1"&gt;
+         &lt;stop offset="0%" stop-color="hsl(226, 100%, 75%)" /&gt;
+            
+         &lt;stop offset="100%" stop-color="hsl(226, 100%, 25%)" /&gt;
+         &lt;/radialGradient&gt;
+      &lt;/defs&gt;
+      </mark>
+      &lt;!-- You can see an example of polygon use at [1a] --&gt;
+      &lt;polygon fill="yellow" stroke="black" stroke-width="10"
+               points="955,60 903,207 757,215 860,288 785,450
+         936,370 950,360 977,382 1061,437 1035,317 1111,225
+         1004,225" /&gt;
+
+      &lt;polygon fill="brown" stroke="black" stroke-width="10"
+               points="950,360 936,370 931,476 830,554
+         880,554 1058,554
+         1105,554 973,476 977,382" /&gt;
+
+      &lt;polygon fill="green" stroke="black" stroke-width="10"
+               points="880,554
+         730, 1023 714, 1076
+         469, 2005 455, 2103
+         16, 3468 1, 3521
+         736, 3521 1184, 3521
+         2050, 3521
+         1800, 2634 1760, 2553
+         1357, 1464 1345, 1361
+         1058, 554" /&gt;
+
+      &lt;polygon fill="brown" stroke="black" stroke-width="10"
+               points="736,3521 736,3977 1184,3977 1184,3521" /&gt;
+
+      &lt;polygon fill="silver" stroke="black" stroke-width="10"
+               points="
+         16,3468 1,3521
+         1800,2634 1760,2553
+         551,2055
+         1357,1464 1345,1361
+         730,1023 714,1076
+         1250,1430
+         469,2005 455,2103
+         1670,2630
+         " /&gt;
+
+         &lt;!-- You can see examples of how to draw ellipses at 1c and 
+         apply gradients at 1d --&gt;
+         &lt;ellipse cx="747" cy="1582" rx="50" ry="50"
+         <mark>fill="url(#blueCircleGradient)"</mark> stroke="black"
+         stroke-width="10" /&gt;
+
+         &lt;ellipse cx="1220" cy="1990" rx="50" ry="100"
+         <mark>fill="url(#blueCircleGradient)"</mark> stroke="black"
+         stroke-width="10" /&gt;
+      &lt;/g&gt;
+   &lt;/svg&gt;
+</code>
+</pre>
+
+<p>
+After I added the gradients to the ornaments, I decided to go ahead and apply gradients to the rest of
+the tree.  After creating the mentioned gradients, I put on the final ornaments.  
+The final tree (for this blog post) is contained in this SVG Code: 
+</p>
+
+<pre>
+<code class="language-svg">
+   &lt;?xml version="1.0" standalone="no" ?&gt;
+   &lt;!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"&gt;
+
+   &lt;!-- 
+   ©2014 - Shawn and Kristen Grace Eary
+   Licened via FCML
+   https://www.utilars.com/Home/FCML 
+   References
+   [1] - Dahlström, Erik; Dengler, Patrick; Grasso, Anthony; Lilley, Chris;
+      McCormack, Cameron, Schepers, Doug; Watt, Jonathan; Ferrailolo, Jon; 
+      藤沢 淳; Jackson, Dean
+      SVG 1.1 (Second Edition) - Basic Shapes. W3C. 
+      [Online] AUG 16, 2011. [Cited: DEC 22, 2013.] 
+      a) http://www.w3.org/TR/SVG/shapes.html#PolygonElement.
+      b) http://www.w3.org/TR/SVG/coords.html#EstablishingANewUserSpace.
+      c) http://www.w3.org/TR/SVG/shapes.html#CircleElement
+      d) http://www.w3.org/TR/SVG/pservers.html#RadialGradientElement
+   --&gt;
+   &lt;!-- You can see a basic frame for an SVG File at [1a]  --&gt;
+   &lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+   preserveAspectRatio="xMinYMin meet"
+   width="350" height="600"&gt;
+      &lt;desc&gt;Christmas Tree&lt;/desc&gt;
+      &lt;!-- You can see an example of scaling at [1b] --&gt;
+      &lt;g transform="scale(0.15)"&gt;
+         &lt;defs&gt;
+            &lt;!-- You can see examples of how to apply gradients at 1c --&gt;
+            &lt;radialGradient id="blueCircleGradient"
+            gradientUnits="objectBoundingBox" fx="-1" fy="-1"&gt;
+               &lt;stop offset="0%" stop-color="hsl(226, 100%, 75%)" /&gt;
+               &lt;stop offset="100%" stop-color="hsl(226, 100%, 25%)" /&gt;
+            &lt;/radialGradient&gt;
+            &lt;radialGradient id="redCircleGradient"
+            gradientUnits="objectBoundingBox" fx="-1" fy="-1"&gt;
+               &lt;stop offset="0%" stop-color="hsl(0, 100%, 100%)" /&gt;            
+               &lt;stop offset="100%" stop-color="hsl(0, 100%, 50%)" /&gt;
+            &lt;/radialGradient&gt;
+            &lt;radialGradient id="yellowCircleGradient"
+            gradientUnits="objectBoundingBox" fx="-1" fy="-1"&gt;
+               &lt;stop offset="0%" stop-color="hsl(55, 85%, 90%)" /&gt;            
+               &lt;stop offset="100%" stop-color="hsl(55, 100%, 40%)" /&gt;
+            &lt;/radialGradient&gt;
+            &lt;radialGradient id="greenTreeGradient"
+            gradientUnits="objectBoundingBox" fx="-1" fy="-1"&gt;
+               &lt;stop offset="0%" stop-color="hsl(122, 68%, 47%)" /&gt;            
+               &lt;stop offset="100%" stop-color="hsl(122, 68%, 12%)" /&gt;
+            &lt;/radialGradient&gt;
+            &lt;radialGradient id="garlandGradient"
+            gradientUnits="objectBoundingBox" fx="-1" fy="-1"&gt;
+               &lt;stop offset="0%" stop-color="hsl(196, 32%, 96%)" /&gt;            
+               &lt;stop offset="100%" stop-color="hsl(196, 32%, 66%)" /&gt;
+            &lt;/radialGradient&gt;
+            &lt;radialGradient id="brownGradient"
+            gradientUnits="objectBoundingBox" fx="-1" fy="-1"&gt;
+               &lt;stop offset="0%" stop-color="hsl(0, 73%, 50%)" /&gt;            
+               &lt;stop offset="100%" stop-color="hsl(0, 73%, 30%)" /&gt;
+            &lt;/radialGradient&gt;
+            &lt;radialGradient id="darkBrownGradient"
+            gradientUnits="objectBoundingBox" fx="-1" fy="-1"&gt;
+               &lt;stop offset="0%" stop-color="hsl(0, 73%, 60%)" /&gt;            
+               &lt;stop offset="100%" stop-color="hsl(0, 73%, 20%)" /&gt;
+            &lt;/radialGradient&gt;
+            &lt;radialGradient id="starGradient"
+            gradientUnits="objectBoundingBox" fx="-1" fy="-1"&gt;
+               &lt;stop offset="0%" stop-color="hsl(55, 87%, 100%)" /&gt;            
+               &lt;stop offset="100%" stop-color="hsl(55, 87%, 50%)" /&gt;
+            &lt;/radialGradient&gt;
+         &lt;/defs&gt;
+         &lt;!-- You can see an example of polygon use at [1a] --&gt;
+         &lt;polygon fill="url(#starGradient)" stroke="black" stroke-width="10"
+         points="955,60 903,207 757,215 860,288 785,450
+         936,370 950,360 977,382 1061,437 1035,317 1111,225
+         1004,225" /&gt;
+
+         &lt;polygon fill="url(#darkBrownGradient)" stroke="black" stroke-width="10"
+         points="950,360 936,370 931,476 830,554
+         880,554 1058,554
+         1105,554 973,476 977,382" /&gt;
+
+         &lt;polygon fill="url(#greenTreeGradient)" stroke="black" stroke-width="10"
+         points="880,554
+         730, 1023 714, 1076
+         469, 2005 455, 2103
+         16, 3468 1, 3521
+         736, 3521 1184, 3521
+         2050, 3521
+         1800, 2634 1760, 2553
+         1357, 1464 1345, 1361
+         1058, 554" /&gt;
+
+         &lt;polygon fill="url(#brownGradient)" stroke="black" stroke-width="10"
+         points="736,3521 736,3977 1184,3977 1184,3521" /&gt;
+
+         &lt;polygon fill="url(#garlandGradient)" stroke="black" stroke-width="10"
+         points="
+         16,3468 1,3521
+         1800,2634 1760,2553
+         551,2055
+         1357,1464 1345,1361
+         730,1023 714,1076
+         1250,1430
+         469,2005 455,2103
+         1670,2630
+         " /&gt;
+
+         &lt;!-- You can see examples of how to draw ellipses at 1c and 
+              apply gradients at 1d --&gt;
+         &lt;ellipse cx="747" cy="1582" rx="50" ry="50"
+         fill="url(#blueCircleGradient)" stroke="black"
+         stroke-width="10" /&gt;
+
+         &lt;ellipse cx="1220" cy="1990" rx="50" ry="100"
+         fill="url(#blueCircleGradient)" stroke="black"
+         stroke-width="10" /&gt;
+
+         &lt;ellipse cx="545" cy="2950" rx="50" ry="50"
+         fill="url(#redCircleGradient)" stroke="black"
+         stroke-width="10" /&gt;
+
+         &lt;ellipse cx="1248" cy="2600" rx="60" ry="60"
+         fill="url(#yellowCircleGradient)" stroke="black"
+         stroke-width="10" /&gt;
+
+         &lt;ellipse cx="1013" cy="995" rx="40" ry="40"
+         fill="url(#yellowCircleGradient)" stroke="black"
+         stroke-width="10" /&gt;
+
+         &lt;ellipse cx="1623" cy="3247" rx="50" ry="60"
+         fill="url(#redCircleGradient)" stroke="black"
+         stroke-width="10" /&gt;
+
+         &lt;ellipse cx="642" cy="2600" rx="100" ry="80"
+         fill="url(#yellowCircleGradient)" stroke="black"
+         stroke-width="10" /&gt;
+      &lt;/g&gt;
+   &lt;/svg&gt;
+</code>
+</pre>
+
+<p>
+This SVG Code will generate a tree that looks like this png:
+</p>
+
+<figure>
+   <img src="https://www.utilars.com/Content/Blog/fig6-kristenTree.png"
+        alt="Final Tree" />
+   <figcaption>Figure 6</figcaption>
+</figure>  
+
+<p>
+In addition, if you have an SVG enabled browser like 
+IE10 (or higher) you can see the actual rendering of the SVG
+file here: 
+</p>
+
+<figure>
+   <!-- http://msdn.microsoft.com/en-us/library/ie/gg589526(v=vs.85).aspx -->
+   <object data="https://www.utilars.com/Content/img/ChristmasTree.svg" type="image/svg+xml">
+   </object>   
+   <figcaption>Figure 7</figcaption>
+</figure>  
+
+<p>
+In conclusion, there are a few advantages to the SVG File as opposed the PNG
+File:
+<ol>
+<li>The SVG File is easily scalable</li>
+<li>The SVG File is easily changeble</li>
+<li>The SVG File weighs in at only 6K while the PNG file seems to take about 23K without the copyright</li>
+<li>The SVG File can be viewed with a plain text editor</li>
+<li>It would reasonably easy to use the SVG Tree in some kind of interactive 
+coloring program<br />
+<span class="sideNote">(Unfortunately, I can't get into that in this post :-) )</span>
+</li>
+</ol>
+</p>
+
+<p>
+It would be very difficult to get all of those benefits with a plain raster image. 
+Now that you have amazingly tolorated this tutorial, I hope you have a better 
+appreciation for the benefits of SVG and how to manully create SVG images.  There
+are more techniques that can be applied to the image such as curves and blurs but
+those can be covered in other topics at a different time. 
+</p>
+            
+<h2>Bibliography</h2>
+<p>
+<a name="src1"></a>
+[1] - Various<br />
+Windows Metafile. Wikipedia.<br /> 
+[Online] DEC 14, 2013. [Cited: JAN 01, 2014.]<br /> 
+<a href="http://en.wikipedia.org/wiki/Windows_Metafile#Variants" target="_blank">http://en.wikipedia.org/wiki/Windows_Metafile#Variants</a><br />
+</p>
+<p>
+<a name="src2"></a>
+[2] - Dahlström, Erik; Dengler, Patrick; Grasso, Anthony; Lilley, Chris;<br />
+McCormack, Cameron, Schepers, Doug; Watt, Jonathan; Ferrailolo, Jon;<br />
+藤沢 淳; Jackson, Dean<br />
+SVG 1.1 (Second Edition) - Basic Shapes. W3C.<br />
+[Online] AUG 16, 2011. [Cited: DEC 22, 2013.]<br />
+a) <a href="http://www.w3.org/TR/SVG" target="_blank">http://www.w3.org/TR/SVG</a><br />
+b) <a href="http://www.w3.org/TR/SVG/shapes.html#PolygonElement" target="_blank">http://www.w3.org/TR/SVG/shapes.html#PolygonElement</a><br />
+c) <a href="http://www.w3.org/TR/SVG/coords.html#EstablishingANewUserSpace" target="_blank">http://www.w3.org/TR/SVG/coords.html#EstablishingANewUserSpace</a><br />
+d) <a href="http://www.w3.org/TR/SVG/shapes.html#EllipseElement" target="_blank">http://www.w3.org/TR/SVG/shapes.html#CircleElement</a><br />
+e) <a href="http://www.w3.org/TR/SVG/pservers.html#RadialGradientElement" target="_blank">http://www.w3.org/TR/SVG/pservers.html#RadialGradientElement</a><br />
+f) <a href="http://www.w3.org/TR/SVG/shapes.html#CircleElement" target="_blank">http://www.w3.org/TR/SVG/shapes.html#CircleElement</a><br />
+</p>
+<p>
+<a name="src3"></a>
+[3] - Coetzee, Derrick;<br /> 
+Converting PPT to SVG using Microsoft Office 2010 PIA.<br />
+Stack Overflow.<br />
+[Online] MAY 22, 2012. [Cited: JAN 01, 2013.]<br /> 
+<a href="http://stackoverflow.com/questions/5775060/converting-ppt-to-svg-using-microsoft-office-2010-pia" target="_blank">http://stackoverflow.com/questions/5775060/converting-ppt-to-svg-using-microsoft-office-2010-pia</a><br />
+</p>
+<p>
+<a name="src4"></a>
+[4] - LePage, Pete.<br />
+How To: HSL and HSLA Color Models.<br />
+Pete LePage.com.<br />
+[Online] JUN 2010. [Cited: JAN 01, 2013.]<br />
+<a href="https://petelepage.com/blog/2010/07/how-to-hsl-and-hsla-color-models/" target="_blank">https://petelepage.com/blog/2010/07/how-to-hsl-and-hsla-color-models/</a><br />
+</p>
+<p>
+©2014 - Shawn and Kristen Grace Eary<br />
+This post and all images are copyright (where allowable) by Shawn and 
+Kristen Grace Eary and are released under the 
+Free Christian Document License (FCDL) and/or Free Christen Media License (FCML)<br />
+Content from authors other than Shawn Eary and Kristen Grace Eary maintain
+the copyrights of their original authors.
+<br />
+</p>
+</article>
+</body>
+</html>

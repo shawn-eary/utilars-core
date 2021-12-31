@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   <title>Peoplesoft: Non-Exact EffDt Can Misplace Related Data</title>
+   <!-- Saw these meta tags on CodeShow
+      http://codeshow.codeplex.com/ -->
+   <meta name="keywords" content="PeopleSoft PeopleCode EffDt Missing Data SQL Oracle Developer" />
+   <meta name="description"
+         content="What can happen to data if EffDt does not match exactly in related tables" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="09/09/2015" />
+   <meta name="copyright" content="©2015 - Shawn Eary" />
+   <!--  Don't ask...
+   <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />   -->
+</head>
+<body>
+   <article>
+      <p>
+         Once again, I was working on a PeopleSoft project.  
+         While working on a page that had three "related" tables, I 
+         made an interesting error that temporarily caused to me 
+         misplace some data.
+      </p>
+      <p>
+         The three tables were all related by two keys.  One of the keys
+         was a string proprietary to my employer and the other key was 
+         Effective Date (EffDt).  I needed to get rid of some old and 
+         unused columns in the main table of the three.
+      </p>
+      <p>
+         I eliminated the columns with ease and saved the table, but then 
+         I had to <b>build</b> the table according to current PeopleSoft 
+         practice.  Of course when I built the table, I got an error explaining
+         that my current settings wouldn't allow PeopleSoft to drop tables that had data in them.  Then, I tried
+         alter by table rename with the drop columns option, but that <b>also</b> gave 
+         me an error.  Eventually, I decided to <b>nuke</b> the table by recreating it.
+         This of course blew away all of my data in the table, but I 
+         <b>expected</b> that.
+      </p>
+      <p>
+         Since there wasn't much data to recover, I decided to use a combination
+         of copy/paste and manual typing to put the data back in the <b>main</b>
+         table. When I got the data back in, I was pleased to find that the level 0 
+         data on my page was mostly correct.  Then, I was not
+         so happy when I noticed that my level 1 data was <b>gasp</b> "missing."
+      </p>
+      <p>
+         I knew I had not messed with any of the data in the other two tables, 
+         so I couldn't understand where my level 1 data went.  After all, I  
+         hadn't even touched my level 1 tables.  Just to make sure, I looked 
+         in my version of Oracle SQL Developer and found that the data was 
+         still there.
+      </p>
+      <p>
+         I couldn't figure out what gave, so I played around with the keys 
+         of the <b>main</b> table for a while.  Unfortunately, that didn't 
+         work.  Apparently, I had not done anything serious to damage the 
+         keys that relate all three of the tables. 
+      </p>
+      <p>
+         Eventually, it dawned on me that there must be a non-visible 
+         error in the data for the table keys.  Even though the key data <b>looked</b> okay
+         to me, I thought I must have missed some: special characters; extra spaces; or, 
+         invisible characters.  After checking the keys for a while, I realized
+         the problem had to be the EffDt field.
+      </p>
+      <p>
+         I ran an SQL statement similar to the following and the cause of the 
+         error was apparent:
+         <pre>
+         <code class="language-SQL">
+         select * from tableOfInterest where EffDt = '3-SEP-2015';
+         </code>
+         </pre>         
+         <span class="sideNote">
+         (Table name and date were actually different in my environment)
+         </span>
+      </p>
+      <p>
+         When I got around to running the above mentioned SQL statement, I 
+         believe I had only one row with a date of 3-SEP-2015 actually show up 
+         with several others that didn't.  That clued me in on the fact that 
+         Oracle SQL Developer was probably not showing me the entire dateTime
+         value for my EffDt column.  Some of the rows apparently had different 
+         <b>times of days</b> for the EffDt column even though they all 
+         had the same <b>date</b>.
+      </p>
+      <p>
+         When I realized the problem, I simply ran a few SQL update statements
+         to correct the unmatched EffDt values.  In my case, I didn't have 
+         much data and I was in a test environment, so I could simply do 
+         something similar to this:
+         <pre>
+         <code class="language-SQL">
+            update tableOfInterest set EffDt = '3-SEP-2015';
+            update relatedTable1 set EffDt = '3-SEP-2015';
+            update relatedTable2 set EffDt = '3-SEP-2015';
+         </code>
+         </pre>
+      </p>
+      <p>
+         Once the EffDt values were all matching, my Level 1 data 
+         reappareed on the page I was working with, and I no longer 
+         had to be in panic mode.  Fortunately, I didn't break 
+         anything afterall...
+      </p>         
+      <h2>Bibliography</h2>
+      <p>
+         No external sources were used for this blog post.
+      </p>      
+      <p>
+         ©2015 - Shawn Eary<br />
+         This post is copyright (where allowable) by Shawn Eary and is released under
+         the Free Christian Media Licence <a target="_blank" href="http://www.arsquies.com/Home/FCML">(FCML)</a>.
+         Content from authors other than Shawn Eary maintain
+         the copyright and license rules that were imposed by the original authors.
+         <br />
+      </p>
+   </article>
+</body>
+</html>

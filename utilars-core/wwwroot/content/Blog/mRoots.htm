@@ -1,0 +1,787 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   <title>M-Roots</title>
+   <!-- Saw these meta tags on CodeShow 
+      http://codeshow.codeplex.com/ -->
+   <meta name="keywords" 
+   content="Roots Complex Numbers Square Root Cube Root 
+   Fourier Transform" />
+   <meta name="description" 
+   content="The M-Roots of a Number" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="06/30/2013" />
+   <meta name="copyright" content="©2013 - Shawn Eary" />
+   <script type="text/javascript"
+    src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+<body>    
+<article>
+   <p>
+   The last few months, I have been blogging about F#.   While I am a 
+   big fan of F#, I would like to part from that discussion to talk 
+   about yet another topic that interests me.  I have been trying for 
+   a while to understand the Fourier Transform; unfortunately, I often 
+   feel like a deer staring into headlights when I look at the 
+   standard Fourier Transform summation formula.  I suppose the only 
+   way for me to really get this is to take it a step at a time and 
+   start with something *relatively* basic such as M-Roots.  
+   </p>
+
+   <p>
+   When you were young, your teacher probably told you that the square 
+   root of a number M was some number N that when multiplied by itself
+   equaled M.   Your teacher may not have used those words, but may 
+   have said something like “The square root of sixteen is four 
+   because four times four equals sixteen and the square root of nine
+   is three because three times three equals nine." 
+   </p>
+
+   <p>
+   Hopefully, your teacher drove home the fact that this wasn’t the 
+   whole story.  You probably know that in addition to the above, 
+   -3 * -3 = 9 and -4 * -4 = 16.   So 9 doesn’t just have the square 
+   root of 3.  It also has a square root of -3 and 16 doesn’t just 
+   have a square root of 4, it also has the square root of -4.  In 
+   fact, for any Complex Number, there are exactly two square roots 
+   <a href="#src1">[1]</a>.
+   </p>
+
+   <p>
+   Okay, so what is a Complex Number?   You probably already know 
+   this also, but a Complex Number contains a both a real and 
+   Imaginary Number.  So what is an Imaginary Number?  An Imaginary 
+   Number is basically what you get when 
+   you try to take the square root of a negative number.   The 
+   square root of 100 is obviously 10 since 10 * 10 = 100, but 
+   what is the square root of -100?  Uuuh,  I-Dough-Know…   
+   </p>
+
+   <p>
+   If you are new to Complex Numbers, you might try to guess that 
+   the square root of -100 is -10, but that doesn’t work since 
+   -10 * -10 = 100.   So what is the square root of -100?  Well, to 
+   solve that problem you might want to break it down.  -100 can be 
+   expressed as -1 * 100 or better yet 100 * -1.   Now, we can take 
+   the square root of (100 * -1)  which is the same as 
+   <math>
+      <mrow>
+         <msqrt><mn>100</mn></msqrt>
+         <mo>*</mo>
+         <msqrt><mn>-1</mn></msqrt>
+      </mrow>
+   </math>
+   </p>
+
+   <p>
+   So what is <math><msqrt><mn>-1</mn></msqrt></math>?  To be honest,
+   I have no clue.  I just know that most folks call that <i>i</i>.
+   What's <i>i</i>?  Well that's the <math><msqrt><mn>-1</mn></msqrt></math>
+   of course!  Don't you know that :-) ?   If you don't believe me 
+   you can solve the equation in <a href="#src2">[2]</a> on your own 
+   time...
+   </p>
+
+   <p>
+   So then, from the above we have that the square root of -100 is 
+   <math>
+      <mrow>       
+         <msqrt><mn>-1</mn></msqrt>
+         <mo>*</mo>         
+         <msqrt><mn>100</mn></msqrt>
+      </mrow>
+   </math>
+   or 
+   <math>
+      <mrow>       
+         <msqrt><mn>100</mn></msqrt>         
+         <mo>*</mo>         
+         <msqrt><mn>-1</mn></msqrt>
+      </mrow>
+   </math>
+   which is 
+   <math>
+      <mrow>       
+         <mi>10</mi>
+         <mo>*</mo>         
+         <msqrt><mn>-1</mn></msqrt>
+      </mrow>
+   </math>
+   which is simply: 10i.
+   </p>
+
+   <p>
+   So in this case, the Imaginary Number 10i can be represented as the 
+   Complex Number 0+10i because there is no real component and there
+   are 10 units of the imaginary component <a href="#src3">[3]</a>.  
+   </p>
+
+   <p>
+   So what is the point in mentioning Complex Numbers?  Well, it has
+   to do with how many roots we can get for a number.  Remember when 
+   I said that for any Complex Number there are exactly two square 
+   roots <a href="#src1">[1]</a>?  As it turns out, we can generalize 
+   that statement and say that for any Complex Number there are exactly 
+   M number of M<sup>th</sup> roots.  In <a href="#src4">[4]</a>, Dr. Smith says 
+   “...the M<sup>th</sup> root of a, which is written as a<sup>1/M</sup>, is not 
+   unique--there are M of them.”  So with the help of Dr. Smith 
+   (and others), we know that there are exactly two square roots for 
+   any number, three cube roots, four fourth roots and so on.  In 
+   order to find all of these roots, we usually need Complex Numbers. 
+   </p>
+
+   <p>
+   So it’s pretty obvious how to get the square root of a number.  
+   In most cases, an intelligent person can just guess and get a 
+   correct answer, but it gets harder when you have to calculate the 
+   cube roots or maybe even the 4<sup>th</sup> roots or the 
+   128<sup>th</sup> roots. 
+   Fortunately, Dr. Smith presents a formula in his text that we can 
+   use.  So let's see if we can figure out how Dr. Smith derives that
+   presented formula...
+   </p>
+
+   <p>
+   At the beginning of his discussion, Dr. Smith says that any 
+   Complex Number can be expressed as follows:
+   <math>   
+   <mrow>
+   <mi>z</mi>
+   <mo>=</mo>
+   <msup>
+   <mrow>
+   <mi>r</mi>
+   <mi>e</mi>
+   </mrow>
+   <mi>
+   j&theta; 
+   </mi>
+   </msup>      
+   </mrow>
+   </math>.<br />
+   <span class="sideNote">
+   [Dr. Smith uses j to represent the square root of -1 instead of i.  
+   This is fairly common practice.  Both j and i generally mean the 
+   same thing; however, I personally prefer to use the letter i and 
+   will try to use i whenever possible from here out.]</span>
+   <br /><br />
+   When Dr. Smith says this, he basically means that any Complex
+   Number can be translated into polar cordinates where r is a 
+   magnitude and i&theta; is a phase.  If you want an example of how 
+   this is so, you can follow <a href="#src5">[5]</a> to see that a 
+   Complex Number x + y<i>i</i> = r(cos &theta; + <i>i</i> sin &theta;).  You can 
+   then use Euler's Identity *mentioned* by Mr. Roelandts in <a href="#src6">[6]</a> to substitute 
+   e<sup><i>i</i>&theta;</sup> for (cos &theta; + <i>i</i> sin &theta;) and get the 
+   final answer that z = x + y<i>i</i> = r*e<sup><i>i</i>&theta;</sup>
+   just like Dr. Smith said.<br />
+   <span class="sideNote">
+   [In case you don't have time to read *all* of Mr. Roelandts' article,
+   you can look to the derivation section where you will find the 
+   useful formula<br />
+   e<sup><i>i&theta;</i></sup>=cos &theta; + <i>i</i> sin &theta;<br />
+   but please note that Mr. Roelandts uses x in his formula instead of 
+   &theta;]
+   </span>
+   </p>
+
+   <p>
+   Now, with the formula 
+      <math>   
+   <mrow>
+   <mi>z</mi>
+   <mo>=</mo>
+   <msup>
+   <mrow>
+   <mi>r</mi>
+   <mi>e</mi>
+   </mrow>
+   <mi>
+   i&theta; 
+   </mi>
+   </msup>      
+   </mrow>
+   </math>, goofy me thinks I can just take the root of both sides of the 
+   equation to get the M roots, but that doesn't work because the 
+   result will not have "k" which is an iteration constant you will 
+   need to find all *M* of the M-Roots.  Instead, Dr. Smith uses 
+   Euler's Identity again to introduce "k" with a trick.  Dr. Smith 
+   says that since 
+   e<sup>i&theta;</sup>=cos &theta; + <i>i</i> sin &theta; that
+   e<sup><i>i</i>2&pi;<i>k</i></sup>=cos(2&pi;k) + <i>i</i> sin(2&pi;k).
+   Now, if you think for a minute, you will see that the new adjusted
+   equation always equals 1.  No joke!!!  I'm not about to prove it, 
+   but try evaluating cos(2&pi;k) + <i>i</i> sin(2&pi;k) for numerous 
+   integer values of k. You *should* get 1 every time.
+   </p>
+
+   <p>
+   So since e<sup><i>i</i>2&pi;<i>k</i></sup> always equals one, there isn't any harm
+   in multiplying it by any side or *both* sides of an equation.  Dr. 
+   Smith takes this step and comes up with: 
+   z = <i>r</i><i>e</i><sup><i>i</i>&theta;</sup><i>e</i><sup><i>i</i>2&pi;<i>k</i></sup>.
+   </p>
+
+   <p>
+   I you are intersted, you can then go to Dr. Smith's book 
+   <a href="#src4">[4]</a> to see finally how he takes the m<sup>th</sup>
+   root of both sides to come up with the final equation. 
+   </p>
+   <math>
+   <mrow>
+   <msup>
+   <mi>z</mi>
+   <mfrac>
+   <mn>1</mn><mi>M</mi>
+   </mfrac>
+   </msup>
+   <mo>=</mo>
+   <msup>
+   <mi>r</mi>
+   <mfrac>
+   <mn>1</mn><mi>M</mi>
+   </mfrac>
+   </msup>
+   <msup>
+   <mi>e</mi>
+   <mrow><mi>i</mi>
+   <mfrac>
+   <mrow><mi>&theta;</mi><mo>+</mo><mn>2</mn><mi>&pi;k</mi></mrow>
+   <mi>M</mi>
+   </mfrac></mrow>
+   </msup>
+
+   </mrow>
+   </math>
+
+   <p>
+   Now, if you are like me. You *may* be starring at the equation 
+   Dr. Smith presented wondering what in the world he just said.  
+   In particular, I'm a bit rusty with Euler's Identity and polar 
+   coordinates.  What don't we 
+   *try* and use Euler's Identity to get rid of that ugly <i>e</i>
+   constant.  If you want to learn more about <i>e</i> you are welcome 
+   to go to <a href="#src7">[7]</a>, but personally, I would just 
+   prefer to send <i>e</i> on its way right now...
+   </p>
+
+   <p>
+   So in my usual style, I’m going to make a Huge Ugly Guess (HUG) and 
+   hope that I am mathematically allowed to assign 
+   <math>
+   <mfrac>
+   <mrow><mi>&theta;</mi><mo>+</mo><mn>2</mn><mi>&pi;k</mi></mrow>
+   <mi>M</mi>
+   </mfrac>
+   </math>
+   to the variable x.  Then, I'm going to use Euler's Identity as 
+   mentioned by Mr. Roelandts in <a href="#src6">[6]</a> to try and 
+   come up with a simplified version of the equation Dr. Smith 
+   demonstrated.  So anyway, if I apply Euler's Identity to the equation 
+   Dr. Smith showed previously, then I *think* I get something like 
+   this:<br />
+
+      <math>
+   <mrow>
+   <msup>
+   <mi>z</mi>
+   <mfrac>
+   <mn>1</mn><mi>M</mi>
+   </mfrac>
+   </msup>
+   <mo>=</mo>
+   <msup>
+   <mi>r</mi>
+   <mfrac>
+   <mn>1</mn><mi>M</mi>
+   </mfrac>
+   </msup> 
+   <mi>(</mi>     
+   <mi>cos</mi>   
+   <mfrac>
+   <mrow><mi>&theta;</mi><mo>+</mo><mn>2</mn><mi>&pi;k</mi></mrow>
+   <mi>M</mi>
+   </mfrac>
+   <mo>+</mo>
+   <mi>i</mi>   
+   <mi>cos</mi>   
+   <mfrac>
+   <mrow><mi>&theta;</mi><mo>+</mo><mn>2</mn><mi>&pi;k</mi></mrow>
+   <mi>M</mi>
+   </mfrac>
+   <mi>)</mi>     
+   </mrow>   
+   </math>
+   </p>
+
+   <p>
+   Walla!!! <i>e</i> is gone.  Now, M is the root "level" I am taking
+   which is 2 for square root, 3 for cube root and so on; therefore, 
+   the value "M" is known.  I know what 2&pi; is - that's just some constant.  Also,
+   k is all numbers between 0 and M-1.  So I guess, I need to figure
+   out what <i>r</i> and &theta; are.  Well, I *think* <i>r</i> is just
+   the magnitude of the Complex Number and &theta; is just the phase, 
+   so I should be good to go.  I *think* I have everything I need to 
+   solve the equation now.  So to drive this home, I think I should
+   try an example.  People such as me like examples...
+   </p>
+
+   <p>
+   Let's try to find the four fourth roots of the number 16+0i (which 
+   is also simply known as the real number 16).  Before we even start, 
+   we can already find two on them in our head.  Two of the 
+   4<sup>th</sup> roots are 2 and -2 since 2*2*2*2 = 16 and 
+   -2*-2*-2*-2=16.  But Dr. Smith told us earlier that there should be
+   four fourth roots of any Complex Number.  Since 16 is a special 
+   case of the Complex Number 16+0i, we are missing two roots.  How 
+   would we find them?  With the equation that Dr. Smith demonstrated
+   of course!!!
+   </p>
+   <p>
+   In that equation, we know that M is 4 and k is all integers from 
+   0 to 3 inclusive.  So we just need to find &theta; and <i>r</i> and 
+   we will be set.  In our particular case, we are lucky and &theta; 
+   is 0 because we are dealing with a real number 16.  You can look 
+   back at Bourne's article <a href="#src5">[5]</a> to verify this.  
+   Also, because 16 is a real number we are in luck again and the 
+   magnitude of <i>r</i> is simply 16.  Again, you can review 
+   <a href="#src5">[5]</a> to see how to compute the magnitude of a 
+   Complex Number.  Lastly, we know that <i>i</i> is just the square root of
+   -1.  So we finally have everything we need, so we just go a 
+   pluggin...
+   </p>
+
+   <p>
+   For k=0 we get:<br />
+      <math>
+   <mrow>
+   <msup>
+   <mi>z</mi>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup>
+   <mo>=</mo>
+   <msup>
+   <mi>r</mi>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup> 
+   <mi>(</mi>
+     
+   <mi>cos</mi>   
+   <mfrac>
+   <mrow><mn>0</mn><mo>+</mo><mn>2</mn><mi>&pi;</mi><mn>0</mn></mrow>
+   <mn>4</mn>
+   </mfrac>
+   <mo>+</mo>
+   <mi>i</mi>   
+   <mi>sin</mi>   
+   <mfrac>
+   <mrow><mn>0</mn><mo>+</mo><mn>2</mn><mi>&pi;</mi><mn>0</mn></mrow>
+   <mn>4</mn>
+   </mfrac>
+   <mi>)</mi>
+   </mrow>   
+   </math>
+   </p>
+
+   <p>
+   For k=1 we get:<br />
+      <math>
+   <mrow>
+   <msup>
+   <mi>z</mi>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup>
+   <mo>=</mo>
+   <msup>
+   <mi>r</mi>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup> 
+     
+   <mi>(</mi>
+   <mi>cos</mi>   
+   <mfrac>
+   <mrow><mn>0</mn><mo>+</mo><mn>2</mn><mi>&pi;</mi><mn>1</mn></mrow>
+   <mn>4</mn>
+   </mfrac>
+   <mo>+</mo>
+   <mi>i</mi>   
+   <mi>sin</mi>   
+   <mfrac>
+   <mrow><mn>0</mn><mo>+</mo><mn>2</mn><mi>&pi;</mi><mn>1</mn></mrow>
+   <mn>4</mn>
+   </mfrac>
+   <mi>)</mi>
+   </mrow>   
+   </math>
+   </p>
+
+      <p>
+   For k=2 we get:<br />
+      <math>
+   <mrow>
+   <msup>
+   <mi>z</mi>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup>
+   <mo>=</mo>
+   <msup>
+   <mi>r</mi>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup> 
+     
+   <mi>(</mi>
+   <mi>cos</mi>   
+   <mfrac>
+   <mrow><mn>0</mn><mo>+</mo><mn>2</mn><mi>&pi;</mi><mn>2</mn></mrow>
+   <mn>4</mn>
+   </mfrac>
+   <mo>+</mo>
+   <mi>i</mi>   
+   <mi>sin</mi>   
+   <mfrac>
+   <mrow><mn>0</mn><mo>+</mo><mn>2</mn><mi>&pi;</mi><mn>2</mn></mrow>
+   <mn>4</mn>
+   </mfrac>
+   <mi>)</mi>
+   </mrow>   
+   </math>
+   </p>
+
+   <p>
+   And finally for k=3 we get...:<br />
+         <math>
+   <mrow>
+   <msup>
+   <mi>z</mi>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup>
+   <mo>=</mo>
+   <msup>
+   <mi>r</mi>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup> 
+     
+   <mi>(</mi>
+   <mi>cos</mi>   
+   <mfrac>
+   <mrow><mn>0</mn><mo>+</mo><mn>2</mn><mi>&pi;</mi><mn>3</mn></mrow>
+   <mn>4</mn>
+   </mfrac>
+   <mo>+</mo>
+   <mi>i</mi>   
+   <mi>sin</mi>   
+   <mfrac>
+   <mrow><mn>0</mn><mo>+</mo><mn>2</mn><mi>&pi;</mi><mn>3</mn></mrow>
+   <mn>4</mn>
+   </mfrac>
+   <mi>)</mi>
+   </mrow>   
+   </math>
+   </p>
+
+   <p>
+   For k=0 we obviously get 2 since the sine term automatically 
+   cancels out and the cos term evaluates to one.  This leaves us 
+   with nothing more than the 4<sup>th</sup> root of the real number 16 which 
+   was obviously 2.  
+   </p>
+   <p>
+   For k=2 we have a similar situation since the sin term cancels out
+   and the cos term evaluates to -1.  So when the magnitude <i>r</i> is
+   raised the the 
+   <math>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </math>
+   &nbsp;power, we get 2 which is then multipled by -1 to get the 
+   final *real* result of -2. 
+   </p>
+
+   <p>
+   Now, if we simplify the k=1 case above we get:<br />
+         <math>
+   <mrow>
+   <msup>
+   <mi>z</mi>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup>
+   <mo>=</mo>
+   <msup>
+   <mn>16</mn>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup> 
+     
+   <mi>(</mi>
+   <mi>cos</mi>   
+   <mfrac>
+   <mrow><mn>2</mn><mi>&pi;</mi></mrow>
+   <mn>4</mn>
+   </mfrac>
+   <mo>+</mo>
+   <mi>i</mi>   
+   <mi>sin</mi>   
+   <mfrac>
+   <mrow><mn>2</mn><mi>&pi;</mi></mrow>
+   <mn>4</mn>
+   </mfrac>
+   <mi>)</mi>
+   </mrow>   
+   </math><br />
+   which is also:<br />
+            <math>
+   <mrow>
+   <msup>
+   <mi>z</mi>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup>
+   <mo>=</mo>
+   <mn>2</mn>  
+   <mi>(</mi>     
+   <mi>cos</mi>   
+   <mfrac>
+   <mi>&pi;</mi>
+   <mn>2</mn>
+   </mfrac>
+   <mo>+</mo>
+   <mi>i</mi>   
+   <mi>sin</mi>   
+   <mfrac>
+   <mi>&pi;</mi>
+   <mn>2</mn>
+   </mfrac>
+   <mi>)</mi>
+   </mrow>   
+   </math><br />
+   <br />
+   which leads to: 
+               <math>
+   <mrow>
+   <msup>
+   <mi>z</mi>
+   <mfrac>
+   <mn>1</mn><mn>4</mn>
+   </mfrac>
+   </msup>
+   <mo>=</mo>
+   <mn>2</mn>  
+   <mi>(</mi>        
+   <mn>0</mn>
+   <mo>+</mo>
+   <mn>1</mn>          
+   <mi>i</mi>     
+   <mi>)</mi>
+   </mrow>   
+   </math><br />
+   <br />
+   or finally:<br />
+   0 + 2<i>i</i>
+   </p>
+
+   <p>
+   I leave it as an exercise for the reader to show that the k=3 case
+   yields 0 - 2<i>i</i>, but you should intiutively know that this 
+   happens because the sin(2&pi;3/4) imaginary term will evaluate 
+   to -1 and the cos(2&pi;3/4) real term will evaluate to zero. 
+   </p>
+
+   <p>
+   So we finally have determined the four 4<sup>th</sup> roots of 
+   16 which is also known as 16+0<i>i</i>.  Those roots are as follows:
+   2+0i, -2+0i, 0+2i, and 0-2i.  A plot of these roots appears 
+   below in Figure#1:
+   </p>
+   <figure>
+    <img width="345px" height="263px" src="http://www.arsquies.com/Content/Blog/mRoots-fig1.png" alt="Plot of 4th Roots of 16+0i" /><br />
+    <figcaption>
+    Figure 1<br />
+    </figcaption>
+    </figure>
+
+    <p>
+    The interesting part of these M<sup>th</sup> roots is that they 
+    will always be evenly spaced around a circle with radius equal to 
+    the value of the magnitude of the Complex Number raised to the 
+    power of 1/M.  You can see that by watching the 
+    <a href="#src8">[8]</a> demo at MathWorld.  The M<sup>th</sup>
+    roots of unity are simply a special case of the M<sup>th</sup>
+    roots that are covered here, so the Rowland and Weisstein article
+    would be a great suplimentary article if you don't quite get 
+    what I am saying here or you don't quite follow Dr. Smith's 
+    approach <a href="#src4">[4]</a>.
+    </p>
+
+    <p>
+    With all of this said, we have given a basic overview of the 
+    concent of M<sup>th</sup> roots.  In fact, you are welcome to 
+    take the 5<sup>th</sup> or 6<sup>th</sup> roots of 16+0<i>i</i> 
+    on your own time.  Or you might even try taking taking roots of 
+    Complex Numbers.  It's up to you, but one thing remains.  We should
+    show that when each of the 4<sup>th</sup> roots we determined is 
+    multiplied by itself four times, we get 16+0<i>i</i> or simply 16.
+    I'm not sure I have the time to do all four of the examples but I 
+    will try the easiest ones. 
+    </p>
+
+    <p>
+    We said the fourth roots of 16 was 2+0i, -2+0i, 0+2i, and 0-2i.
+    Well, we can easly see that 2*2*2*2=16 and that -2*-2*-2*-2=16, so
+    lets see what happens when we multiply (0-2i) by itself four times.
+    For starters we get:<br />
+    (0-2i)*(0-2i)*(0-2i)*(0-2i)<br />
+    this becomes<br />
+    (-2i)*(-2i)*(-2i)*(-2i)<br />
+    which is<br />
+    (4i<sup>2</sup>)*(-2i)*(-2i)<br />
+    Now, because the square of i is -1, we have<br />
+    (4*(-1))*(-2i)*(-2i)<br />
+    which is<br />
+    -4*(-2i)*(-2i)<br />
+    which is<br />
+    -4*(4i<sup>2</sup>)<br />
+    which is<br />
+    -4*(4*(-1))<br />
+    which is<br />
+    -4*-4 which is obviously 16.
+    </p>
+
+    <p>
+    I leave it as an exercise to the reader to prove that 
+    (0+2i)<sup>4</sup> = 16.  Now, I will mention the caveat.  I 
+    had it easy.  I was lucky because all of my 4<sup>th</sup> roots
+    were purely real or purely imaginary.  That made the multiplication
+    of my roots by themselves quite easy.  In many cases, you will 
+    have a complex m<sup>th</sup> root that has both real *and* 
+    imaginary components.  In that case, if you want to multiply the 
+    root by itself you will have to use the FOIL method.  Most likely,
+    you are already familiar with FOIL, but there is a good example of 
+    it at <a href="#src9">[9]</a> if you need help. 
+    </p>
+
+    <p>
+    That's about all I'm going to say on M<sup>th</sup> roots.  So 
+    why would someone want to know this?  Well, if you want to evenly
+    space a bunch of points around a circle, it might be useful.  It 
+    seems to me that such a technique *might* be useful in drawing 
+    3D cylindrical based meshes, but I hope to get into that at some
+    future date.  The main reason I think someone would want to know
+    about M<sup>th</sup> roots is that it makes it easier to 
+    understand what's going on in the Fourier Transform.  I don't know
+    the exact details at this moment, but I *think* I read somewhere
+    that if you have the M<sup>th</sup> roots of unity 
+    <a href="#src10">[10]</a>, then it 
+    becomes easier to evaluate the Fourier Transform.  Hopefully, I 
+    will be able to get to that in the next few months without frying 
+    my brain...
+
+<h2>Bibliography</h2>
+<a name="src1"></a>
+1. Weisstein, Eric W.<br />
+"Square Root." From MathWorld--A Wolfram Web Resource.<br />
+[Cited: JUN 30, 2013.]<br />
+<a target="_blank" href="http://mathworld.wolfram.com/SquareRoot.html">http://mathworld.wolfram.com/SquareRoot.html</a><br />
+<br />
+
+<a name="src2"></a>
+2. Various.<br />
+Imaginary Unit.<br />
+Wikipedia. [Online: JUN 19, 2013]<br />
+[Cited: JUN 30, 2013.]<br />
+<a target="_blank" href="http://en.wikipedia.org/wiki/Imaginary_unit">http://en.wikipedia.org/wiki/Imaginary_unit</a><br />
+<br />
+
+<a name="src3"></a>
+3. Weisstein, Eric W.<br />
+"Complex Number." From MathWorld--A Wolfram Web Resource.<br />
+[Cited: JUN 30, 2013.]<br />
+<a target="_blank" href="http://mathworld.wolfram.com/ComplexNumber.html">http://mathworld.wolfram.com/ComplexNumber.html</a><br />
+<br />
+
+<a name="src4"></a>
+4. Smith, Julis Orion III<br />
+MATHEMATICS OF THE DISCRETE FOURIER TRANSFORM (DFT) WITH AUDIO 
+APPLICATIONS SECOND EDITION.<br />
+Stanford. [Online: MAY 06, 2013]<br />
+[Cited: JUN 29, 2013.]<br />
+<a target="_blank" href="https://ccrma.stanford.edu/~jos/mdft/Back_Mth_Roots.html">https://ccrma.stanford.edu/~jos/mdft/Back_Mth_Roots.html</a><br />
+<span class="sideNote">[Also available in print - Check Amazon.com]</span>
+<br /><br />
+
+<a name="src5"></a>
+5. Bourne, Murray<br />
+Polar Form of a Complex Number<br />
+Interactive Mathematics. [Online: MAY 25, 2013]<br />
+[Cited: JUN 29, 2013.]<br />
+<a target="_blank" href="http://www.intmath.com/complex-numbers/4-polar-form.php">http://www.intmath.com/complex-numbers/4-polar-form.php</a><br />
+<br />
+
+<a name="src6"></a>
+6. Roelandts, Tom<br />
+Euler's Identity<br />
+TomRoelandts.com. [Online: MAR 11, 2012]<br />
+[Cited: JUN 29, 2013.]<br />
+<a target="_blank" href="http://tomroelandts.com/articles/eulers-identity">http://tomroelandts.com/articles/eulers-identity</a><br />
+<br />
+
+<a name="src7"></a>
+7. Various<br />
+What is e?<br />
+Non Destructive Testing (NDT) Resource Center. [Online: Unknown]<br />
+[Cited: JUN 29, 2013.]<br />
+<a target="_blank" href="http://www.ndt-ed.org/EducationResources/Math/Math-e.htm">http://www.ndt-ed.org/EducationResources/Math/Math-e.htm</a><br />
+<br />
+
+<a name="src8"></a>
+8. Rowland, Todd and Wisstein, Eric W.<br />
+"Root of Unity." From MathWorld--A Wolfram Web Resource.<br />
+[Cited: JUN 30, 2013.]<br />
+<a target="_blank" href="http://mathworld.wolfram.com/RootofUnity.html">http://mathworld.wolfram.com/RootofUnity.html</a><br />
+<br />
+
+<a name="src9"></a>
+9. Unknown<br />
+Foil Method to Multiply Binomials<br />
+Math Warehouse. [Online: Unknown]<br />
+[Cited: JUN 30, 2013.]<br />
+<a target="_blank" href="http://www.mathwarehouse.com/algebra/polynomial/foil-method-binomials.php">http://www.mathwarehouse.com/algebra/polynomial/foil-method-binomials.php</a><br />
+<br />
+
+<a name="src10"></a>
+10. Various.<br />
+Root of Unity.<br />
+Wikipedia. [Online: MAY 8, 2013]<br />
+[Cited: MAY 8, 2013.]<br />
+<a target="_blank" href="http://en.wikipedia.org/wiki/Root_of_unity">http://en.wikipedia.org/wiki/Root_of_unity</a><br />
+<br />
+
+
+
+<p>
+©2013 - Shawn Eary<br />
+This post is released under the Free Christian Document License (FCDL)<br />
+</p>
+</article>
+</body>
+</html>

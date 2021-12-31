@@ -1,0 +1,35 @@
+﻿@model utilars_core.Models.MessageAttempt
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<h2>Contact WebMaster</h2>
+
+<p>
+    I got rid of the old contact form because I don't have
+    a reliable email forwarding service at this moment.
+</p>
+
+<div class="errMsg">
+    @ViewData["Message"]
+</div>
+<br />
+<br />
+<div>
+    @* Page 74 of Nerd Dinner *@
+    @using (Html.BeginForm()) {
+    <fieldset>
+        <div id="tbQuestion" style=" background-color:Gainsboro">
+            @* https://stackoverflow.com/questions/5120645/razor-syntax-equivalent  *@
+            @Html.Raw(Model.Base64Digits)
+        </div>
+        Enter the numbers that appear above: <br />
+        @Html.TextBoxFor(m => m.ChallengeResponse)<br />
+        <br />
+
+        <input type="hidden" value="@Model.Expected" name="Expected" />
+
+        <input type="submit" value="Click for Contact Info" />
+    </fieldset>
+    }
+</div>

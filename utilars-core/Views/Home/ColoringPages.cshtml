@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Coloring Pages";
+}
+
+<h2>Coloring Pages</h2>
+
+<p>
+    Below you will find Coloring Pages contributed by Shawn Eary and Family that is released
+    under
+    @Html.ActionLink("FCML", "FCML", "Home")
+</p>
+
+@foreach (efModels.sp_coloringPagesIndexResult item in Model)
+{ 
+<div>
+    <h3><u>@Html.DisplayFor(modelItem => item.Title)</u></h3>
+    <p>Description: @Html.DisplayFor(modelItem => item.Description)</p>
+    <p>
+        Licensed via @Html.DisplayFor(modelItem => item.Licenses) by @Html.DisplayFor(modelItem => item.Contributors)<br />
+    </p>
+    <p>
+    </p>
+    <a href="@Html.DisplayFor(modelItem => item.mainURI)">
+        <img src="@Html.DisplayFor(modelItem => item.tmbURI)" alt="not implemented yet" />
+    </a>
+    <br />
+</div>
+}

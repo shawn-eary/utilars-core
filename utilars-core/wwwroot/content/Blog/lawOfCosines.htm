@@ -1,0 +1,504 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   <title>Law of Cosines</title>
+   <!-- Saw these meta tags on CodeShow 
+      http://codeshow.codeplex.com/ -->
+   <meta name="keywords" content="Math Trigonometry Triangles Cosine Sine" />
+   <meta name="description"
+         content="Very informal explanation of how law of cosines is a generalization of Pythagorean Theorem" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="09/23/2014" />
+   <meta name="copyright" content="©2014 - Shawn Eary" />   
+   <!--  Don't ask...
+   <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />   -->
+</head>
+<body>       
+   <article>
+      <p>
+      When I was in secondary school, I was taught the ever 
+      familiar c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> for 
+      the right triangle.  This is the well known 
+      Pythagorean Theorem <a href="#src1">[1]</a>
+      </p>
+      <p>
+      The Pythagorean Theorem is a super easy way to compute 
+      lengths of many objects because at lot of objects can be simplified
+      into right triangles; unfortunately, the Pythagorean Theorem 
+      only works for <b>right</b> triangles.  To demonstrate the 
+      Pythagorean Theorem, I use an example. 
+      </p>
+      <p>
+      Suppose for a minute that you managed a large nature center called Blue Mountain Arboretum 
+      as seen in Figure#1 below:
+      </p>
+      <figure>
+         <img width="700" src="https://www.utilars.com/Content/Blog/loc-fig1.gif"
+              alt="Picture of Park to demonstrate use of Pythagorean Theorem" />
+         <figcaption>
+            Figure 1
+         </figcaption>
+      </figure>
+      <p>
+      Further suppose that your patrons lost interest in the 
+      Visitor and Education Center shown in Figure#1 and 
+      instead became more 
+      interested in the new Parque de Flores exhibit.  After
+      receiving several complaints from patrons about how long and boring 
+      the walk around the Visitor Center was, 
+      you consider commissioning some engineers to build a path 
+      through the Visitor Center from the intersection of 
+      Hola Camino and Cherry Lane to the intersection of 
+      Swan Street and Pear Street.  
+      </p>
+      <p>
+      Presently, your patrons have to travel approximately 2500 ft + 
+      800 ft for a total of 3300 ft to get from the park entrance to
+      the intersection of Swan Street and Pear Street, but you are 
+      wondering if allowing them to cut diagonally through the center
+      would save them much walking distance so you decide to use the 
+      Pythagorean Theorem.
+      </p>
+      <p>
+      The Pythagorean Theorem works for you because Swan Street 
+      and Cherry Lane form a right angle and the path we want 
+      across the visitor center is a hypotenuse opposite that 
+      said right angle.  Now, if you use the Pythagorean Theorem 
+      and do the math, your work might look something like this: 
+      </p>
+      <p>
+      c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup><br />
+      c<sup>2</sup> = 2500<sup>2</sup> + 800<sup>2</sup><br />
+      c<sup>2</sup> = 6250000 + 640000<br />
+      c<sup>2</sup> = 6890000<br />
+      c<sup>2</sup> = 689 * 10000<br />
+         <math>
+            <mi>c</mi>
+            <mo>=</mo>
+            <msqrt>               
+               <mn>689</mn>
+            </msqrt>
+            <mo>*</mo>
+            <msqrt>
+               <mn>10000</mn>
+            </msqrt>
+         </math><br />
+
+         <math>
+            <mi>c</mi>
+            <mo>=</mo>
+            <msqrt>
+               <mn>689</mn>
+            </msqrt>
+            <mo>*</mo>            
+               <mn>100</mn>            
+         </math><br />
+
+         <math>
+            <mi>c</mi>
+            <mo>=</mo>            
+            <mn>100</mn>
+            <mo>*</mo>
+            <msqrt>
+               <mn>689</mn>
+            </msqrt>            
+         </math><br />         
+         <math>
+            <mi>c</mi>
+            <mo>&#x2248;</mo>
+            <mn>2624.88095</mn>
+         </math><br />
+      </p>
+      <p>
+      Which is significantly shorter than the 3300 ft the patrons would
+      have to walk if they didn't have a path to cut directly 
+      through the middle of the Visitor/Education Center.  Given this 
+      information, you decide that it might be worth the cost to build 
+      that bridge or tunnel to cut through. 
+      </p>
+      <p>
+      Again, the problem with this approach is that the Pythagorean Theorem only
+      works on triangles with right angles.  If the roads where 
+      slanted as in Figure#2, you would not be able to use the Pythagorean Theorem.
+      </p>
+      <figure>
+         <img width="700" src="https://www.utilars.com/Content/Blog/loc-fig2.gif"
+              alt="Picture of Park With Slanted Roads to Demonstrate Use of Law of Cosines" />
+         <figcaption>
+            Figure 2
+         </figcaption>
+      </figure>
+      <p>
+      To overcome this, you could *try* to find a right triangle that has 
+      the edge "c" as a hypotenuse; unfortunately, that proves to be a bit difficult
+      due to the lack of roads and closings on Pear Street and Cherry Lane. 
+      Instead of trying to find a such a right triangle, it might 
+      be easier to go ahead and use the Law of Cosines which 
+      according to <a href="#src2">[2]</a> says:<br />
+      c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> - 2ab cos Θ
+      </p>
+      <p>
+      This doesn't look too much different than the Pythagorean Theorem 
+      except for the weird "- 2ab cos Θ" term on the end which we will 
+      get to later. 
+      </p>
+      <p>
+      So you already know that the part of Cherry Lane from Hola Camino to 
+      Swan Street is 2400 ft (edge b) because it was measured by tape and you also 
+      already know that the part of Swan Street from Cherry Lane to 
+      Pear Street is 900 ft (edge a) from the same technique.  The only thing you 
+      don't know is the angle that Cherry Lane and Swan Street make (Angle Θ) when they 
+      interect.  This is easy to get though.
+      </p>
+      <p>
+      To find the Angle Θ, you send a worker out with her super duper
+      survey compass to the intersection of Swan Street and Cherry Lane and find out that 
+      Cherry lane points 243 degrees going west and that Swan Street points 3 degrees 
+      going North.  Since 360 is directly North, your worker finds the angle spread by 
+      subracting 243 from 360 and then adding the remaining 3 degrees.  This would 
+      give us an equation similar to Θ = (360 - 243) + 3 = 120 degress which is 
+      (120 * π) / 180 radians.
+      </p>
+      <p>
+      From the law of cosines, you can then compute the distance as follows:<br /> 
+         <math>
+            <msup>
+               <mi>c</mi>
+               <mn>2</mn>
+            </msup>
+            <mo>=</mo>
+            <msup>
+                <mn>2400</mn>
+                <mn>2</mn>
+            </msup>
+            <mo>+</mo>
+            <msup>
+                <mn>900</mn>
+                <mn>2</mn>
+            </msup>
+            <mo>-</mo>
+            <mn>2</mn>
+            <mo>*</mo>
+            <mn>2400</mn>
+            <mo>*</mo>
+            <mn>900</mn>
+            <mo>cos</mo>
+            <mo>(</mo>
+            <mrow>
+            <mfrac>
+            <mrow>
+            <mn>120</mn>
+            <mi>π</mi>
+            </mrow>
+            <mi>180</mi>
+            </mfrac>
+            </mrow>
+            <mo>)</mo>
+         </math><br />
+
+         <math>
+            <msup>
+               <mi>c</mi>
+               <mn>2</mn>
+            </msup>
+            <mo>=</mo>
+            <mn>5760000</mn>
+            <mo>+</mo>
+            <mn>810000</mn>
+            <mo>-</mo>
+            <mn>4320000</mn>
+            <mo>cos</mo>
+            <mo>(</mo>
+            <mrow>
+               <mfrac>
+                  <mrow>
+                     <mn>120</mn>
+                     <mi>π</mi>
+                  </mrow>
+                  <mi>180</mi>
+               </mfrac>
+            </mrow>
+            <mo>)</mo>
+         </math><br />
+
+         <math>
+            <msup>
+               <mi>c</mi>
+               <mn>2</mn>
+            </msup>
+            <mo>=</mo>
+            <mn>6570000</mn>
+            <mo>-</mo>
+            <mn>4320000</mn>
+            <mo>cos</mo>
+            <mo>(</mo>
+            <mrow>
+               <mfrac>
+                  <mrow>
+                     <mn>12</mn>
+                     <mi>π</mi>
+                  </mrow>
+                  <mi>18</mi>
+               </mfrac>
+            </mrow>
+            <mo>)</mo>
+         </math><br />
+
+         <math>
+            <msup>
+               <mi>c</mi>
+               <mn>2</mn>
+            </msup>
+            <mo>=</mo>
+            <mn>6570000</mn>
+            <mo>-</mo>
+            <mn>4320000</mn>
+            <mo>cos</mo>
+            <mo>(</mo>
+            <mrow>
+               <mfrac>
+                  <mrow>
+                     <mn>2</mn>
+                     <mi>π</mi>
+                  </mrow>
+                  <mi>3</mi>
+               </mfrac>
+            </mrow>
+            <mo>)</mo>
+         </math><br />
+
+         Then according to <a href="#src3">[3]</a>
+         cos(2π/3) is -1/2 so you have:<br />
+         <math>
+            <msup>
+               <mi>c</mi>
+               <mn>2</mn>
+            </msup>
+            <mo>=</mo>
+            <mn>6570000</mn>
+            <mo>-</mo>
+            <mo>(</mo>
+            <mn>4320000</mn>
+            <mo>*</mo>
+            <mfrac>
+            <mrow>
+            <mo>-</mo>
+            <mn>1</mn>
+            </mrow>
+            <mn>2</mn>
+            </mfrac>
+            <mo>)</mo>
+            
+         </math><br />
+         which is<br />
+         <math>
+            <msup>
+               <mi>c</mi>
+               <mn>2</mn>
+            </msup>
+            <mo>=</mo>
+            <mn>6570000</mn>
+            <mo>-</mo>
+            <mo>(</mo>
+            <mn>-2160000</mn>            
+            <mo>)</mo>
+         </math><br />
+         <math>
+            <msup>
+               <mi>c</mi>
+               <mn>2</mn>
+            </msup>
+            <mo>=</mo>
+            <mn>6570000</mn>
+            <mo>+</mo>            
+            <mn>2160000</mn>            
+         </math><br />
+
+         <math>
+            <msup>
+               <mi>c</mi>
+               <mn>2</mn>
+            </msup>
+            <mo>=</mo>
+            <mn>8730000</mn>
+         </math><br />
+
+         <math>
+            <msup>
+               <mi>c</mi>
+               <mn>2</mn>
+            </msup>
+            <mo>=</mo>
+            <mn>873</mn>
+            <mo>*</mo>
+            <mn>10000</mn>
+         </math><br />
+         <math>
+            <msup>
+               <mi>c</mi>
+               <mn>2</mn>
+            </msup>
+            <mo>=</mo>
+            <mn>97</mn>
+            <mo>*</mo>
+            <mn>9</mn>
+            <mo>*</mo>
+            <mn>10000</mn>
+         </math><br />
+         <math>     
+               <mi>c</mi>               
+            <mo>=</mo>
+            <msqrt><mn>97</mn></msqrt>            
+            <mo>*</mo>
+            <msqrt><mn>9</mn></msqrt>            
+            <mo>*</mo>
+            <msqrt><mn>10000</mn></msqrt>
+         </math><br />
+         <math>            
+               <mi>c</mi>               
+            <mo>=</mo>
+            <msqrt><mn>97</mn></msqrt>
+            <mo>*</mo>
+            <mn>3</mn>
+            <mo>*</mo>
+            <mn>100</mn>
+         </math><br />
+         <math>            
+               <mi>c</mi>               
+            <mo>=</mo>
+            <msqrt><mn>97</mn></msqrt>
+            <mo>*</mo>
+            <mn>300</mn>            
+         </math><br />
+         <math>            
+               <mi>c</mi>               
+            <mo>=</mo>
+            <mn>300</mn>
+            <msqrt><mn>97</mn></msqrt>                        
+         </math><br />
+         <math>            
+               <mi>c</mi>               
+            <mo>≈</mo>
+            <mn>2954.657341</mn>
+         </math><br />
+      </p>
+      <p>
+         This is longer than the longest edge of 2400ft but shorter than the total walking 
+         distance of 2400+900=3300ft.  So you can save your patrons some walking distance
+         by cutting across the Visitor Center even in the scenario where the roads are angled.
+      </p>
+      <p>
+      So we have seen how the law of cosines works for angles other than 90 degrees or 
+      π/2 radians, but 
+      does is it really work just like the Pythagorean Theorem?  According to 
+         <a href="#src2">[4]</a> it does.  Because if you substitute 
+      90 degrees which equals π/2 radians into the formula, you get:<br />
+      c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> - 2ab cos (π/2)<br />
+      c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> - 2ab (0)<br />
+      c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> - (0)<br />
+      c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> - (0)<br />
+      which is the Pythagorean Theorem.
+      </p>
+      <p>
+      As another extreme example, consider the situation where the angle is 
+      180 degrees or π radians.  Then we have a straight line with both edges
+      comming right after each other.  This looks like the Figure#3
+      </p>
+      <figure>
+         <img src="https://www.utilars.com/Content/Blog/loc-fig3.gif"
+              alt="Picture of 'triangle' with one of the angles equal to 180 degrees or π" />
+         <figcaption>
+            Figure 3
+         </figcaption>
+      </figure>
+      <p>
+      Then we have:<br />
+      c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> - 2ab cos (π)<br />
+      c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> - 2ab (-1)<br />
+      c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> + 2ab<br />
+      c<sup>2</sup> = a<sup>2</sup> + 2ab + b<sup>2</sup><br />
+      c<sup>2</sup> = (a+b)(a+b)<br />
+      c = a+b<br />
+      which is intuitive by the picture.  When Θ = 180 or π, then the 
+      Law of Cosines shows that the hypotenuse of the "triangle" is simply
+      the sum of the lengths of the two sides a and b. 
+      </p>
+      <p>
+      On the other extreme, consider angles less than 90 degrees or π/2.  
+      What happens to the triangle as Θ approaches 0.  As Θ gets smaller
+      and smaller, the triangle starts looking like a line again, but this
+      time instead of segments a and b extending each other they seem to 
+      overlap each other.  Leaving c to be the difference between b and a as in 
+      Figure 4:
+         <figure>
+            <img src="https://www.utilars.com/Content/Blog/loc-fig4.gif"
+                 alt="Picture of 'triangle' with one of the angles equal to 180 degrees or π" />
+            <figcaption>
+               Figure 4
+            </figcaption>
+         </figure>
+
+      If we look at the math, we get:<br />
+         c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> - 2ab cos (0)<br />
+         c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> - 2ab (1)<br />
+         c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> - 2ab<br />
+         c<sup>2</sup> = a<sup>2</sup> - 2ab + b<sup>2</sup><br />
+         c<sup>2</sup> = (b-a)(b-a)<br />
+         c<sup></sup> = (b-a)<br />
+         Note from FOIL  that both (b-a) and (a-b) are real roots of a<sup>2</sup> - 2ab + b<sup>2</sup> but that
+         only the (b-a) example makes sense in this particular case since c should not be negative.
+      </p>
+      <p>
+      So you can see that while we didn't <b>prove</b> the law of cosines, we did 
+      show (with help from references) that it is an extension of 
+      the Pythagorean Theorem and that it works in the special cases where
+      Θ = π and Θ = 0.  It is useful to have this law of cosines available 
+      in your toolbox for instances when the Pythagorean Theorem won't work. 
+      Also, since the Pythagorean Theorem is just a special case of the 
+      Law of Cosines, there is no longer any need to remember the 
+      Pythagorean Theorem itself (if you could ever forget it).  Personally,
+      I will just keep the Law of Cosines in my head moving forward...
+      </p>
+<h2>Bibliography</h2>
+<p>
+<a name="src1"></a>
+[1] - Various.<br />
+Pythagorean Theorem<br />
+Wikipedia. [Online] August 16, 2014.<br />
+[Cited: August 27, 2014.]<br />
+<a target="_blank" href="https://en.wikipedia.org/wiki/Pythagorean_theorem">https://en.wikipedia.org/wiki/Pythagorean_theorem</a>
+</p>
+<p>
+<a name="src2"></a>
+[2] - R. E. Larson, R. P. Hostetler and B. H. Edwards,<br /> 
+"Right Inside Cover," in Calculus - Fourth Edition,<br /> 
+D.C. Heath, 1990.<br /> 
+0-669-16406-2<br />
+</p>
+      <p>
+     <a name="src3"></a>
+         [3] - Belk Jim.<br />
+         Unit Circle Angles (SVG Diagram)<br />
+         Wikipedia. [Online] November 14, 2010.<br />
+         [Cited: September 23, 2014.]<br />
+         <a target="_blank" href="https://en.wikipedia.org/wiki/Unit_circle#mediaviewer/File:Unit_circle_angles_color.svg">https://en.wikipedia.org/wiki/Unit_circle#mediaviewer/File:Unit_circle_angles_color.svg</a>
+      </p>
+      <p>
+         <a name="src4"></a>
+         [4] - Various.<br />
+         Law of Cosines<br />
+         Wikipedia. [Online] September 4, 2014.<br />
+         [Cited: September 23, 2014.]<br />
+         <a target="_blank" href="https://en.wikipedia.org/wiki/Law_of_cosines">https://en.wikipedia.org/wiki/Law_of_cosines</a>
+      </p>
+<p>
+©2014 - Shawn Eary<br />
+This post is copyright (where allowable) by Shawn Eary and is released under 
+the Free Christian Media Licence <a target="_blank" href="https://www.utilars.com/Home/FCML">(FCML)</a>.
+Content from authors other than Shawn Eary maintain
+the copyright and licnese rules that were imposed by the original authors.
+<br />
+</p>
+</article>
+</body>
+</html>

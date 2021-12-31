@@ -1,0 +1,96 @@
+﻿<!-- Copyright 2011-2021 - Shawn Eary (Licensed under the FCDL) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Utilars</title>
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="warning">
+        Cultivate your children:<br />
+        <a href="https://soundcloud.com/shawn-eary/story-time">https://soundcloud.com/shawn-eary/story-time</a>
+
+        <p>
+            NOTE: Please be aware that some content on this site may be difficult for exceptionally young users. Parental Guidance (PG)
+            is advised. In particular, this site may contain political views that you need to objectively discuss with your children in
+            a Christ orientated spirit.
+        </p>
+
+        <p>
+            Cookie Policy: This site does not directly use cookies at this time; however, it embeds third party content from
+            SoundCloud on the @Html.ActionLink("Music", "Music", "Home") page. By using this website, you consent to the before
+            mentioned limited use of cookies.
+        </p>
+    </div>
+    <div id="masterLayout">
+        <nav>
+            <ul>
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("FCML", "FCML", "Home")</li>
+                <li>@Html.ActionLink("Linux Beef", "LinuxBeef", "Home")</li>
+                <li>@Html.ActionLink("Music", "Music", "Home")</li>
+                <li>
+                    Graphics:
+                    <ul>
+                        <li>@Html.ActionLink("Pictures", "Pictures", "Home")</li>
+                        <li>@Html.ActionLink("Coloring Pages", "ColoringPages", "Home")</li>
+                        <li>@Html.ActionLink("Clipart", "Clipart", "Home")</li>
+                    </ul>
+                </li>
+                <li>
+                    Blogs:
+                    <ul>
+                        <li>
+                            @* https://www.tutorialsteacher.com/csharp/csharp-anonymous-type#:~:text=In%20C%23%2C%20an%20anonymous%20type%20is%20a%20type,the%20new%20operator%20with%20an%20object%20initializer%20syntax. *@
+                            @* https://stackoverflow.com/questions/38103882/routevaluedictionary-in-actionline-in-asp-net-mvc *@
+                            @Html.ActionLink(
+                            "shawn-eary", "Index", "Blog",
+                            new {userName = "shawn-eary"}
+                            )
+                            @* @Html.ActionLink("shawn-eary", "Index", "Blog",
+                            new RouteValueDictionary {{"userName", "shawn-eary"}},
+                            null
+                            ) *@
+                        </li>
+                    </ul>
+                </li>
+                <li>@Html.ActionLink("Stories", "Stories", "Home")</li>
+                <li>
+                    @Html.ActionLink("Information Technology", "InformationTechnology", "Home")
+                    <ul>
+                        <li>@Html.ActionLink("MRoots", "MRoots", "Home")</li>
+                        <li><a href="https://github.com/shawn-eary/D2D11Collision" target="_blank">Direct2D Collision Sample</a></li>
+                    </ul>
+                </li>
+                <li>@Html.ActionLink("Cheeze Blaster", "CheezeBlaster", "Home")</li>
+                <li>
+                    About:
+                    <ul>
+                        <li>@Html.ActionLink("General", "About", "Home")</li>
+                        <li>@Html.ActionLink("Values", "Values", "Home")</li>
+                    </ul>
+                </li>
+                <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+            </ul>
+        </nav>
+
+        <div id="PrimaryDiv">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+        <footer>
+            <div class="container">
+                Copyright © 2011-2021 - Shawn Eary<br />
+                Licensed via @Html.ActionLink("FCML", "FCML", "Home")<br />
+                Content is copyright by respective authors<br />
+                This website was last updated on December 29, 2021
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

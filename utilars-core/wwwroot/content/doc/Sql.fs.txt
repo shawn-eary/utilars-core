@@ -1,0 +1,162 @@
+﻿(*
+"And whatever you do, whether in word or deed,
+do it all in the name of the Lord Jesus, giving thanks to
+God the Father through him."
+Collossians 3:17 NIV
+
+!!! Warning !!! This document is currently in a draft status.
+it might change a bit. If you actually do cite it,
+be sure and let everyone know that you are citing
+a draft document.
+
+Title : SqlHelper
+Filename : Sql.fs    (Body - You Can't Look at this when I'm Done :-) )
+Author : Shawn Eary
+Date : 13-NOV-2010
+Revision : dft-0.01  (This is seriously alpha...)
+Copyright : 2010
+License : Free Christian Document License (FCDL)
+http://www.arsquies.com/fcdl
+Warranty : None (See FCDL Terms)
+Purpose : To amuze the reader (Also see spec)
+Notes: 
+The program is covered under the FCDL (see above) as such it
+is treated more as a paper than a program. Do not confuse
+the FCDL License with other "Open Source" Licenses as this
+license is very different. The FCDL is a "good faith"
+licence that basically gives you the
+right to:
+a) Make as many copies of covered documents that you want as
+   long as the entire covered documents including spelling
+   errors, biblical references, citations and author credits
+   are kept intact.
+b) Use portions of this document to create your own
+   religiously neutral or Christian products provided you
+   properly cite this document.
+   (Overall URL of document and Author at tail or beginning
+    of work with (filename:functionname) citations inline)
+c) Charge for the distribution of covered documents or
+   for products that were created by using portions of covered
+   documents with no obligation to reimburse the authors of
+   the covered documents.
+   Resources
+*)
+namespace Helper
+
+open System
+open System.Data.SqlClient
+
+module Sql =
+   (* Base class to create the "Simple" SqlParameter and save the 
+      parameter name for later use.  All "Simple" SqlParameters
+      have a name *) 
+   type sSqlParam(name:string) = 
+      member this.m_name = name
+   
+   (* An sql input parameter.  Constuctor takes a name and value pair
+      and stored them in immutable locations.  Default immutablity
+      is an advantage of F# *)
+   type sInSqlParam(name:string,value:obj) = 
+      inherit sSqlParam(name)  
+      member this.m_value = value 
+
+   (* A "Simple" Sql Output parameter.  Here's where things start to 
+      get ugly and I being to wonder why I didn't use C# or some other
+      imperative/OOP language.  Becuase
+      a) F# makes everything immutable by nature
+      b) I have been trained to think in an imperative (not functional)
+         fashion,  I put my own messed up twist on what would be a 
+         proper solution
+         (I'm sure LISP and F# veterans everywhere would gasp at 
+          what I do below...), but as I said before, part of the 
+         purpose of this tiny library is to amuze the reader. *)       
+   type sOutSqlParam(name:string) = 
+      inherit sSqlParam(name)      
+
+      (* The m_output variable needs to be mutable so I can figure 
+         out how to relay a result back to the calling code *) 
+      let mutable m_output : obj = null
+
+      (* An Sql output param.  Currently only Int type is supported
+         I need to change it it support other types later *) 
+      member this.m_dSqlParam : System.Data.SqlClient.SqlParameter = 
+         let dSqlParam = new SqlParameter(name, System.Data.SqlDbType.Int)    
+         dSqlParam.Direction <- System.Data.ParameterDirection.Output
+         dSqlParam
+
+      (* A property to set recieve the output of running a T-SQL 
+         command *) 
+      member this.output 
+         with get() = m_output
+         and set(newValue) = m_output <- newValue
+
+   (* Allows SqlClient commands to be lumped together into a single
+      transaction.  Takes an SQL connection and a 
+      user (for future use).  Lumping the commands into a single 
+      tranaction will make it easier to rollback changes if something 
+      gets goofed up.  (This is in theory of course)   Right now
+      there's no telling what will go wrong with this library *)             
+   type tran(sc, user) =  
+      (* Start the transaction scope *)     
+      let ts = new System.Transactions.TransactionScope()
+
+      (* Takes a varaible length array of "Simple" Sql parameters
+         and runs a stored precedure against the database specified
+         by the current SqlConnection *) 
+      member this.runSP (spName, [<ParamArray>] args: sSqlParam[]) = 
+         (* Make the stored procedure command that will be run *) 
+         let mutable cmd = new System.Data.SqlClient.SqlCommand(spName, sc)
+         cmd.CommandType <- System.Data.CommandType.StoredProcedure   
+
+         (* Add the user specified arguments to the command *)         
+         for p in args do                
+            if p.GetType() = typeof<sInSqlParam> then
+               (* Input parameters are easy to add since they are 
+                  immutable *) 
+               let inP : sInSqlParam = p :?> sInSqlParam 
+               cmd.Parameters.AddWithValue(inP.m_name, inP.m_value) |> ignore            
+            else 
+               (* This becomes a mess here becuase the output 
+                  parameters need to be immutable *) 
+               let outP : sOutSqlParam = p :?> sOutSqlParam                      
+               cmd.Parameters.Add(outP.m_dSqlParam) |> ignore            
+            (* F# is a little picky about return types.  We need to 
+               return () for each iteration of the for loop to keep 
+               F# happy.  I'm not 100% sure why this is necessary 
+               because I have more expreience with imperative 
+               programming.  The reader should note, however, that 
+               I have had some light exposure to SML/NJ and LISP, but
+               I still have a hard time thinking out of the 
+               imperative box *) 
+            ()               
+
+         (* Open the connection *)          
+         cmd.Connection.Open()
+ 
+         (* Run the prepared command *) 
+         let da = new System.Data.SqlClient.SqlDataAdapter(cmd);
+         let dt = new System.Data.DataTable();      
+         let rowsAffected = da.Fill dt               
+            
+         (* Terminatee the connection *) 
+         cmd.Connection.Close()         
+
+         (* This is a little on the goofy side, but I am trying to 
+            get the results of cmd Output Parameters back to the 
+            user *) 
+         let mutable i = 0
+         for p : System.Data.SqlClient.SqlParameter in cmd.Parameters do
+            if p.Direction = System.Data.ParameterDirection.Output then
+               (args.[i] :?> sOutSqlParam).output <- p.Value
+               ()
+            else
+               ()
+            i <- i + 1
+         dt
+
+      (* Allow the user to terminate the trascation scopoe at a 
+         later time *) 
+      member this.closeTran () = 
+         ts.Complete()
+         ts.Dispose()
+         ()

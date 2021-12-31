@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>F# (FSharp) Local Constants</title>
+    <!-- Saw these meta tags on CodeShow 
+         http://codeshow.codeplex.com/ -->
+    <meta name="keywords" content="F# FSharp *.NET" />
+    <meta name="description" 
+    content="Units of Measure in F#" />
+    <meta name="author" content="Shawn Eary" />
+    <meta name="dateCreated" content="03/30/2013" />
+    <meta name="copyright" content="©2013 - Shawn Eary" />
+</head>
+<body>    
+<article>
+    <p>
+    The last few months, I talked about how the immutability of F# can 
+    make programming in .NET easier by reducing the occurrence of some 
+    common bugs.    This month, I hope to talk about yet another bug 
+    reducing feature of F#.   That feature is units of measure.
+    </p>
+
+    <p>
+    Sometimes people use computer languages for numerical or scientific 
+    computing.  When this is done, there can sometimes be a challenge 
+    to keep the units straight.  A common example that comes to my 
+    mind is the sine and cosine math functions. 
+    </p>
+
+    <p>
+    In C++, if you wanted to compute the sine of 90.0 degrees you 
+    might be tempted to do something like this:
+    </p>
+
+    <pre>
+    <code class="language-cplusplus">
+#include "math.h"
+#include "stdafx.h"
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	double const result = sin(90.0f); 
+	return 0;
+}
+    </code>
+    </pre>
+
+    <p>
+    But if you run the above program and set a breakpoint on the 
+    return line, you might get a nasty surprise that the result isn’t 
+    equal to 1.0 as you would expect but that it is closer to 0.89.  
+    What happened?    Well you passed in the wrong units to the sine 
+    function.  If you look at a doc page <a href="#src1">(1)</a> for the sin C++ function, 
+    you will see that that function requires the input value to have 
+    units of radians.   If you were to pass in π/2.0 instead of 90.0, 
+    the answer would be more familiar.  
+    </p>
+
+    <p>
+    You might say that this is common knowledge but if you happen to be 
+    working with alternate libraries there could be some confusion.  
+    For example, consider the Direct2D D2D1::Matrix3x2F::Rotation 
+    function described here <a href="#src2">(2)</a>.   This C++ function also takes angles 
+    as input but in the case of this function the angles are expressed 
+    in degrees.  So if some angle functions require radian inputs 
+    and others require degrees, how do you make sure you pass in the 
+    correct values?  The easy way is to use a language that supports 
+    units of measure like F# does.  
+    </p>
+
+    <p>
+    Now, let’s reconsider the above problem of computing the sine 
+    using F#.  The code would look something like this: 
+    </p>
+
+    <pre>
+    <code class="language-fsharp">
+    let sineOf90 = sin 90.0
+    printf "%f" sineOf90
+    </code>
+    </pre>
+
+    <p>
+    If you run the program, you will still notice that the built in 
+    sine function still does not throw an error when the user 
+    accidentally passes in 90.0 degrees instead of π/2.0.  This 
+    results in the unexpected output of about 0.89 again.  
+    Fortunately, there is something we can do.  We can define our 
+    own sine function and use units of measure to tell the user 
+    that she/he *must* pass in radians.   
+    </p>
+
+    <p>
+    Below, is a code example where we create our own sine function that uses 
+    units of measure to require radian values at compile time.  It 
+    then shows how the code will not compile if the user makes a 
+    mistake and accidentally passes in an angle of degrees when they 
+    should have used radians: 
+    </p>
+
+    <pre>
+    <code class="language-fsharp">
+    [&lt;Measure&gt;] type radians;
+    let sine (x : float&lt;radians&gt;) = sin x
+    let sineOfNinety = sine 90.0
+    </code>
+    </pre>
+
+    <p>
+    If you try to compile the code, you will get two errors:
+    </p>
+    <p class="article-error">
+    c:\...\Program.fs(2,37): error FS0001: The type 'float&lt;radians&gt;' does not match the type 'float'
+    </p>
+    and 
+    <p class="article-error">
+    c:\...\Program.fs(3,25): error FS0001: This expression was expected to have type     float&lt;radians&gt;     but here has type     float
+    </p>
+
+    <p>
+    The first error says that the built in sine function we are 
+    calling doesn't use units of measure while the second error says
+    that we tried to pass in an ordinary float when we *should* have 
+    passed in a float with units of type radians.  We can get rid of 
+    the first error by simply removing the units just before the built
+    in sine call since it is no longer needed.  We do that like so <a href="#src3">(3)</a>:
+    </p>
+
+    <pre>
+    <code class="language-fsharp">
+    [&lt;Measure&gt;] type radians;
+    let sine (x : float&lt;radians&gt;) = sin (float x)
+    let sineOfNinety = sine 90.0
+    </code>
+    </pre>
+
+    <p> 
+    We still get an error stating that you can’t pass a plain float 
+    without units into our new sine function.  At this point we are 
+    forced to specify the units when calling the sine function and we 
+    know that we need to correct our error since 90.0 radians is of no 
+    significant value but π/2.0 radians is.  Our corrected code then 
+    becomes: 
+    </p>
+    <pre>
+    <code class="language-fsharp">
+    open System
+    [&lt;Measure&gt;] type radians;
+    let sine (x : float&lt;radians&gt;) = sin (float x)
+    let sineOfPIOverTwo = sine ((Math.PI / 2.0)*1.0&lt;radians&gt;)
+    printf "%f" sineOfPIOverTwo
+    </code>
+    </pre>
+
+    <p>
+    Now consider a more significant example, suppose we have a 
+    triangleAngle function that returns the angle of the triangle in 
+    degrees and we want to unknowingly pass that value into our new 
+    sine function.  If the triangleAngle function and our sine 
+    function were coded to *properly* use units of measure, then we 
+    might come up with code that looks like this:
+    </p>
+    <pre>
+    <code class="language-fsharp">
+    open System
+    [&lt;Measure&gt;] type radians;
+    [&lt;Measure&gt;] type degrees; 
+
+    (* Takes an angle of radians and converts it to degrees *) 
+    let toDegrees (x : float&lt;radians&gt;) = 
+        ((float x) * 360.0 / 2.0 / Math.PI) * 1.0&lt;degrees&gt;
+
+    (* Takes the x and y dimensions of a triangle and returns the inner
+       angle or the arctangent in degrees *)
+    let triangleAngle y x = toDegrees ((atan (y/x))*1.0&lt;radians&gt;)
+
+    (* Computes the angle in degrees of a right triangle with two sides
+       of equal length *) 
+    let theAngle = triangleAngle 16.0 16.0
+
+    let sine (x : float&lt;radians&gt;) = sin (float x)
+    printf "%f\n" (sine theAngle)
+    </code>
+    </pre>
+
+    <p>
+    Fortunately, the compiler comes to our rescue and tells us we are 
+    stupidly trying to pass an angle in degrees into our sine function 
+    that only accepts radians.   The compiler has just kept us from 
+    doing something excessively stupid all because we were wise 
+    enough to use the units of measure feature built into F# :-)
+    </p>
+
+    <p>
+    Now, if you are guessing that the solution to this bug is to write 
+    a toRadians function, you are right!  That’s all we have to do to 
+    get our program working correctly and we can verify that the sine 
+    of a right triangle with two sides of length 16.0 is the same as 
+    the sine of 45 degrees which is the same as the sine of π/4.
+    </p>
+
+    <pre>
+    <code class="language-fsharp">
+    open System
+    [&lt;Measure&gt;] type radians;
+    [&lt;Measure&gt;] type degrees; 
+
+    (* Takes an angle of radians and converts it to degrees *) 
+    let toDegrees (x : float&lt;radians&gt;) = 
+        ((float x) * 360.0 / 2.0 / Math.PI) * 1.0&lt;degrees&gt;
+
+    (* Takes an angle of degrees and converts it to radians *) 
+    let toRadians (x : float&lt;degrees&gt;) = 
+        ((float x) * 2.0 * Math.PI / 360.0) * 1.0&lt;radians&gt;
+
+    (* Takes the x and y dimensions of a triangle and returns the inner
+       angle or the arctangent in degrees *)
+    let triangleAngle y x = toDegrees ((atan (y/x))*1.0&lt;radians&gt;)
+
+    (* Computes the angle in degrees of a right triangle with two sides
+       of equal length *) 
+    let theAngle = triangleAngle 16.0 16.0
+
+    let sine (x : float&lt;radians&gt;) = sin (float x)
+
+    (* Notice how both values match
+       The former converts 45 degrees to radians before calling sine
+       and the later just simply users the radians equivalent of 45 
+       degrees which is PI/4 *) 
+    printf "%f\n" (sine (toRadians theAngle))
+    printf "%f\n" (sine ((Math.PI / 4.0)*1.0&lt;radians&gt;))
+    </code>
+    </pre>
+
+    <p>
+    It’s awesome that F# can catch these kinds of stupidities for us 
+    as long as we use its units of measure feature :o).   I hope the 
+    feature comes to other languages like unmanaged C++ someday. 
+    </p>
+
+<h2>Bibliography</h2>
+<a name="src1"></a>
+1. cplusplus.com<br />
+Documentation Page for C Sin Function<br />
+cplusplus.com. [Online]<br />
+[Cited: MAR 29, 2013.]<br />
+<a target="_blank" href="http://www.cplusplus.com/reference/cmath/sin/">http://www.cplusplus.com/reference/cmath/sin/</a><br />
+<br />
+<a name="src2"></a>
+2. Microsoft.<br />
+Matrix3x2F::Rotation method.<br />
+Windows Dev Center - Desktop. [Online: NOV 29, 2012]<br />
+[Cited: MAR 29, 2013.]<br />
+<a target="_blank" href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd372285(v=vs.85).aspx">http://msdn.microsoft.com/en-us/library/windows/desktop/dd372285(v=vs.85).aspx</a><br />
+<br />
+
+<a name="src3"></a>
+3. Microsoft.<br />
+Units of Measure (F#).<br />
+MSDN. [Online]<br />
+[Cited: MAR 29, 2013.]<br />
+<a target="_blank" href="http://msdn.microsoft.com/en-us/library/dd233243.aspx">http://msdn.microsoft.com/en-us/library/dd233243.aspx</a><br />
+<br />
+<p>
+©2013 - Shawn Eary<br />
+This post and all included code is released under the Free Christian Document License (FCDL)<br />
+</p>
+</article>
+</body>
+</html>

@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   <title>WCF REST and MVC Routing</title>
+   <!-- Saw these meta tags on CodeShow 
+      http://codeshow.codeplex.com/ -->
+   <meta name="keywords" content="WCF REST MVC Routing" />
+   <meta name="description" 
+   content=
+   "Describes the importance of updating the MVC Routing
+    when hosting WCF REST services inside the MVC App" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="10/01/2013" />
+   <meta name="copyright" content="©2013 - Shawn Eary" />
+   <!-- I need to get this out over here
+   <script type="text/javascript"
+    src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> 
+</script> -->
+   <!--  Don't ask...
+   <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />   -->
+</head>
+<body>    
+   <article>
+      <p>
+      Recently, I was trying to add a WCF REST File Upload Service 
+      into an alpha application of mine <a href="https://usedcarlot.codeplex.com/">here</a>
+      and was greeted by this wonderful error: 
+      </p>
+
+       <div style="background-color: #FFFDC4">           
+               <span>
+                   <h1 style="color:red">Server Error in '/' Application.<hr width="100%" size="1" color="silver"></h1>
+                   <h2 style="color:crimson"><i>The resource cannot be found.</i></h2>
+               </span>
+
+               <font face="Arial, Helvetica, Geneva, SunSans-Regular, sans-serif ">
+                   <b> Description: </b>HTTP 404. The resource you are looking for (or one of its dependencies) could have been removed, had its name changed, or is temporarily unavailable. &nbsp;Please review the following URL and make sure that it is spelled correctly.
+                   <br><br>
+
+                   <b> Requested URL: </b>/File.svc/Upload/1<br><br>
+                   <hr width="100%" size="1" color="silver">
+                   <b>Version Information:</b>&nbsp;Microsoft .NET Framework Version:4.0.30319; ASP.NET Version:4.0.30319.32559
+               </font>           
+       </div>
+
+      <p>
+      I didn't understand why I was getting the error since I had the following Operation
+      Contract defined in my Implementation WCF File IAW <a href="#src1">[1]</a>
+      <a href="#src2">[2]</a> and <a href="#src3">[3]</a>:
+      </p>
+      <pre>
+      <code class="language-csharp">
+      [OperationContract]
+      [WebInvoke(Method = "POST", UriTemplate = "Upload/{Id}")]      
+      string Upload(string Id, Stream fileContents);
+      </code>
+      </pre>
+
+      <p>
+      To troubleshoot, I played around with some of the HTTPGet style
+      Operation Contracts shown in <a href="#src3">[3]</a> and was able 
+      to get them to work.  Because of this, I first thought the problem 
+      has something to do with the fact that I was trying to use a POST
+      operation, but I was wrong.  After much goofing around, I found 
+      that an Operation Contract like the following was firing correctly:
+      </p>
+
+      <pre>
+      <code class="language-csharp">
+      [OperationContract]
+      [WebInvoke(Method = "POST", UriTemplate = "Upload/{Id}/{Junk}")]      
+      string Upload(string Id, string Junk, Stream fileContents);
+      </code>
+      </pre>
+
+      <p>
+      My unfortunate instinct was to think that this was some kind of 
+      weird REST WCF Bug but then it dawned on me that this had to be
+      some kind of MVC Routing issue.  So I looked at the Routes in 
+      my RoutingConfig.cs and found the code not much different than 
+      what one would see if she/he created a new MVC Project from the 
+      MVC Template.  My code looked something like this:  
+      </p>
+
+      <pre>
+      <code class="language-csharp">
+      public static void RegisterRoutes(RouteCollection routes)
+      {
+         routes.IgnoreRoute("{resource}.axd/{*pathInfo}");          
+         routes.MapRoute(
+            name: "Default",
+            url: "{controller}/{action}/{id}",
+            defaults: new { controller = "Inventory", action = "Index", id = UrlParameter.Optional }
+         );
+      }
+      </code>
+      </pre>
+
+      <p>
+      After thinking on this for a bit, I was embarrased to realize
+      that MVC was confusing the URL of http://localhost:50867/File.svc/Upload/1 
+      that I was trying to use to POST to my service with an MVC
+      Action of Upload in the File.svc Controller with an Id of 1. 
+      After comming to this embarrassing relization, I simply added
+      an additional IgnoreRoute line to my RoutingConfig.cs file and all
+      was well:
+      </p>
+
+       <pre>
+       <code class="language-csharp">
+        public static void RegisterRoutes(RouteCollection routes)
+        {
+            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+            // Need this to keep MVC Routing from interfering with calls
+            // to REST WCF Services
+            <mark>routes.IgnoreRoute("{resource}.svc/{*pathInfo}");</mark>
+
+            // Default Route Should be to the inventory Controller
+            routes.MapRoute(
+                name: "Default",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Inventory", action = "Index", id = UrlParameter.Optional }
+            );
+        }
+      </code>
+      </pre>
+     
+      <p>
+      The morale of the story is that it pays to be aware of the Routes 
+      you register when working with MVC.  In MVC4, these Routes would 
+      normally be stored in the RoutingConfig.cs file.  While I think 
+      Microsoft Tech Evangelist 
+      <a href="http://weblogs.asp.net/jgalloway/about.aspx">Jon Galloway</a>
+      mentions in Module 1 of <a href="#src4">[4]</a> that programmers should try to 
+      use the default MVC routings when possible, there may be times when you 
+      need to go in and customize those routes to get the expected firing
+      of various RESTful actions. 
+      </p>
+
+      
+      
+      <h2>Bibliography</h2>
+      <a name="src1"></a>
+      1. Kumar, Dhananjay<br />
+      Uploading File to server from ASP.Net client using WCF REST Service.<br />
+      debugmode.net [Online: May 1, 2011]<br />
+      [Cited: October 1, 2013.]<br />
+      <a target="_blank" href="http://debugmode.net/2011/05/01/uploading-file-to-server-from-asp-net-client-using-wcf-rest-service/">http://debugmode.net/2011/05/01/uploading-file-to-server-from-asp-net-client-using-wcf-rest-service/</a><br />
+      <br />
+
+       <a name="src2"></a>
+       2. bendewey; jaimie<br />
+       RESTful WCF service image upload problem.<br />
+       StackOverflow [Online: March 20, 2009]<br />
+       [Cited: October 1, 2013.]<br />
+       <a target="_blank" href="http://stackoverflow.com/questions/664712/restful-wcf-service-image-upload-problem">http://stackoverflow.com/questions/664712/restful-wcf-service-image-upload-problem</a><br />
+       <br />
+
+       <a name="src3"></a>
+       3. Microsoft<br />
+       WebInvokeAttribute Class.<br />
+       MSDN<br />
+       [Cited: October 1, 2013.]<br />
+       <a target="_blank" href="http://msdn.microsoft.com/en-us/library/system.servicemodel.web.webinvokeattribute.aspx">http://msdn.microsoft.com/en-us/library/system.servicemodel.web.webinvokeattribute.aspx</a><br />
+       <br />
+
+       <a name="src4"></a>
+       4. Microsoft; Galloway, Jon; Harrison, Christopher<br />
+       Developing ASP.NET MVC 4 Web Applications Jump Start<br />
+       Microsoft Virtual Academy [Online: 2013]<br />
+       [Cited: October 1, 2013.]<br />
+       <a target="_blank" href="http://www.microsoftvirtualacademy.com/training-courses/developing-asp-net-mvc-4-web-applications-jump-start#fbid=edMlSP3rk7d">http://www.microsoftvirtualacademy.com/training-courses/developing-asp-net-mvc-4-web-applications-jump-start#fbid=edMlSP3rk7d</a><br />
+       <br />
+      
+
+      <p>
+         ©2013 - Shawn Eary<br />
+         This post is released under the Free Christian Document License (FCDL)<br />
+      </p>
+   </article>
+</body>
+</html>

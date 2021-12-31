@@ -1,0 +1,607 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Instancing with Direct3D12</title>
+   <!-- Saw these meta tags on CodeShow
+      http://codeshow.codeplex.com/ -->
+   <meta name="keywords" content="DX12 D3D12 DirectX12 DirectX Instancing Universal Windows Platform (UWP) VS2017" />
+   <meta name="description"
+         content="Easiest way to instance the cube that comes with the Direct3D12 UWP Template from VS2017" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="09/05/2018" />
+   <meta name="copyright" content="©2018 - Shawn Eary" />
+   <!--  Don't ask...
+   <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />   -->
+</head>
+<body>
+    <article>
+        <p>
+            Microsoft was kind enough to provide a working Direct3D12 Sample for
+            Universal Windows Platform (UWP) as a template with VS2017.  Unfortunately,
+            if you've even attempted to ever play with previous versions of DirectX,
+            you may find that Direct3D12 is really picky and it's easy to mess
+            yourself up and wind up scratching your head.  If you want to redraw
+            the cube from the demo in more than one place, you can't simply go into the Render
+            function to make your transformations and draw calls within a basic
+            for loop like I did in:
+            <a href="https://www.utilars.com/Blog/shawn-eary/2012/12/16/cubeCloneWin8">
+                https://www.utilars.com/Blog/shawn-eary/2012/12/16/cubeCloneWin8
+            </a>
+        </p>
+        <p>
+            In DirectX12 you are forced to manage the GPU(s) more directly so you can
+            have the ultimate in performance.  This means the API will not insulate
+            you from silly mistakes.  This means novices (like myself
+            need to be vary wary of DirectX12. However, Despite DirectX12's added
+            complexity, there is always going to be some newbie that likes banging
+            her/his head against the wall...  Becuase DirectX12 is more complicated,
+            a different approach is needed to "easily" redraw the cube from the
+            demo in more than one place.  The easiest approach I found was
+            instancing.
+        </p>
+        <p>
+            Unfortunately, D3D12 Instancing is apparently even harder than D3D11
+            Instancing.  The good news though is that once you've done it, your
+            code should be more efficient.  At the time of this post, there didn't seem to be very many
+            introductary examples on DirectX12 instancing so I will try to
+            explain how I *think* I was able to get it to work in this blog post.
+        </p>
+        <p>
+            First off, open VS2017 Community Edition.  Start a new project and
+            pick the DirectX 12 App (Universal Windows) Visual C++ Template
+        </p>
+        <figure>
+            <img src="https://www.utilars.com/Content/Blog/dx12inst-fig1.png"
+                 alt="Picture showing dialog to open DirectX 12 App (Universal Windows) Visual C++ Template" />
+            <figcaption>
+                Figure 1
+            </figcaption>
+        </figure>
+        <p>
+            After that, you will be shown a "New Universal Windows Platform Project" Window
+            from which you are supposed to pick your target and minimum versions for your UWP
+            app.  I'm not really sure what the implications are of choosing the different options
+            but for this example, we can simply choose "Windows 10, version 1803 (10.0; Build 17134)
+            for Target version and Minimum version.  This tutorial is simple enough that other versions
+            will probably work as well, but it would be best to err on the side of more recent
+            versions if you had to chose a different value.
+        </p>
+        <p>
+            After chosing your target and minimum versions, VS2017 will create a project for you.
+            If you build it, you will see a simple rotating cube.  When you get a chance, you need
+            to stop the project and expand the Content folder to look at the Sample3DSceneRenderer.cpp file that
+            Microsoft created for you.
+        </p>
+        <figure>
+            <img src="https://www.utilars.com/Content/Blog/dx12inst-fig2.png"
+                 alt="Picture showing the Sample3DScenceRenderer.cpp file Microsoft created for you" />
+            <figcaption>
+                Figure 2
+            </figcaption>
+        </figure>
+        <p>
+            Lot's of cool things happen in this file. This is were *most* of the changes will take
+            place.  In this particular picture you will see the cubVertices array.  On the left
+            side is each vertice of a triangle that will be rendered via your GPU.  I *think*
+            this data gets processed by something called a VertexShader on the GPU.  On the right side,
+            are colors for each of the vertices.  I *think* that stuff is processed by something
+            called a PixelShader on the GPU.  You can play with this if you want but don't for get
+            to make a copy of the original values or put this project into version control...
+        </p>
+        <p>
+            In the case of these particular vertices, a technique called indexing is used.  I won't
+            get into that here, but basically each vertex / color pair can be used zero or more times
+            since it is referenced later by an index buffer.  In simpiler DX examples, the vertices
+            might be used directly, but in this Microsoft template, the vertices are indexed for possile
+            reuse.  This "potentially" allows for better performance and DX12 is *all* about bleeding
+            edge performance.  The only problem is novices (like myself) may not be able to fully
+            achieve that expected performance due to a lack of understanding...
+        </p>
+        <p>
+            Regardless of operator understanding, the Verties and Indexes are sent to the GPU via Index
+            and Vertex buffers and we are going to have to create a *new* buffer called an Instance Buffer.
+            Because the GPU seems to be isolated from its surroundings, we are going to need a way to
+            pass positional information to the GPU.  As I said previously, we can't just translate the
+            box and call the Draw call several times.  We have to pass the positions of the cube copies
+            to the GPU via a buffer.  While there are *other* ways of getting this data to the GPU, this
+            is the "easiest" way I found. According to the dude over at Rastertek, "Instancing is a method
+            of rendering in DirectX 11 that eliminates this problem by accepting a single vertex buffer with
+            the geometry and then uses a second buffer called an Instance Buffer which carries the
+            modification information for each instance of the model geometry." - <a href="#src1">[1]</a><br />
+            <span class="sideNote">
+                (If you haven't read the DX11 tutorial over at RasterTek, you might want to do so when you
+                get a chance.  It's doesn't explain DX12 or UWP, but it explains instancing better than I can...)
+            </span>
+        </p>
+        <p>
+            So now let's start creating the instance buffer.  First, under content, double click your Sample3DSceneRenderer.h
+            file.  Insert the following inbetween the Microsoft supplied code:
+
+        </p>
+        <pre>
+        <code class="language-cpp">
+            ...
+            // Direct3D resources for cube geometry.
+            Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_commandList;
+            Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
+            Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pipelineState;
+            Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_cbvHeap;
+            Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer;
+        <span class="highlight">
+            // Added by Instancing Tutorial: To Share Positional information with GPU
+            Microsoft::WRL::ComPtr<ID3D12Resource> m_instanceBuffer;
+            </span>
+            Microsoft::WRL::ComPtr<ID3D12Resource> m_indexBuffer;
+            Microsoft::WRL::ComPtr<ID3D12Resource> m_constantBuffer;
+            ModelViewProjectionConstantBuffer m_constantBufferData;
+            UINT8* m_mappedConstantBuffer;
+            UINT m_cbvDescriptorSize;
+            D3D12_RECT m_scissorRect;
+            std::vector<byte> m_vertexShader;
+            std::vector<byte> m_pixelShader;
+            D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
+            D3D12_INDEX_BUFFER_VIEW m_indexBufferView;
+        <span class="highlight">
+            // Added by Instancing Tutorial: Not sure what this does
+            D3D12_VERTEX_BUFFER_VIEW m_instanceBufferView;
+            </span>
+            ...
+            </code>
+        </pre>
+        <p>
+            This will declare your Instance Buffer and m_instanceBufferView.  I'm going to be
+            honest. I don't know what the m_instanceBufferView is for but I *think* I needed it...
+        </p>
+        <p>
+            Now, you need to tell the GPU that you will be sending some instancing data over.
+            You need to open the Sample3DSceneRenderer.cpp file again and got to the
+            CreateDeveiceDependentResources function.  You need to look for the
+            D3D12_INPUT_ELEMENT_DESC item.  It happens to be called inputLayout and it's
+            decribed really well in the Instance Buffer section of the Braynzar Soft
+            Instancing tutorial at <a href="#src2">[2]</a>
+        </p>
+        <p>
+            Currently, the Microsoft Code for that in CreateDeveiceDependentResources looks like this:
+        </p>
+        <pre>
+        <code class="language-cpp">
+            ...
+            static const D3D12_INPUT_ELEMENT_DESC inputLayout[] =
+            {
+               { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+               { "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+            };
+            ...
+            </code>
+        </pre>
+        <p>
+            We will need to add a few lines like so:
+        </p>
+        <pre>
+        <code class="language-cpp">
+             ...
+             static const D3D12_INPUT_ELEMENT_DESC inputLayout[] =
+             {
+        <span class="highlight">
+                // Microsoft Created Code: Data From Vertex Buffer
+                </span>
+                { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+                { "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+
+        <span class="highlight">
+                // Stuff We are Adding: Data From Instance Buffer
+                { "INSTANCEPOS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 1, 0, D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA, 1},
+                { "INSTANCECOLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 12, D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA, 1}
+                </span>
+             };
+             ...
+            </code>
+        </pre>
+        <p>
+            Pay <b>particular</b> attention to the fourth parameter for the structures in the inputLayout array.
+            For the Vertex Buffer it is always 0 but for the Instance buffer it is always 1.  Braynzar Soft
+            explains in its D3D11 instancing tutorial that these are "slots" that in which the data will be
+            loaded into the GPU for later retreival.  The Vertex Buffer and Instance Buffer need to both
+            be in different slots.  Also, Braynzar Soft explains that the "POSITION", "COLOR", "INSTANCEPOS",
+            and "INSTANCECOLOR" identifiers are "keys" that are later used by the Vertex Shader to retrieve
+            the data.  I'm thinking each of these keys need to be unique.
+        </p>
+        <p>
+            Now look down in the function for an array definition cubeVertices of type VertexPositionColor.
+            The Microsoft code looks like this:
+        </p>
+        <pre>
+        <code class="language-cpp">
+             ...
+             // Cube vertices. Each vertex has a position and a color.
+             VertexPositionColor cubeVertices[] =
+             {
+                { XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+                { XMFLOAT3(-0.5f, -0.5f,  0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
+                { XMFLOAT3(-0.5f,  0.5f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+                { XMFLOAT3(-0.5f,  0.5f,  0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f) },
+                { XMFLOAT3(0.5f, -0.5f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+                { XMFLOAT3(0.5f, -0.5f,  0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f) },
+                { XMFLOAT3(0.5f,  0.5f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f) },
+                { XMFLOAT3(0.5f,  0.5f,  0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+             };
+             ...
+            </code>
+        </pre>
+        <p>
+            We're not going to change this code, but we are going to add something similar in
+            form just below it.  For this tutorial, we are going to create six instances of the
+            cube. So we will need six rows each containing position and color data.  The
+            color data will be ignored so we will set the RBG values to 1.0f for each color
+            value in the second colum, but in the first column each XMFLOAT3 value will
+            correspond to an instance based offset that will be used by the Vertex Shader to
+            move the cube instance before displaying it.  We are going to try to display a
+            very basic cross or letter "t".  I know this isn't the best artwork, but once you've
+            sucessfully worked through this tutorial, you can put the cubes wherever you want:
+        </p>
+        <pre>
+        <code class="language-cpp">
+             ...
+             // Cube vertices. Each vertex has a position and a color.
+             VertexPositionColor cubeVertices[] =
+             {
+                { XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+                { XMFLOAT3(-0.5f, -0.5f,  0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
+                { XMFLOAT3(-0.5f,  0.5f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+                { XMFLOAT3(-0.5f,  0.5f,  0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f) },
+                { XMFLOAT3(0.5f, -0.5f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+                { XMFLOAT3(0.5f, -0.5f,  0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f) },
+                { XMFLOAT3(0.5f,  0.5f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f) },
+                { XMFLOAT3(0.5f,  0.5f,  0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+             };
+
+        <span class="highlight">
+             // Instance position data.  Second column data is color data
+             // and will be ignored for this tutorial since I don't want to
+             // mess with the Vertex Shader more than I need to.  The first
+             // column is what you want to pay attention to.  It should form
+             // the pattern of a simple cross or letter "t"
+             VertexPositionColor instanceVertices[] =
+             {
+                { XMFLOAT3(-5.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+                { XMFLOAT3(0.0f, 0.0f,  0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+                { XMFLOAT3(5.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+                { XMFLOAT3(0.0f, -5.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+                { XMFLOAT3(0.0f, 5.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+                { XMFLOAT3(0.0f, 10.0f,  0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+             };
+             </span>
+             ...
+            </code>
+        </pre>
+        <p>
+            Now, we need to upload this data to the GPU.  We are going to take an easy
+            approch for this.  There is a chunk of code that Microsoft wrote that will
+            upload the Vertex Buffer to the GPU.  It looks like this:
+        </p>
+        <pre>
+        <code class="language-cpp">
+                ...
+                const UINT vertexBufferSize = sizeof(cubeVertices);
+
+                // Create the vertex buffer resource in the GPU's default heap and copy vertex data into it using the upload heap.
+                // The upload resource must not be released until after the GPU has finished using it.
+                Microsoft::WRL::ComPtr<ID3D12Resource>
+                vertexBufferUpload;
+
+                CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
+                CD3DX12_RESOURCE_DESC vertexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize);
+                DX::ThrowIfFailed(d3dDevice->CreateCommittedResource(
+                &defaultHeapProperties,
+                D3D12_HEAP_FLAG_NONE,
+                &vertexBufferDesc,
+                D3D12_RESOURCE_STATE_COPY_DEST,
+                nullptr,
+                IID_PPV_ARGS(&m_vertexBuffer)));
+
+                ...
+
+                // Upload the vertex buffer to the GPU.
+                {
+                D3D12_SUBRESOURCE_DATA vertexData = {};
+                vertexData.pData = reinterpret_cast<BYTE*> (cubeVertices);
+                vertexData.RowPitch = vertexBufferSize;
+                vertexData.SlicePitch = vertexData.RowPitch;
+
+                UpdateSubresources(m_commandList.Get(), m_vertexBuffer.Get(), vertexBufferUpload.Get(), 0, 0, 1, &vertexData);
+
+                CD3DX12_RESOURCE_BARRIER vertexBufferResourceBarrier =
+                CD3DX12_RESOURCE_BARRIER::Transition(m_vertexBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+                m_commandList->ResourceBarrier(1, &vertexBufferResourceBarrier);
+                }
+                ...
+            </code>
+        </pre>
+        <p>
+            We're mainly going to copy that big long mess of gobbledygook and make only the minor changes necessary to make
+            it work to upload our instance buffer.  So right underneath the part where the ResourceBarrier was created for the
+            VertexBuffer upload we will put something like this<br />
+            <span class="sideNote">
+                (Don't ask me about ResourceBarriers, I'm a beginner...  It's something to keep the threading straight but I
+                don't know much more.)
+            </span>:
+        </p>
+        <pre>
+        <code class="language-cpp">
+            const UINT instanceBufferSize = sizeof(instanceVertices);
+
+            // Create the instance buffer resource in the GPU's default heap and copy vertex data into it using the upload heap.
+            // The upload resource must not be released until after the GPU has finished using it.
+            Microsoft::WRL::ComPtr<ID3D12Resource>
+            instanceBufferUpload;
+
+            // Don't Need - This was defined earlier: CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
+            CD3DX12_RESOURCE_DESC instanceBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(instanceBufferSize);
+            DX::ThrowIfFailed(d3dDevice->CreateCommittedResource(
+               &defaultHeapProperties,
+               D3D12_HEAP_FLAG_NONE,
+               &instanceBufferDesc,
+               D3D12_RESOURCE_STATE_COPY_DEST,
+               nullptr,
+               IID_PPV_ARGS(&m_instanceBuffer)));
+
+            // Don't Need - This was defined earlier: CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
+            DX::ThrowIfFailed(d3dDevice->CreateCommittedResource(
+               &uploadHeapProperties,
+               D3D12_HEAP_FLAG_NONE,
+               &instanceBufferDesc,
+               D3D12_RESOURCE_STATE_GENERIC_READ,
+               nullptr,
+               IID_PPV_ARGS(&instanceBufferUpload)));
+
+            NAME_D3D12_OBJECT(m_instanceBuffer);
+
+            // Upload the vertex buffer to the GPU.
+            {
+               D3D12_SUBRESOURCE_DATA instanceData = {};
+               instanceData.pData = reinterpret_cast<BYTE*> (instanceVertices);
+               instanceData.RowPitch = instanceBufferSize;
+               instanceData.SlicePitch = instanceData.RowPitch;
+
+               UpdateSubresources(m_commandList.Get(), m_instanceBuffer.Get(), instanceBufferUpload.Get(), 0, 0, 1, &instanceData);
+
+               CD3DX12_RESOURCE_BARRIER instanceBufferResourceBarrier =
+               CD3DX12_RESOURCE_BARRIER::Transition(m_instanceBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+               m_commandList->ResourceBarrier(1, &instanceBufferResourceBarrier);
+            }
+            </code>
+        </pre>
+        <p>
+            Now, we need to create an InstanceBufferView.  I don't know why because I don't really
+            understand what I'm doing here, but the code doesn't seem to work without one.
+            At the end of the CreateDeviceDependentResources function there the vertex and index
+            buffer views are created.  We will put the code in to create the InstanceBufferView
+            there:
+        </p>
+        <pre>
+        <code class="language-cpp">
+        ...
+        // Create vertex/index buffer views.
+        m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+        m_vertexBufferView.StrideInBytes = sizeof(VertexPositionColor);
+        m_vertexBufferView.SizeInBytes = sizeof(cubeVertices);
+
+        <span class="highlight">
+        m_instanceBufferView.BufferLocation = m_instanceBuffer->GetGPUVirtualAddress();
+        m_instanceBufferView.StrideInBytes = sizeof(VertexPositionColor);
+        m_instanceBufferView.SizeInBytes = sizeof(instanceVertices);
+        </span>
+
+        m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
+        m_indexBufferView.SizeInBytes = sizeof(cubeIndices);
+        m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
+        ...
+        </code>
+        </pre>
+        <p>
+            Notice above that when specifying the StrideInBytes size, we were about to
+            use sizeof(VertexPositionColor).  This is because we decided to keep
+            using the VertexPositionColor structure that the Vertex Buffer was using
+            and simply ignore the color data.  We could have created our *own*
+            data structure that *just* kept the VertexData, but that might have been
+            even more hassle.
+        </p>
+        <p>
+            Now, all of that mess and we are ready to actually use this data.
+            We have to use it in the Vertex Shader which will be running inside
+            the GPU.  You need to open the SampleVertexShader.hlsl file under Content
+            that Microsoft created for you.  Two changes will need to be made here.
+            One to the VertexShaderInput and and the other to the "main" function.
+            The VertexShaderInput must match the D3D12_INPUT_ELEMENT_DESC inputLayout[]
+            array we defined earlier so we need to add a few things.
+        </p>
+        <pre>
+        <code class="language-cpp">
+         ...
+        // Per-vertex data used as input to the vertex shader.
+        struct VertexShaderInput
+        {
+           float4 pos : SV_POSITION;
+           float3 color : COLOR0;
+        <span class="highlight">
+           float4 instancePos : INSTANCEPOS;
+           float3 instanceColor : INSTANCECOLOR;
+           </span>
+        };
+        ...
+        </code>
+        </pre>
+        <p>
+            In the highlighted portion above, the indentifiers to to the right of the colon "INSTANCEPOS" and
+            "INSTANCECOLOR" need to correspond to the identifiers we used when we created the
+            D3D12_INPUT_ELEMENT_DESC inputLayout[] array.
+        </p>
+        <p>
+            Next we need to update the main as mentioned in a manner similar to what the
+            Rastertex example does in the TextureVertexShader function of <a href="#src1">[1]</a>.  Basically, we take the Instance
+            Data that is passed in via the input parameter and add it to the output.  The
+            following highlighted code shows this:
+        </p>
+        <pre>
+        <code class="language-cpp">
+            ...
+            // Simple shader to do vertex processing on the GPU.
+            PixelShaderInput main(VertexShaderInput input)
+            {
+                PixelShaderInput output;
+                float4 pos = float4(input.pos, 1.0f);
+
+        <span class="highlight">
+                pos.x += input.instancePos.x;
+                pos.y += input.instancePos.y;
+                pos.z += input.instancePos.z;
+                </span>
+
+                // Transform the vertex position into projected space.
+                pos = mul(pos, model);
+                pos = mul(pos, view);
+                pos = mul(pos, projection);
+                output.pos = pos;
+
+                // Pass the color through without modification.
+                output.color = input.color;
+
+                return output;
+            }
+            ...
+            </code>
+        </pre>
+        <p>
+            Now we need to make a few changes to the Render function.  Look for a
+            bracketed section just below<br />
+            PIXBeginEvent(m_commandList.Get(), 0, L"Draw the cube");
+            in your Render function of Sample3DSceneRenderer.cpp
+        </p>
+        <pre>
+        <code class="language-cpp">
+            ...
+            PIXBeginEvent(m_commandList.Get(), 0, L"Draw the cube");
+            {
+                // Set the graphics root signature and descriptor heaps to be used by this frame.
+                m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
+                ID3D12DescriptorHeap* ppHeaps[] = { m_cbvHeap.Get() };
+                m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+                ...
+
+                m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+        <span class="highlight">
+                m_commandList->IASetVertexBuffers(1, 1, &m_instanceBufferView);
+                </span>
+                m_commandList->IASetIndexBuffer(&m_indexBufferView);
+        <span class="highlight">
+                // Commented - m_commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
+                m_commandList->DrawIndexedInstanced(36, 6, 0, 0, 0);
+                </span>
+
+                // Indicate that the render target will now be used to present when the command list is done executing.
+                CD3DX12_RESOURCE_BARRIER presentResourceBarrier =
+                CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetRenderTarget(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+                m_commandList->ResourceBarrier(1, &presentResourceBarrier);
+            }
+            PIXEndEvent(m_commandList.Get());
+            ...
+            </code>
+        </pre>
+        <p>
+            In the above section of the Render function, you will need to call IASetVertexBuffer on your
+            &m_instanceBufferView.  The code is highlighted, but notice how the first parameter is
+            1 instead of 0 like it is when &m_vertexBufferView is set.  That is because the instance
+            buffer is in slot 1 while the vertex buffer is in slot 0.  Also, look at the section where
+            DrawIndexedInstanced is called.  The second parameter has been changed from 1 to 6.  That is
+            because instead of drawing one single instance we are now drawing six instances per call.
+            This only works because we are passing six different VertexShaderInput values via the
+            Instance Buffer.  Without the instance buffer we wouldn't have an easy by to
+            determine where to draw each of the six instances.
+        </p>
+        <p>
+            There are other ways to figure out where to get the instancing data from, but I will not get too
+            deeply into them.  For example on Page 561 of Luna's <a href="#src3">[3]</a> (and possibly other references),
+            you will see that SV_InstanceID is a special vertex shader "command" that will allow you to retrieve
+            the instance number that is being worked on from within the Vertex Shader.  You can then use
+            the instance number to either calculate the positions of the instnaces or lookup into "global"
+            data.  I think Luna is actually using the instanceID to look into a global instance data
+            structure called gInstanceData but it isn't clear to me how the GPU gets visibility to that.  It's
+            also not clear to me how Luna's examples in his book tie into the Universal Windows Platform (UWP)
+            that this particular example is based off of.  For that reason, I chose to not use take Luna's
+            approach and only use his text as a reference when I'm seriously stuck and 
+            <a href="https://www.bing.com" target="_blank">Bing</a> can't help me
+            anymore [which is quite often by the way].
+        </p>
+        <p>
+            That should be about it for all of the setup (assuming I wrote this blog correctly).   You should be able
+            to run the program and see at least one cube rotating on the screen, but you will likely be a bit dissapointed
+            because your camera will be too close.  One last change that I forgot to tell you about is that we
+            need to back the camera up.  In your CreateWindowSizeDependentResources function of your
+            Sample3DSceneRenderer.cpp file, look for code that looks like this:
+            <pre>
+            <code class="language-cpp">
+            ...
+            // Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
+            <span class="highlight">
+            // commented - static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
+            static const XMVECTORF32 eye = { 0.0f, 0.7f, 8.0f, 0.0f };
+            </span>
+            static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
+            static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
+            ...
+            </code>
+        </pre>
+        </p>
+        <p>
+            In the above code, change the z coordinate of your eye from 1.5f to 8.0f, and then run the program.
+            If I told you everything correctly and you were able to follow me, you should see six cubes in a
+            cross or t pattern rotating around just like the basic cube does in the Microsoft Supplied demo.
+            The cool part is that you can probably figure out now how to modify your code to put the
+            cubes wherever you want on the screen or to even add more 😀.  Also, since you are using instancing,
+            you can supposely render thousands of these such cubes on the screen with a single draw call without
+            sacrificing any performance.  If you look at the cited references, you will also learn that you
+            can even apply textures and/or colors to these instances to make them unique, but I don't know
+            how to do that right now and you will have to figure that one out for yourself.  The end result
+            will generally look something like the below animated GIF.<br />
+            <span class="sideNote">
+                (The actual DirectX12 rendering will have a much smother gradient with less jerky movement.
+                The below GIF was significantly reduced in quality to conserve bandwidth and conform to
+                GIF standards.  Also, as mentioned above, you should now have the skills to modify the
+                rendering code to display additional cubes as you see fit)
+            </span>
+        </p>
+        <figure>
+            <img src="https://www.utilars.com/Content/Blog/rotatingCross.gif"
+                 alt="Sample Simplified Output" />
+            <figcaption>
+                Figure 3
+            </figcaption>
+        </figure>
+        <h2>Bibliography</h2>
+        <a name="src1"></a>
+        1. http://rastertek.com/dx11tut37.html <br />
+        <br />
+
+        <a name="src2"></a>
+        2. <a target="_blank" href="https://www.braynzarsoft.net/viewtutorial/q16390-33-instancing-with-indexed-primitives">
+        https://www.braynzarsoft.net/viewtutorial/q16390-33-instancing-with-indexed-primitives</a> <br />
+        <br />
+
+        <a name="src3"></a>
+        3. Luna, Frank D.<br />
+        Introduction to 3D Game Programming with DirectX 12<br />
+        Dulles: David Pallai - Mercury Learning and Information, 2016.
+        <br />
+        <p>
+            ©2018 - Shawn Eary<br />
+            This post is copyright (where allowable) by Shawn Eary and is released under
+            the Free Christian Media Licence <a href="https://www.utilars.com/Home/FCML">(FCML)</a>.
+            Content from authors other than Shawn Eary maintain
+            the copyright and license rules that were imposed by the original authors.
+            <br />
+        </p>
+    </article>
+</body>
+</html>

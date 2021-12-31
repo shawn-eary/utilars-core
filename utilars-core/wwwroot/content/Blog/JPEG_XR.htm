@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Benefits of JPEG XR</title>
+    <!-- Saw these meta tags on CodeShow 
+         http://codeshow.codeplex.com/ -->
+    <meta name="keywords" content="JPEG XR image compression" />
+    <meta name="description" 
+    content="Benefits of JPEG XR" />
+    <meta name="author" content="Shawn Eary" />
+    <meta name="dateCreated" content="04/23/2013" />
+    <meta name="copyright" content="©2013 - Shawn Eary" />
+</head>
+<body>    
+<article>
+    <p>
+    If you happened to read my last few posts, you will have noticed 
+    that I was proposing the benefits of F#.  Before I finish that set 
+    of posts, I would like to take a diversion and briefly mention a 
+    highly underutilized feature that greatly interests me.  That 
+    item of interest is JPEG XR <a href="#src1">(1)</a>.
+    </p>
+
+    <p>
+    The primary benefits that I see for JPEG XR are:
+    </p>
+    <ol>
+      <li>better compression than traditional JPEG</li>
+      <li>option for lossless compression</li>
+      <li>JPEG XR is an ISO Standard <a href="#src2">(2)</a><a href="#src3">(3)</a></li> 
+      <li>support for more colors than JPEG and JPEG 2000</li>
+      <li>transparency</li>
+      <li>the ability to embed tags in your images</li>
+    </ol>
+
+    <h3>Improved Lossy Compression</h3>
+    <p>
+    Of these benefits, Item#1 is probably the most significant 
+    advantage so I will discuss it first.   While the results tend to 
+    vary depending upon the application, JPEG XR seems to give me 
+    better compression than traditional JPEG.  In fact,
+    Microsoft states "The JPEG XR format can achieve up to twice the 
+    compression efficiency of the original JPEG format, with less 
+    noticeable compression artifacts. " <a href="#src4">(4)</a>
+    To me, the better compression of JPEG XR seems to be more obvious at the 
+    rougher image quality levels.   
+    </p>
+    <p>
+    Recently, I tried to make the background image for this site.  
+    Because the image had to be loaded on the first visit to this site, the 
+    image had to be small in size.  Also, because the image had to 
+    occupy most of the screen, it had to have relatively large 
+    pixel dimensions.   To achieve both of these goals, I eventually 
+    used JPEG XR instead of JPEG. The JPEG XR format seemed to allow the 
+    background image to render to the user *much* quicker on lower 
+    bandwidth levels than the JPEG format did.  While I would like to show you a side 
+    by side comparison of my background image with JPEG and JPEG XR 
+    compressions, doing so would take up too much of my limited 
+    bandwidth.  Instead, I will show you a much simpler example.
+    </p>
+
+    <p>
+    While this is something of a contrived example, it does demonstrate
+    my point.  To show an example of how JPEG XR *might* outperform 
+    traditional JPEG compression, I used a picture I took of a chair 
+    on top of carpet.  I then experimented with various JPEG XR and 
+    traditional JPEG quality settings in 
+    <a target="_blank" href="http://www.getpaint.net/">Paint.NET</a>.  At the lower 
+    quality settings, traditional JPEG seemed to be more easily 
+    confused by the carpet background while JPEG XR seemed to do 
+    well.   Also, at lower quality settings some of the colors chosen 
+    by traditional JPEG seemed to be a bit odd.   To get an objective 
+    result however, I decided to find the lowest JPEG XR quality 
+    setting that I could tolerate and then save that image along with 
+    a the same traditional JPEG image at the same file size and this 
+    picture represents the result:
+    </p>
+
+    <figure>
+    <img class="figImageHack" src="../../../../../Content/img/jpegCompare.png" 
+    alt="Picture showing better performance of JPEG XR compared to 
+    similar traditional JPEG image" /><br />
+    <figcaption>
+    Figure 1<br />
+    <span class="sideNote">
+    (PNG Image showing JPEG XR and traditional JPEG compression side by side)
+    </span>
+    </figcaption>
+    </figure>
+
+
+    <p>
+    This could be a matter of taste, but you *may* be able to see in 
+    Figure#1 how the chair in the JPEG XR image has slightly smoother 
+    curves and less pixilation.  Also, you might think that the text 
+    copyright text shows up clearer in the JPEG XR image than it does 
+    in the traditional JPEG image of the same size.  Admittedly, 
+    this is a bit of a contrived example, but I had to use smaller and 
+    less realistic images to stay within a reasonable bandwidth.  If 
+    you are so inclined, you can download the 
+    <a href="http://pdnjpegxrplugin.codeplex.com/" target="_blank">
+    JPEG XR Plugin for Paint.NET
+    </a>  
+    and try a similar experiment with much larger files.   
+    </p>
+
+    <h3>New Lossless Compression</h3>
+
+    <p>
+    The next most significant option for JPEG XR is its option for 
+    lossless compression.   This lossless compression allows JPEG XR 
+    to compete with lossless PNG and in some cases maybe even RAW image
+    formats.  In the case of lossless compression, the same chair 
+    image appeared to take 223 KB to store in 24 bit PNG format but 
+    only 125 KB to store in 24 bit lossless JPEG XR.   So JPEG XR *seems* 
+    to me to offer better compression than PNG.  In fact, some people 
+    have proposed that some high end “hobbyist” cameras do away with 
+    RAW and use JPEG XR instead.
+    </p>
+
+    <p>
+    While Ms. Lori Grunin didn’t actually say we should do away with 
+    RAW, I did understand her to imply that JPEG XR
+    has some potential in the professional photography area.
+    In a 2008 post, I understood Ms. Grunin to say 
+    “Raw files--data straight from the sensor--place a heavy 
+    performance burden on a digital camera. Though they're same 
+    dimensions as JPEGs, raw files support 12-bit or deeper color, 
+    while JPEG and its widely ignored successor, JPEG 2000, support 
+    only 8 bits. That makes the raw file footprint bigger, even when 
+    compressed, and increases the required amount of buffer memory.” 
+    <a href="#src5">(5)</a>  
+    There are a few things to gleam from that statement, one is that 
+    in 2008, the color depth of JPEG 2000 was apparently not much 
+    better than original three channel 24 bit model of classic JPEGs. 
+    Another thing is that RAW apparently just takes up too much 
+    memory.  Personally, I’ve never had the money to buy a 
+    professional camera that processes RAW files so I haven’t 
+    experienced this, but it seems common sense to me.  Big file size
+    isn't the only problem with raw though.
+    </p>
+
+    <h3>ISO Standardization</h3>
+
+    <p>
+    I *think* the other problem with *.raw files is that it can 
+    sometimes be a pain to manipulate them.  From my 
+    understanding, *.raw files vary between camera vendors so 
+    a *.raw on an old professional Single Lens Reflex (SLR) 
+    Kodak Camera may not necessarily be in the same format as a *.raw 
+    file on a professional Olympus SLR.   If you have some sort of 
+    batch processing that you need done on a large number of *.raw 
+    files from various cameras, then you would probably have to go 
+    through the effort of not only determining to which camera each *.raw 
+    file belongs but also get a tool that can update those *.raw files.  
+    In certain situations that could be a bit of a mess.  That mess 
+    could totally be avoided if more camera vendors were to replace 
+    their *.raw formats with the JPEG XR ISO Standard 
+    <a href="#src2">(2)</a><a href="#src3">(3)</a>. 
+    </p>
+
+    <h3>Improved Color Support and Pallet</h3>
+
+    <p>
+    As if the ISO Standardization, lost cost and excellent compression
+    of JPEG XR wasn't enough to convince hobbyists to consider using 
+    JPEG XR as a poor man's version of RAW, there is the fact
+    that JPEG XR has a much better color depth than JPEG and maybe
+    even JPEG 2000. Assuming I interpreted her correctly, Ms. Grunin 
+    seemed to imply that back in 2008 both JPEG and JPEG XR only 
+    supported 8 bits per channel for a total of 24 bits on a three 
+    channel image <a href="#src5">(5)</a>.  In contrast, JPEG XR seems
+    to support 16 bits per channel additive RGB for 48 bits per pixel 
+    and a more advanced 64 bits per pixel CMYK subtractive color 
+    <a href="#src1">(1)</a><a href="#src6">(6)</a>.  Note that while I
+    haven't personally had the privilege of dealing with high end 
+    printing equipment that needs CMYK treatment, I think that JPEG XR
+    could be useful in a print shop environment where subtractive 
+    color is more of an issue. 
+    </p>
+
+    <h3>Transparency and Tags (Bye-bye PNG...)</h3>
+
+    <p>
+    Other key features of JPEG XR that are important to me personally, 
+    are translucency and the ability to embed tags in the images.  I 
+    group these features together because when combined with the 
+    excellent compression rate of JPEG XR, they allow me to use JPEG XR
+    as a replacement for PNG.  As you know, JPEG already allows 
+    metadata to be easily planted into images, but when is the last 
+    time you have been able to reliably do that with a PNG?  PNG 
+    *does* allow tEXt chunks to be embedded into images 
+    <a href="#src7">(7)</a>, but those chunks can not be read or written 
+    to via *most* image editing programs.  Because of the lack of 
+    support for PNG tEXt chunks, it may or *may not* be useful for 
+    you to embed data in them.  In contrast, JPEG XR like JPEG allows
+    metadata to be easily embedded in the file and that metadata is 
+    easily read or updated by modern versions of MS Windows.  The 
+    tagging, translucency and compression features of JPEG XR reduce
+    the need to rely on PNG. 
+    </p>
+
+    <h3>Concluding Remarks</h3>
+
+    <p>
+    So your probably wondering why I am blogging on this if I am so 
+    sold on JPEG XR.  Since I am so sold on JPEG XR, why don’t I just 
+    use it and move on?  Well I am using it as best I can but there 
+    are a few third party hiccups.  As of the writing of the blog entry, neither 
+    FireFox 20.0.1 nor Chrome 26.0.1410.64m seemed to support JPEG XR.  
+    I find that lack of support a bit amusing since the format:
+    </p>
+
+    <ol>
+    <li>is widely supported in MS Windows <a href="#src1">(1)</a></li>
+    <li>the format is supported by the latest version of Flash <a href="#src1">(1)</a></li>
+    <li>the format is an ISO Standard as mentioned above <a href="#src2">(2)</a><a href="#src3">(3)</a></li>
+    <li>Microsoft released the JPEG XR Standard under a Microsoft Open Specification Promise back in 2007 <a href="#src8">(8)</a></li>
+    <li>on April 2013, Microsoft released a BSD Licensed open source JPEG XR Library <a href="#src1">(1)</a></li>
+    </ol>
+
+    <p>
+    With all of the advantages of JPEG XR and the efforts Microsoft has 
+    made to make the standard publically accessible, I can't image why so 
+    many pure "Open Source" giants still appear to be resisting its
+    adoption.  I think this standard has been around since 2007 
+    <a href="#src1">(1)</a>, so what's the holdup?  If any groups are 
+    *still* resisting the adoption of JPEG XR, I fear they may be doing 
+    so to the general public's detriment.<br /><br />
+
+    <i>(Maybe we should all keep our fingers crossed that the new 
+        April 2013 released BSD JPEG-XR library knock down the walls
+        of acceptance once and for all...)</i>
+    </p>
+
+<h2>Bibliography</h2>
+<a name="src1"></a>
+1. Various.<br />
+JPEG XR<br />
+Wikipedia. [Online] APR 16, 2013.<br />
+[Cited: APR 23, 2013.]<br />
+<a target="_blank" href="http://en.wikipedia.org/wiki/JPEG_XR">http://en.wikipedia.org/wiki/JPEG_XR</a><br /><br />
+
+<a name="src2"></a>
+2. Crow, Bill.<br />
+JPEG XR is Now an International Standard<br />
+MSDN Blogs:  Bill Crow's Digital Imaging & Photography Blog. 
+[Online] July 30, 2009.<br />
+[Cited: APR 23, 2013.]<br />
+<a target="_blank" 
+href="http://blogs.msdn.com/b/billcrow/archive/2009/07/29/jpeg-xr-is-now-an-international-standard.aspx">
+http://blogs.msdn.com/b/billcrow/archive/2009/07/29/jpeg-xr-is-now-an-international-standard.aspx
+</a><br /><br />
+
+<a name="src3"></a>
+3. Sharpe, Louis etc al.<br />
+Press Release - 49th WG1 Sardinia Meeting:<br /> 
+JPEG Committee Issues Call for Advanced Image Coding Technologies<br />
+JPEG.org<br />
+[Online] July 17, 2009.<br />
+[Cited: APR 23, 2013.]<br />
+<a target="_blank" 
+href="http://jpeg.org/newsrel26.html">
+http://jpeg.org/newsrel26.html
+</a><br /><br />
+
+<a name="src4"></a>
+4. Microsoft.<br />
+JPEG XR Codec Overview<br />
+MSDN: Windows Developer Center - Desktop[Online] November 29, 2012.<br />
+[Cited: APR 23, 2013.]<br />
+<a target="_blank" 
+href="http://msdn.microsoft.com/en-us/library/windows/desktop/Hh707223(v=vs.85).aspx">
+http://msdn.microsoft.com/en-us/library/windows/desktop/Hh707223(v=vs.85).aspx
+</a><br /><br />
+
+<a name="src5"></a>
+5. Grunin, Lori<br />
+Could JPEG XR deliver cheaper, better burst shooting?<br />
+CNET Crave [Online] February 6, 2008<br />
+[Cited: APR 23, 2013.]<br />
+<a target="_blank" 
+href="http://news.cnet.com/8301-17938_105-9865981-1.html">
+http://news.cnet.com/8301-17938_105-9865981-1.html
+</a><br /><br />
+
+<a name="src6"></a>
+6. Various.<br />
+CMYK Color Model<br />
+Wikipedia. [Online] APR 11, 2013.<br />
+[Cited: APR 23, 2013.]<br />
+<a target="_blank" href="http://en.wikipedia.org/wiki/CMYK_color_model">
+http://en.wikipedia.org/wiki/CMYK_color_model
+</a><br /><br />
+
+<a name="src7"></a>
+7. Various.<br />
+Portable Network Graphics<br />
+Wikipedia. [Online] APR 11, 2013.<br />
+[Cited: APR 20, 2013.]<br />
+<a target="_blank" href="http://en.wikipedia.org/wiki/Portable_Network_Graphics#.22Chunks.22_within_the_file">
+http://en.wikipedia.org/wiki/Portable_Network_Graphics#.22Chunks.22_within_the_file
+</a><br /><br />
+
+<a name="src8"></a>
+8. Various.<br />
+Microsoft Open Specification Promise<br />
+Wikipedia. [Online] March 17, 2013.<br />
+[Cited: APR 20, 2013.]<br />
+<a target="_blank" href="http://en.wikipedia.org/wiki/Microsoft_Open_Specification_Promise">
+http://en.wikipedia.org/wiki/Microsoft_Open_Specification_Promise
+</a><br />
+<br />
+<p>
+©2013 - Shawn Eary<br />
+This post and all included code is released under the Free Christian Document License (FCDL)<br />
+</p>
+</article>
+</body>
+</html>
