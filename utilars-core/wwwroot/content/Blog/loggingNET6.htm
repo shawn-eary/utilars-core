@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Turning on Logging in .NET 6</title>
+   <!-- Saw they keywords trick from Microsoft's Jeremy Foster  -->
+   <meta name="keywords" content=".NET .NET6 6 logging deployment" />
+   <meta name="description"
+         content="When .NET6 Deployment Goes Bust Turn on Logging" />
+   <meta name="author" content="Shawn Eary" />
+   <meta name="dateCreated" content="01/01/2022" />
+   <meta name="copyright" content="(c) ©2022 - Shawn Eary" />
+
+</head>
+<body>
+    <article>
+        <p>
+            I recently upgraded an ASP.NET 4.5 Website to .NET 6. The code worked fine on my local Win 10 box, but when I deployed to my webhost, some of the
+            views gave me this purposefully obscure security conscious error:
+        </p>
+        <p class="article-error">
+        Error.<br />
+        An error occurred while processing your request.<br />
+        Request ID: 00-95fd44c7f4062ab2523fa3656e58a068-0ada48fa7a2c0149-00<br />
+<br />
+        Development Mode<br />
+        Swapping to Development environment will display more detailed information about the error that occurred.<br />
+<br />
+        The Development environment shouldn't be enabled for deployed applications. It can result in displaying sensitive information from exceptions to end users. For local debugging, enable the Development environment by setting the ASPNETCORE_ENVIRONMENT environment variable to Development and restarting the app.<br />
+        </p>
+
+        <p>
+        I had a hunch the problem was with my database firewall but didn't know what IP addresses to set.
+        I communicated with my webhost provider a bit, but was not able to get the
+        info I needed. Eventually, I realized I was going to have to turn <b>global</b> logging on somewhere.
+        Unfortunately, many posts I found on the Internet either seemed too complicated or referred to a web.config that I couldn't
+        find in my local .NET 6 solution.
+        </p>
+        <p>
+        Fortunately, <a target="_blank" href="https://winscp.net/eng/index.php">WinSCP</a> came to my rescue with secure FTP over SSL. I was able to use it to clean out
+        <b>all</b> of the old files in my webhost and redeploy. This got rid of all of the .NET 4.5 junk that was still there. After this, I was
+        surprised to see a web.config file was still there even though my local machine didn't seem to have one [A]...
+        </p>
+        <p>
+        Awesomely, WinSCP let me edit the remote web.config in place and I saw this:
+        </p>
+        <p>
+            <pre>
+            <code class="language-xml">
+&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;configuration&gt;
+    &lt;location path="." inheritInChildApplications="false"&gt;
+        &lt;system.webServer&gt;
+            &lt;handlers&gt;
+                &lt;add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" /&gt;
+            &lt;/handlers&gt;
+            &lt;aspNetCore processPath="dotnet" arguments=".\[siteName].dll" stdoutLogEnabled=<span class="highlight">"false"</span> stdoutLogFile=".\logs\stdout" hostingModel="inprocess" /&gt;
+        &lt;/system.webServer&gt;
+    &lt;/location&gt;
+&lt;/configuration&gt;
+&lt;!--ProjectGuid: fd7c2850-3d8e-4552-9ac8-62e290bc13d6--&gt;
+            </code>
+            </pre>
+        </p>
+        <p>
+        All I had to do was change the stdoutLogEnabled from "false" to "true" and recreate the anomaly. After
+        duplicating the problem, WinSCP let me look at the resulting log and I saw an error that looked like this:
+        </p>
+        <p class="article-error">
+            Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot open server '[myServerName]' requested by the login. Client with IP address '[attemptingIP_Address]' is not allowed to access the server...
+        </p>
+        <p>
+        I then put [attemptingIP_Address] into the firewall for my SQL Server and the problem was resolved.
+        </p>
+<h2>Footnotes</h2>
+[A] - Since I could not find a web.config in my local .NET 6 solution, I presumed .NET 6 did not need or use one.
+Apparently, I was wrong.
+    </article>
+</body>
+</html>
