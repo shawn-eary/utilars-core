@@ -2,11 +2,11 @@
 MIT LICENSE
 https://mit-license.org/
 
-Copyright © 2020 Shawn Eary
+Copyright (c) 2021, 2020 Shawn Eary
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation
-files(the “Software”), to deal in the Software without restriction,
+files(the "Software"), to deal in the Software without restriction,
 including without limitation the rights to use, copy, modify, merge,
 publish, distribute, sublicense, and / or sell copies of the Software,
 and to permit persons to whom the Software is furnished to do so,
@@ -15,7 +15,7 @@ subject to the following conditions:
 The above copyright notice and this permission notice shall be included
 in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN
 NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -24,18 +24,68 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
 THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+
+// #####################################################################
+// # BEGIN Constants                                                   #
+// #####################################################################
+var gWidth = 800;
+var gHeight = 600;
+
+// Hard coded for now 
+const c_numHouses = 4;
+
+const gc_defaultHouseMass = 20.0;
+const gc_defaultHouseRotationalInertia = 10.0;
+const gc_defaultWindowMass = 2.0;
+const gc_defaultWindowRotationalInertia = 1.0;
+const gc_defaultRoofMass = 10.0;
+const gc_defaultRoofRotationalInertia = 2.0;
+
+const gc_floatingPointFudgeFactor = 0.01;
+
+// BEGIN: 
+// https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/math/sin
+const sine = Math.sin;
+const cos = Math.cos;
+const pi = Math.PI;
+// https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/math/sin
+// END 
+
+const rand = Math.random();
+function getBoundedRandNum(min, max) {
+    var spread = max - min;
+    // https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_random
+    var returnValue = Math.floor(Math.random() * spread) + min;
+    return returnValue;
+}
+
+// Just picking numbers most out of thin air right now
+const gc_launch_angle_min = pi / 4.0;
+const gc_launch_angle_max = 3.0 * pi / 4.0;
+const gc_launch_magnitude_min = 20.0;
+const gc_launch_magnitude_max = 30.0;
+
+const gc_gravitational_acceleration = 2.0;
+
+const gc_launch_rotation_min = -10.0;
+const gc_launch_rotation_max = 10.0;
+// #####################################################################
+// # END Constants                                                     #
+// #####################################################################
+
 // https://svgjs.com/docs/3.0/getting-started/
 var draw;
 
 var elevationTextObj;
 
-/* Hard coded for now */
-const c_numHouses = 4;
+var frameUpdateId;
+var theEntireWorldHasBeenDestroyedByEvilWickedBrainwashingAliens = false;
+
+
 
 // https://jsfiddle.net/wout/ncb3w5Lv/1/
 // define document width and height
-var gWidth = 800;
-var gHeight = 600;
+
 
 var minElevation = gHeight;
 var elevationRange = 400.0;
@@ -45,16 +95,26 @@ var maxElevation = minElevation + elevationRange;
 var bombdarWidth = gWidth * 0.1;
 
 var playAreaWidth = gWidth - bombdarWidth;
+var playAreaHeight = gHeight;
 
 var houseWidth = playAreaWidth / 20;
 var houseHeight = houseWidth;
+
+// var houseWidth = playAreaWidth / 20;
+// var houseHeight = houseWidth;
+// const gc_bombWidth = 50;
+// const gc_bombHeight = 20;
+var gc_bombWidth = playAreaWidth / 10;
+var gc_bombHeight = playAreaHeight / 12;
+
+
 
 // The Bombda is always going to be small so
 // just pick a small but reasonable width
 // and height
 var bombdarImageWidth = 2;
 
-var impactElevation = gHeight * 0.05;
+var impactElevation = gHeight * 0.10;
 
 /* Higher sub levels will eventually indicated more
  * difficult play.  Hard code to level 3 right now.
@@ -71,8 +131,71 @@ var playerSubLevel = 3;
 // https://www.w3schools.com/js/js_arrays.asp
 var bombs = [];
 
+var houses = [];
+
+var ammoPodWidth = playAreaWidth / 20;
+var ammoPodHeight = ammoPodWidth;
+var g_ammoPods = [];
+
+
 // https://stackoverflow.com/questions/62768780/how-feasible-is-it-to-use-the-oscillator-connect-and-oscillator-disconnect-m
 const cNUM_MAX_BOMBS = 5;
+
+function numUnexplodedHouses() {
+    var count = 0;
+    for (i = 0; i < houses.length; i++) {
+        if (houses[i].hasBeenBlownToBits == false) {
+            count++;
+        }
+    }
+    return count;
+}
+
+function blowUpHouse(h) {
+    h.hasBeenBlownToBits = true;
+
+    // For now, just fade the house out
+    // Since that is easy. Can do better
+    // animations in the future
+    var houseParts = h.parts;
+    for (var i = 0; i < houseParts.length; i++) {
+        var aPart = houseParts[i];
+        // https://svgjs.dev/docs/3.0/animating/
+        aPart.i.animate(2000, 0, 'now').attr({ fill: '#000' });
+
+        var lA = getBoundedRandNum(gc_launch_angle_min, gc_launch_angle_max);
+        var lM = getBoundedRandNum(gc_launch_magnitude_min, gc_launch_magnitude_max);
+        var lR = getBoundedRandNum(gc_launch_rotation_min, gc_launch_rotation_max);
+
+        aPart.fx = lM * sine(lA);
+        aPart.fy = lM * cos(lA);
+        aPart.fr = lR;
+    }
+
+    // Need sound here too but that's later...
+}
+
+function bombHitHouse(b, h) {
+    var bombXMin = b.x;
+    var bombXMax = b.x + gc_bombWidth;
+
+    var houseXMin = h.physCord.x;
+    var houseXMax = h.physCord.x + houseWidth;
+
+    if (bombXMin > houseXMax) {
+        // Left edge of bomb exceeds this house's right X edge
+        // Bomb is to right of house
+        return false;
+    } else if (bombXMax < houseXMin) {
+        // Right edge of bomb preceeds this house's left X edge
+        // Bobm is to the left of house
+        return false;
+    } else {
+        // Bomb ain't to the right or the left of the house
+        // so it must have blown up the house
+        return true;
+    }
+}
 
 function drawWindow(x, y) {
     var window1 = draw.rect(houseWidth / 6, houseHeight / 6);
@@ -84,27 +207,85 @@ function drawWindow(x, y) {
         }
     );
     window1.move(window1Cord.x, window1Cord.y);
+    return window1;
+}
+
+function makeHousePart(i, m, rm, x, y, t) {
+    var someHousePart = {
+        i: i,      // Image
+        m: m,      // Mass
+        rm: rm,    // Rotational Inertia
+        x: x,      // x cord
+        y: y,      // y cord
+        r: 0,      // rotation position
+        fx: 0.0,   // force x
+        fy: 0.0,   // force y [Other than gravity]
+        fr: 0.0,   // rotational force
+        ax: 0.0,   // acceleration x
+        ay: 0.0,   // acceleration y
+        ar: 0.0,   // totational acceleration
+        vx: 0.0,   // velocity x
+        vy: 0.0,   // velocity y
+        vr: 0.0,   // rotational velocity
+        type: t    // "Window", "Roof", "Body"
+    }
+    return someHousePart;
 }
 
 function makeHouse(x) {
+    var houseParts = [];
+
     // House Body
     var houseImg = draw.rect(houseWidth, houseHeight);
     var centeredX = x - (houseWidth / 2);
     houseImg.fill('#F4E900');
-    var physBombCord = logicalToPlayArea(
+    var physHouseCord = logicalToPlayArea(
         {
             x: centeredX,
             y: impactElevation + houseHeight
         }
     );
-    houseImg.move(physBombCord.x, physBombCord.y);
+    houseImg.move(physHouseCord.x, physHouseCord.y);
+
+    var someHousePart;
+    someHousePart =
+        makeHousePart(
+            houseImg,
+            gc_defaultHouseMass,
+            gc_defaultHouseRotationalInertia,
+            centeredX,
+            impactElevation + houseHeight,
+            "Body"
+        );
+    houseParts.push(someHousePart);
 
     // Bad Windows
     var windowElevation = impactElevation + (houseHeight * 7.0 / 8.0);
     var window1x = x - (houseWidth / 4.0);
     var window2x = x + (houseWidth / 4.0);
-    drawWindow(window1x, windowElevation);
-    drawWindow(window2x, windowElevation);
+    var someWindow;
+    someWindow = drawWindow(window1x, windowElevation);
+    someHousePart =
+        makeHousePart(
+            someWindow,
+            gc_defaultWindowMass,
+            gc_defaultWindowRotationalInertia,
+            window1x,
+            windowElevation,
+            "Window",
+        );
+    houseParts.push(someHousePart);
+    someWindow = drawWindow(window2x, windowElevation);
+    someHousePart =
+        makeHousePart(
+            someWindow,
+            gc_defaultWindowMass,
+            gc_defaultWindowRotationalInertia,
+            window2x,
+            windowElevation,
+            "Window"
+        );
+    houseParts.push(someHousePart);
 
     // Roof 
     var polyString = "";
@@ -120,75 +301,41 @@ function makeHouse(x) {
         }
     );
     houseTop.move(physBombCord2.x, physBombCord2.y);
-}
+    someHousePart =
+        makeHousePart(
+            houseTop,
+            gc_defaultRoofMass,
+            gc_defaultRoofRotationalInertia,
+            centeredX,
+            impactElevation + (houseHeight * 2),
+            "Roof"
+        );
+    houseParts.push(someHousePart);
 
-function makeBomb() {
-    // Create a bomb between 400 and 800 ("Martian Feet") - Yeah Whatever..
-    // https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_random
-    var bombElevation = Math.floor(Math.random() * elevationRange) + minElevation;
-
-    // https://stackoverflow.com/questions/879152/how-do-i-make-javascript-beep
-    // Set up bomb oscillator and gain
-    var someOscillator = audioCtx.createOscillator();
-    var someGain = audioCtx.createGain();
-    someOscillator.connect(someGain);
-    someGain.connect(audioCtx.destination);
-
-    someGain.gain.value = 0.1;
-    someOscillator.frequency.value = bombElevation;
-    someOscillator.type = 'sine';
-
-    someOscillator.start();
-
-    // https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_random
-    var bombX = Math.floor(Math.random() * 400.0);
-
-    // https://svgjs.com/docs/3.0/getting-started/
-    var bombImage = draw.rect(10, 10);
-
-    // Cheat and assume.  We have plenty of vertical
-    // realestate in the Bombdar so just assign the
-    // height to bombdarImageWidth
-    var bombdarImage = draw.rect(bombdarImageWidth, bombdarImageWidth);
-
-    // https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_random
-    var colorIndex = Math.floor(Math.random() * 4.0);
-    if (colorIndex > 2.9) {
-        bombImage.fill('#f06');
-    } else if (colorIndex > 1.9) {
-        bombImage.fill('#0f6');
-    } else if (colorIndex > 0.9) {
-        bombImage.fill('#60f');
-    } else {
-        bombImage.fill('#3ff');
-    }
-    bombdarImage.fill('#ddd');
-
-
-    // https://www.w3schools.com/js/js_objects.asp
-    var someBomb = {
-        elevation: bombElevation,
-        originalElevation: bombElevation,
-        oscillator: someOscillator,
-        gain: someGain,
-        active: true,
-        x: bombX,
-        img: bombImage,
-        bImg: bombdarImage
+    var someHouse = {
+        physCord: {
+            x: x,
+            y: impactElevation + houseHeight
+        },
+        parts: houseParts,
+        hasBeenBlownToBits: false
     };
-    bombs.push(someBomb);
+    houses.push(someHouse);
 }
 
-function nukeDeadBombs() {
+function nukeBombs(justDeadOnes) {
     // Remove dead bombs
     // https://www.w3schools.com/js/js_arrays.asp
     var newBombs = [];
     for (var i = 0; i < bombs.length; i++) {
         var curBomb = bombs[i];
-        if (curBomb.active) {
+        if ((curBomb.active) && (justDeadOnes)) {
             newBombs.push(curBomb);
         } else {
-            // Dead bomb. Deactivate the oscillator
+            // This is either a Dead Bomb or the world
+            // had ended...
+
+            // Deactivate the oscillator
             curBomb.gain.value = 0.0;
             curBomb.oscillator.stop();
         }
@@ -271,7 +418,8 @@ function begin() {
 
     // Run every "frame" which I guess is
     // every 60th of a second...
-    setInterval(updateBombs, 1000.0 / 60.0);
+    // https://developer.mozilla.org/en-US/docs/Web/API/setInterval
+    frameUpdateId = setInterval(updateFrame, 1000.0 / 60.0);
 };
 
 function getNumActiveBombs() {
@@ -297,97 +445,6 @@ function getTotalBombLifefactor() {
     return totalLifeFactor;
 }
 
-function updateBombs() {
-
-    // "Garbage collect" dead bombs
-    nukeDeadBombs();
-
-    // At any frame update, there is a small chance that
-    // another bomb might be created.
-    // a) Never allow more bombs than the curent
-    //    playerSubLevel
-    // b) The probabity of annother bomb being created
-    //    should maybe be greatest when existing bombs
-    //    are "old"
-    // c) To keep from breaking the program, there should
-    //    never be more than cNUM_MAX_BOMBS
-    var numActiveBombs = getNumActiveBombs();
-    var totalBombLifeFactor = getTotalBombLifefactor();
-
-    // Hopefully this number will be from zero to 1...
-    var NTBLF = 0.0;
-    if (numActiveBombs > 0) {
-        NTBLF = totalBombLifeFactor / numActiveBombs;
-    }
-
-    // https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_random
-    var randNumZeroToOne = Math.random();
-
-    if (randNumZeroToOne > NTBLF) {
-        // See if we can create a new bomb
-        if ((bombs.length <= playerSubLevel) &&
-            (bombs.length <= cNUM_MAX_BOMBS)) {
-
-            makeBomb();
-        }
-    }
-
-    var elevationText = "";
-    for (var j = 0; j < bombs.length; j++) {
-        curBomb = bombs[j];
-
-        // Only process active bombs.  This keeps me 
-        // from having to recreate bombs all of the time
-        // I can just reuse an inactive bomb when I need
-        // to
-        if (curBomb.active == true) {
-            curBomb.elevation = curBomb.elevation - (80.0 / 60.0);
-
-            // https://stackoverflow.com/questions/7641818/how-can-i-remove-the-decimal-part-from-javascript-number            
-            elevationText += Math.floor(curBomb.elevation) + " ";
-
-            // https://teropa.info/blog/2016/08/10/frequency-and-pitch.html
-            var curBomb = bombs[j];
-            curBomb.oscillator.frequency.value = curBomb.elevation;
-
-            // https://svgjs.com/docs/3.0/getting-started/
-            var bombImage = curBomb.img;
-            var bombdarImage = curBomb.bImg;
-
-            var physBombCord = logicalToPlayArea(
-                {
-                    x: curBomb.x,
-                    y: curBomb.elevation
-                }
-            );
-            bombImage.move(
-                physBombCord.x,
-                physBombCord.y
-            );
-
-            var physBombCord2 = logicalToBombdarArea(
-                {
-                    x: curBomb.x,
-                    y: curBomb.elevation
-                }
-            );
-            bombdarImage.move(
-                physBombCord2.x,
-                physBombCord2.y
-            );
-
-            // Turn the volume for the oscillator off when the 
-            // "bomb" gets below 50 "Martian Feet"
-            if (curBomb.elevation < impactElevation) {
-                curBomb.active = false;
-            }
-        }
-    }
-
-    // https://svgjs.com/docs/3.0/shape-elements/#svg-text
-    elevationTextObj.text("Elevations: " + elevationText);
-}
-
 function logicalToPlayArea(c) {
     var physX = c.x + bombdarWidth;
     var physY = gHeight - c.y;
@@ -409,5 +466,4 @@ function logicalToBombdarArea(c) {
     };
     return physical;
 }
-
 
