@@ -9,6 +9,7 @@
     <Compile Include="Models\BlogModels.fs" />
     <Compile Include="Models\ContactModels.fs" />
     <Compile Include="Models/ErrorViewModel.fs" />
+    <Compile Include="Controllers\StoryTimeController.fs" />
     <Compile Include="Controllers\BlogController.fs" />
     <Compile Include="Controllers/HomeController.fs" />
     <Compile Include="Program.fs" />
@@ -26,6 +27,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Blog\" />
+    <Folder Include="Views\StoryTime\" />
     <Folder Include="wwwroot\img\" />
     <Folder Include="wwwroot\content\" />
   </ItemGroup>
