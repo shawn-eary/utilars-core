@@ -23,7 +23,7 @@ type HomeController (logger : ILogger<HomeController>) =
     inherit Controller()
 
     member this.Index () =
-        this.ViewData.["Message"] <- "Welcome to Utilars"
+        this.ViewData.["Message"] <- "Welcome to Utilars™"
         this.View()
     member this.FCDL () =
         this.View()
