@@ -1,0 +1,42 @@
+{
+    // https://stackoverflow.com/questions/56893702/i-get-the-message-could-not-find-the-task-build-when-i-try-to-start-my-c-sh
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/utilars-core/utilars-core.fsproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/utilars-core/utilars-core.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/utilars-core/utilars-core.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
