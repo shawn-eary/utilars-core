@@ -1,4 +1,4 @@
-﻿/* Copyright © 2011-2014 - Shawn Eary (Licensed under FCDL) */
+﻿/* Copyright © 2011-2014, 2023 - Shawn Eary (Licensed under FCDL) */
 
 .sideNote {
     color: #b23c9f;
@@ -114,8 +114,21 @@ left: 0px;   */
     font-weight: bolder
 }
 
+fieldset div {
+    margin-top: 1em;
+}
+
+nav ul li {
+    margin-top: 0.25em;
+}
 
 
+
+/* https://www.w3schools.com/cssref/sel_read-only.php */ 
+input:read-only {
+    background-color: lightgray;
+}
+ 
 html {
     /* http://weblogs.asp.net/scottgu/archive/2006/05/29/Eliminating-CSS-Image-Flicker-with-IE6.aspx */
     /* background: #FCD6FF url(/img/grace.png) no-repeat center center fixed; */

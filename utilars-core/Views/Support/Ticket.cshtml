@@ -1,0 +1,67 @@
+﻿@model utilars_core.Models.TicketRequest
+@{
+    ViewData["Title"] = "Support Request";
+}
+
+<h2>Request Support</h2>
+
+<div class="errMsg">
+    @ViewData["MessageToUser"]
+</div>
+<br />
+<br />
+<div>
+    @* Page 74 of Nerd Dinner *@
+    @using (Html.BeginForm()) {
+    <fieldset>
+        <div>
+        Product:<br />
+        <input value="OATS 1.0" readonly />
+        </div>
+        <br /> 
+        <div>
+        Your Name:<br />
+
+        @* https://www.tutorialsteacher.com/mvc/htmlhelper-validationmessagefor#:~:text=The%20Html.ValidationMessageFor%20%28%29%20is%20a%20strongly%20typed%20extension,MvcHtmlString%20ValidateMessageFor%20%28Expression%3CFunc%3Cdynamic%2CTProperty%3E%3E%20expression%2C%20string%20validationMessage%2C%20object%20htmlAttributes%29 *@
+        @Html.TextBoxFor(m => m.Name)<br />
+        @Html.ValidationMessageFor(m => m.Name)
+        </div>
+
+        <div>
+        @* https://www.tutorialsteacher.com/mvc/htmlhelper-validationmessagefor#:~:text=The%20Html.ValidationMessageFor%20%28%29%20is%20a%20strongly%20typed%20extension,MvcHtmlString%20ValidateMessageFor%20%28Expression%3CFunc%3Cdynamic%2CTProperty%3E%3E%20expression%2C%20string%20validationMessage%2C%20object%20htmlAttributes%29 *@
+        Your Email:<br />
+        @Html.TextBoxFor(m => m.Email)<br />
+        @Html.ValidationMessageFor(m => m.Email)
+        </div>
+
+        <div>
+        Brief description of Problem:<br />
+        @* https://www.tutorialsteacher.com/mvc/htmlhelper-validationmessagefor#:~:text=The%20Html.ValidationMessageFor%20%28%29%20is%20a%20strongly%20typed%20extension,MvcHtmlString%20ValidateMessageFor%20%28Expression%3CFunc%3Cdynamic%2CTProperty%3E%3E%20expression%2C%20string%20validationMessage%2C%20object%20htmlAttributes%29 *@            
+        @* https://stackoverflow.com/questions/37559110/confused-with-difference-in-mvc-5-textboxfor-editfor-and-textareafor *@
+        @* https://stackoverflow.com/questions/40110027/asp-net-mvc-textareafor-unable-to-change-width *@
+        @Html.TextAreaFor(m => m.Message, 10, 73, htmlAttributes: new {@class = "form-control", })<br />
+        @Html.ValidationMessageFor(m => m.Message)
+        </div>
+        <div>
+        <i>NOTEs:<br/>
+        <ol>
+        <li>A maximum of 500 characters are allowed.</li>
+        <li>Do not include any personal or sensitive information in your support request.</li>
+        </ol>
+        </i>
+        </div>
+
+        <div id="tbQuestion" style=" background-color:Gainsboro">
+            @* https://stackoverflow.com/questions/5120645/razor-syntax-equivalent  *@
+            @Html.Raw(Model.Base64Digits)
+        </div>
+        Enter the numbers that appear above: <br />
+        @Html.TextBoxFor(m => m.ChallengeResponse)<br />
+        <br />
+
+        <input type="hidden" value="@Model.Expected" name="Expected" />        
+
+        <input type="submit" value="Request Ticket" />
+    </fieldset>
+    }
+</div>
