@@ -12,6 +12,7 @@
     <Compile Include="Models/SupportModels.fs" />
     <Compile Include="Controllers\StoryTimeController.fs" />
     <Compile Include="Controllers\SupportController.fs" />
+    <Compile Include="Controllers\DonateController.fs" />
     <Compile Include="Controllers\BlogController.fs" />
     <Compile Include="Controllers/HomeController.fs" />
     <Compile Include="Program.fs" />
