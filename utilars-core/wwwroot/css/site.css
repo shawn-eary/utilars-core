@@ -178,3 +178,21 @@ html {
 .musicItem > table th {
     text-align: left;
 }
+
+.generic-blog-table {
+    padding: 10px;
+}
+/* https://stackoverflow.com/questions/14410606/table-with-alternate-backround-rows-and-header */ 
+.generic-blog-table tbody tr:nth-child(odd) td {
+    background-color:rgb(229, 249, 248);
+    padding: 5px 20px 5px 5px;
+}
+.generic-blog-table tbody tr:nth-child(even) td {
+    background-color:rgb(238, 191, 253);
+    padding: 5px 20px 5px 5px;
+}
+.generic-blog-table thead tr th {
+    background-color: black;
+    color: white;
+    padding: 5px 20px 5px 5px;
+}
